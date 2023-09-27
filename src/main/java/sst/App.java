@@ -68,6 +68,10 @@ public class App
 
     public static void main(String[] args)   
         {
+            getAndExecuteCommands();
+        }
+
+    static void getAndExecuteCommands() {
         // main polling loop
         String str;
 
@@ -132,7 +136,7 @@ public class App
                     break;
                 }
             }
-        }
+    }
 
     static void ExecCOMMANDS()
         {
