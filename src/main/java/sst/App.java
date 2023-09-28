@@ -98,11 +98,11 @@ public class App {
                         Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
                         // check if positions is a 
                         if(checkEntityListAgainstPosition(position, Klingons)) {
-                            Map[i][j][k][l] = Klingons[0].Symbol;
+                            Map[i][j][k][l] = Klingons[0].symbol;
                         } else if (checkEntityAgainstPosition(position, Enterprise)) {
-                            Map[i][j][k][l] = Enterprise.Symbol;
+                            Map[i][j][k][l] = Enterprise.symbol;
                         } else {
-                            Map[i][j][k][l] = NOTHING;
+                            Map[i][j][k][l] = '.';
                         }
                     }
                 }
@@ -126,7 +126,7 @@ public class App {
 
             System.out.println("Planets Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
             // make sure position is not being used by another klingon
-            Planets[i] = new Planets(pos);
+            Planets[i] = new Planet(pos);
         }
         System.out.println(" ");
     }
@@ -144,13 +144,17 @@ public class App {
     }
 
     static Position generateNewPosition(){
-        Coordinate quadrant = new Coordinate(generateRandomNumber(8), (generateRandomNumber(8)));
-        Coordinate sector = new Coordinate(generateRandomNumber(10), (generateRandomNumber(10)));
+        Coordinate quadrant = new Coordinate(generateRandomNumber(1, 8), (generateRandomNumber(1, 8)));
+        Coordinate sector = new Coordinate(generateRandomNumber(1, 10), (generateRandomNumber(1, 10)));
         Position position = new Position(quadrant, sector);
         while(!isPositionEmpty(position)) {
             position = generateNewPosition();
         }
         return position;
+    }
+
+    static int generateRandomNumber(int min, int max) {
+        return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     static Boolean isPositionEmpty(Position position) {
@@ -171,8 +175,8 @@ public class App {
 
     static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
         // checks if entity is in a position
-        return entity != null && entity.Position.Quadrant.X == position.Quadrant.X && entity.Position.Quadrant.Y == position.Quadrant.Y && 
-            entity.Position.Sector.X == position.Sector.X && entity.Position.Sector.Y == position.Sector.Y;
+        return entity != null && entity.position.Quadrant.X == position.Quadrant.X && entity.position.Quadrant.Y == position.Quadrant.Y && 
+            entity.position.Sector.X == position.Sector.X && entity.position.Sector.Y == position.Sector.Y;
     }
 
     static void getAndExecuteCommands() {
@@ -246,8 +250,8 @@ public class App {
     static void ExecSRSCAN()
         {
 
-            int row = Enterprise.Position.Quadrant.X;
-            int column = Enterprise.Position.Quadrant.Y;
+            int row = Enterprise.position.Quadrant.X;
+            int column = Enterprise.position.Quadrant.Y;
             int r, c;
 
             con.printf("\nShort-range scan (MOCK):\n\n");

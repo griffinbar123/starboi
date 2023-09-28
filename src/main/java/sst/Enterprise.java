@@ -1,7 +1,6 @@
-package main.java.sst;
+package sst;
 
 public class Enterprise extends Entity {
-    
     public Enterprise(Position position) {
         super(position, 'E');
     }

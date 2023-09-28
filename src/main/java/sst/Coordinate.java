@@ -1,6 +1,8 @@
-package main.java.sst;
+package sst;
 
+import lombok.Data;
 
+@Data
 public class Coordinate {
     public int X;
     public int Y;

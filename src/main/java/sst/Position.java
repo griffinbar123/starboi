@@ -1,6 +1,8 @@
-package main.java.sst;
+package sst;
 
+import lombok.Data;
 
+@Data
 public class Position {
 
     public Coordinate Quadrant;
