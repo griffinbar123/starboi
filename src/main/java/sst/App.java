@@ -81,9 +81,9 @@ public class App {
         if (con == null)
             return;
 
-        // getAndExecuteCommands(); // TODO
-        initializeGame();
-        ExecSTATUS();
+        // getAndExecuteCommands(); // TODO: uncomment
+        initializeGame(); // TODO: for testing
+        ExecSTATUS(); // TODO: for testing
     }
 
     static void initializeGame() {
@@ -98,6 +98,11 @@ public class App {
 
     }
 
+    /**
+     * Updates the map
+     * 
+     * @author Griffin Barnard
+     */
     static void updateMap() {
         for (int i = 0; i < Map.length; i++) {
             for (int j = 0; j < Map[i].length; j++) {
@@ -334,10 +339,18 @@ public class App {
         con.printf("\n");
     }
 
+    /**
+     * 
+     * Prints the status of the Enterprise during the game
+     * 
+     * @author Matthias Schrock
+     * @see Enterprise
+     */
     static void ExecSTATUS() {
         System.out.println("Stardate\t" + Enterprise.getStarDate());
         System.out.println("Condition\t" + Enterprise.getCondition());
-        System.out.println("Position\t" + Enterprise.getPosition().getQuadrant().getX() + " - " + Enterprise.getPosition().getQuadrant().getY() + ", "
+        System.out.println("Position\t" + Enterprise.getPosition().getQuadrant().getX() + " - "
+                + Enterprise.getPosition().getQuadrant().getY() + ", "
                 + Enterprise.getPosition().getSector().getY() + " - " + Enterprise.getPosition().getSector().getY());
         System.out.println("Life Support\t" + (Enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
         System.out.print("Warp Factor\t");
@@ -352,5 +365,4 @@ public class App {
         System.out.print("Time Left\t");
         System.out.printf("%.2f\n", Enterprise.getTime());
     }
-
 }
