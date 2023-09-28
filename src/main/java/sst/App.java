@@ -8,6 +8,7 @@ import Model.Entity;
 import Model.Klingon;
 import Model.Planet;
 import Model.Position;
+import Utils.Utils;
 
 public class App {
     private static String cmdstr;
@@ -80,11 +81,12 @@ public class App {
         if (con == null)
             return;
 
-        // getAndExecuteCommands();
-        initalizeMap();
+        // getAndExecuteCommands(); // TODO
+        initializeGame();
+        ExecSTATUS();
     }
 
-    static void initalizeMap() {
+    static void initializeGame() {
         Map = new char[8][8][10][10];
 
         initializeEnterprise();
@@ -155,17 +157,13 @@ public class App {
     }
 
     static Position generateNewPosition() {
-        Coordinate quadrant = new Coordinate(generateRandomNumber(0, 7), (generateRandomNumber(0, 7)));
-        Coordinate sector = new Coordinate(generateRandomNumber(0, 9), (generateRandomNumber(0, 9)));
+        Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
+        Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
         while (!isPositionEmpty(position)) {
             position = generateNewPosition();
         }
         return position;
-    }
-
-    static int generateRandomNumber(int min, int max) {
-        return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     static Boolean isPositionEmpty(Position position) {

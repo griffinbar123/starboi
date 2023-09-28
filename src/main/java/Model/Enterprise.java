@@ -22,7 +22,7 @@ public class Enterprise extends Entity {
 
     private int torpedoes;
 
-    private Sheild sheilds;
+    private Sheild sheilds = new Sheild();
 
     private int klingons;
 
