@@ -1,17 +1,43 @@
 package sst;
 import java.io.Console;
+import java.util.Random;
+
+import main.java.sst.Coordinate;
+import main.java.sst.Planet;
+import main.java.sst.Klingon;
+import main.java.sst.Enterprise;
+import main.java.sst.Position;
+import main.java.sst.Entity;
 
 /**
  * Hello world!
  *
  */
+
+
 public class App 
 {
-   private static String cmdstr;
+
+    // public static final char STAR = '*';
+    // public static final char ENTERPRISE = 'E';
+    // public static final char KLINGON = 'K';
+    // public static final char STARBASE = 'B';
+    // public static final char KLINGON_COMMANDER = 'C';
+    // public static final char KLINGON_SUPER_COMMNANDER = 'S';
+    // public static final char ROMULAN = 'R';
+    // public static final char PLANET = 'P';
+    public static final char NOTHING = '\u00B7';
+    // public static final char BLACK_HOLE = ' ';
+
+    private static String cmdstr;
     private static Console con;
+    private static char[][][][] Map;
+    private static Klingon[] Klingons;
+    private static Enterprise Enterprise;
+    private static Planet[] Planets;
 
     enum Command
-        {
+    {
         SRSCAN,
         LRSCAN,
         PHASERS,
@@ -64,20 +90,119 @@ public class App
             }
 
         public boolean CanAbbrev() { return canAbbrev; }
-        }
+    }
 
     public static void main(String[] args)   
-        {
-            getAndExecuteCommands();
-        }
-
-    static void getAndExecuteCommands() {
-        // main polling loop
-        String str;
+    {
 
         con = System.console();
         if (con == null)
             return;
+
+        // getAndExecuteCommands();
+        initalizeMap();
+    }
+
+    static void initalizeMap(){
+        Map = new char[8][8][10][10];
+
+        initializeEnterprise();
+        initializeKlingons(3);
+    
+
+        updateMap();
+        ExecSRSCAN();
+
+    }
+
+    static void updateMap(){
+        for(int i = 0; i < Map.length; i++) {
+            for(int j = 0; j < Map[i].length; j++) {
+                for(int k = 0; k < Map[i][j].length; k++) {
+                    for(int l = 0; l < Map[i][j][k].length; l++) {
+                        Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
+                        // check if positions is a 
+                        if(checkEntityListAgainstPosition(position, Klingons)) {
+                            Map[i][j][k][l] = Klingons[0].Symbol;
+                        } else if (checkEntityAgainstPosition(position, Enterprise)) {
+                            Map[i][j][k][l] = Enterprise.Symbol;
+                        } else {
+                            Map[i][j][k][l] = NOTHING;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    static void initializeEnterprise() {
+        Position pos = generateNewPosition();
+
+        System.out.println("Enterprise Position: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
+
+        Enterprise = new Enterprise(pos);
+        System.out.println(" ");
+    }
+
+    static void initializePlanets(int numberOfPlanets){
+        Planets = new Planet[numberOfPlanets];
+        for(int i = 0; i < numberOfPlanets; i++){
+            Position pos = generateNewPosition();
+
+            System.out.println("Planets Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
+            // make sure position is not being used by another klingon
+            Planets[i] = new Planets(pos);
+        }
+        System.out.println(" ");
+    }
+
+    static void initializeKlingons(int numberOfKlingons){
+        Klingons = new Klingon[numberOfKlingons];
+        for(int i = 0; i < numberOfKlingons; i++){
+            Position pos = generateNewPosition();
+            
+            System.out.println("Klingon Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
+            // make sure position is not being used by another klingon
+            Klingons[i] = new Klingon(pos);
+        }
+        System.out.println(" ");
+    }
+
+    static Position generateNewPosition(){
+        Coordinate quadrant = new Coordinate(generateRandomNumber(8), (generateRandomNumber(8)));
+        Coordinate sector = new Coordinate(generateRandomNumber(10), (generateRandomNumber(10)));
+        Position position = new Position(quadrant, sector);
+        while(!isPositionEmpty(position)) {
+            position = generateNewPosition();
+        }
+        return position;
+    }
+
+    static Boolean isPositionEmpty(Position position) {
+        // use this to check if a position is empty, but can't check the map because it might not be updated
+        return !(checkEntityAgainstPosition(position, Enterprise) || checkEntityListAgainstPosition(position, Klingons));
+    }
+
+    static Boolean checkEntityListAgainstPosition(Position position, Entity[] entities){
+        // checks if any entity in the list provided is is in the provided position
+
+        for(int i = 0; i < entities.length; i++){
+            if(checkEntityAgainstPosition(position, entities[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
+        // checks if entity is in a position
+        return entity != null && entity.Position.Quadrant.X == position.Quadrant.X && entity.Position.Quadrant.Y == position.Quadrant.Y && 
+            entity.Position.Sector.X == position.Sector.X && entity.Position.Sector.Y == position.Sector.Y;
+    }
+
+    static void getAndExecuteCommands() {
+        // main polling loop
+        String str;
 
         con.printf("\n            SUPER STAR TREK (Java Edition)\n");
         con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
@@ -154,77 +279,61 @@ public class App
 
     static void ExecSRSCAN()
         {
-        int r,c;
 
-        char[][] chScan = new char[10][10]; // minor inefficiency here
+            int row = Enterprise.Position.Quadrant.X;
+            int column = Enterprise.Position.Quadrant.Y;
+            int r, c;
 
-        for (r = 1; r <= 10; r++)
+            con.printf("\nShort-range scan (MOCK):\n\n");
+            boolean leftside = true;
+            boolean rightside = true;
+
+            // print column header
+            con.printf("        ");
             for (c = 1; c <= 10; c++)
+                con.printf("%1d ", c);
+            con.printf("\n");
+
+            for (r = 1; r <= 10; r++)
                 {
-//                chScan[r-1][c-1] = '.';
-                chScan[r-1][c-1] = '\u00B7';
-                }
-
-        // MOCK
-        chScan[0][0] = '*';
-        chScan[0][5] = 'R';
-        chScan[1][3] = 'E';
-        chScan[2][5] = '*';
-        chScan[2][7] = 'B';
-        chScan[3][3] = 'S';
-        chScan[4][7] = 'K';
-        chScan[5][1] = 'K';
-        chScan[5][3] = ' ';
-        chScan[5][8] = '*';
-        chScan[6][5] = 'P';
-        chScan[7][4] = '*';
-        chScan[8][1] = '*';
-        chScan[8][4] = '*';
-        chScan[8][8] = 'C';
-
-        con.printf("\nShort-range scan (MOCK):\n\n");
-        boolean leftside = true;
-        boolean rightside = true;
-
-        // print column header
-        con.printf("        ");
-        for (c = 1; c <= 10; c++)
-            con.printf("%1d ", c);
-        con.printf("\n");
-
-        for (r = 1; r <= 10; r++)
-            {
-            if (leftside)
-                {
-                con.printf("    %2d  ", r);
-                
-                for (c = 1; c <= 10; c++)
-                    con.printf("%c ", chScan[r-1][c-1]);
-                }
-
-            if (rightside)
-                {
-                con.printf(" ");
-
-                switch (r)   
+                if (leftside)
                     {
-                    case  1:  con.printf("Stardate      %.1f", 2516.3);                          break;
-                    case  2:  con.printf("Condition     %s", "RED");                             break;
-                    case  3:  con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);          break;
-                    case  4:  con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");        break;
-                    case  5:  con.printf("Warp Factor   %.1f", 5.0);                             break;
-                    case  6:  con.printf("Energy        %.2f", 2176.24);                         break;
-                    case  7:  con.printf("Torpedoes     %d", 3);                                 break;
-                    case  8:  con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0); break;
-                    case  9:  con.printf("Klingons Left %d", 12);                                break;
-                    case 10:  con.printf("Time Left     %.2f", 3.72);                            break;
+                    con.printf("    %2d  ", r);
+                    
+                    for (c = 1; c <= 10; c++)
+                        con.printf("%c ", Map[row][column][r-1][c-1]);
                     }
+
+                if (rightside)
+                    {
+                    con.printf(" ");
+
+                    switch (r)   
+                        {
+                        case  1:  con.printf("Stardate      %.1f", 2516.3);                          break;
+                        case  2:  con.printf("Condition     %s", "RED");                             break;
+                        case  3:  con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);          break;
+                        case  4:  con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");        break;
+                        case  5:  con.printf("Warp Factor   %.1f", 5.0);                             break;
+                        case  6:  con.printf("Energy        %.2f", 2176.24);                         break;
+                        case  7:  con.printf("Torpedoes     %d", 3);                                 break;
+                        case  8:  con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0); break;
+                        case  9:  con.printf("Klingons Left %d", 12);                                break;
+                        case 10:  con.printf("Time Left     %.2f", 3.72);                            break;
+                        }
+                    }
+
+                con.printf("\n");
                 }
 
             con.printf("\n");
-            }
+        }
 
-        con.printf("\n");
+        private static int generateRandomNumber(int large) {
+            Random rand = new Random();
+    
+            // Generate random integers in range 0 to 999
+            return rand.nextInt(large);
         }
 
     }
