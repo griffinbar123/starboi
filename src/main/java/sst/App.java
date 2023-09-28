@@ -1,34 +1,10 @@
 package sst;
+
 import java.io.Console;
-import java.util.Random;
+import Model.Status;
 
-import main.java.sst.Coordinate;
-import main.java.sst.Planet;
-import main.java.sst.Klingon;
-import main.java.sst.Enterprise;
-import main.java.sst.Position;
-import main.java.sst.Entity;
-
-/**
- * Hello world!
- *
- */
-
-
-public class App 
-{
-
-    // public static final char STAR = '*';
-    // public static final char ENTERPRISE = 'E';
-    // public static final char KLINGON = 'K';
-    // public static final char STARBASE = 'B';
-    // public static final char KLINGON_COMMANDER = 'C';
-    // public static final char KLINGON_SUPER_COMMNANDER = 'S';
-    // public static final char ROMULAN = 'R';
-    // public static final char PLANET = 'P';
-    public static final char NOTHING = '\u00B7';
-    // public static final char BLACK_HOLE = ' ';
-
+public class App {
+    public static Status status = new Status();
     private static String cmdstr;
     private static Console con;
     private static char[][][][] Map;
@@ -36,8 +12,7 @@ public class App
     private static Enterprise Enterprise;
     private static Planet[] Planets;
 
-    enum Command
-    {
+    enum Command {
         SRSCAN,
         LRSCAN,
         PHASERS,
@@ -79,17 +54,17 @@ public class App
 
         private boolean canAbbrev;
 
-        Command()
-            {
+        Command() {
             canAbbrev = true;
-            }
+        }
 
-        Command(boolean abrOk)
-            {
-            canAbbrev = abrOk;   
-            }
+        Command(boolean abrOk) {
+            canAbbrev = abrOk;
+        }
 
-        public boolean CanAbbrev() { return canAbbrev; }
+        public boolean CanAbbrev() {
+            return canAbbrev;
+        }
     }
 
     public static void main(String[] args)   
@@ -207,64 +182,55 @@ public class App
         con.printf("\n            SUPER STAR TREK (Java Edition)\n");
         con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
 
-        while (true)
-            {
+        while (true) {
             str = con.readLine("COMMAND> ");
             cmdstr = str.toUpperCase().trim();
 
             Command c = Command.undefined;
 
-            for (Command cx : Command.values())
-                {
+            for (Command cx : Command.values()) {
                 boolean Matched;
 
-                if (cx.CanAbbrev())
-                    {
+                if (cx.CanAbbrev()) {
                     String cmd = cx.toString();
 
                     int cmdlen = cmd.length();
                     int tstlen = cmdstr.length();
-                
-                    String abrcheck = cmd.substring(0,Math.min(cmdlen,tstlen));
+
+                    String abrcheck = cmd.substring(0, Math.min(cmdlen, tstlen));
 
                     Matched = cmdstr.compareTo(abrcheck) == 0;
-                    }
-                else
+                } else
                     Matched = cmdstr.compareTo(cx.toString()) == 0;
 
-                if (Matched)
-                    {
+                if (Matched) {
                     c = cx;
-                    break;                    
-                    }
-                }
-
-            switch(c)
-                {
-                case SRSCAN:
-                    ExecSRSCAN();
-                    break;
-
-                case COMMANDS:
-                    ExecCOMMANDS();
-                    break;
-
-                case QUIT:
-                    return;
-
-                case undefined:
-                    con.printf("'%s' is not a valid command.\n\n", cmdstr);
-                    break;
-
-                default:
-                    con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n", c.toString());
                     break;
                 }
             }
+
+            switch (c) {
+                case SRSCAN:
+                    ExecSRSCAN();
+                    break;
+                case COMMANDS:
+                    ExecCOMMANDS();
+                    break;
+                case STATUS:
+                    ExecSTATUS();
+                case QUIT:
+                    return;
+                case undefined:
+                    con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                    break;
+                default:
+                    con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n", c.toString());
+                    break;
+            }
+        }
     }
 
-    static void ExecCOMMANDS()
-        {
+    static void ExecCOMMANDS() {
         con.printf("   SRSCAN    MOVE      PHASERS   CALL\n");
         con.printf("   STATUS    IMPULSE   PHOTONS   ABANDON\n");
         con.printf("   LRSCAN    WARP      SHIELDS   DESTRUCT\n");
@@ -275,7 +241,7 @@ public class App
         con.printf("   COMPUTER  EMEXIT    PROBE     COMMANDS\n");
         con.printf("   SCORE     CLOAK     CAPTURE   HELP\n");
         con.printf("\n");
-        }
+    }
 
     static void ExecSRSCAN()
         {
@@ -308,32 +274,63 @@ public class App
                     {
                     con.printf(" ");
 
-                    switch (r)   
-                        {
-                        case  1:  con.printf("Stardate      %.1f", 2516.3);                          break;
-                        case  2:  con.printf("Condition     %s", "RED");                             break;
-                        case  3:  con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);          break;
-                        case  4:  con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");        break;
-                        case  5:  con.printf("Warp Factor   %.1f", 5.0);                             break;
-                        case  6:  con.printf("Energy        %.2f", 2176.24);                         break;
-                        case  7:  con.printf("Torpedoes     %d", 3);                                 break;
-                        case  8:  con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0); break;
-                        case  9:  con.printf("Klingons Left %d", 12);                                break;
-                        case 10:  con.printf("Time Left     %.2f", 3.72);                            break;
-                        }
-                    }
-
-                con.printf("\n");
+                switch (r) {
+                    case 1:
+                        con.printf("Stardate      %.1f", 2516.3);
+                        break;
+                    case 2:
+                        con.printf("Condition     %s", "RED");
+                        break;
+                    case 3:
+                        con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);
+                        break;
+                    case 4:
+                        con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");
+                        break;
+                    case 5:
+                        con.printf("Warp Factor   %.1f", 5.0);
+                        break;
+                    case 6:
+                        con.printf("Energy        %.2f", 2176.24);
+                        break;
+                    case 7:
+                        con.printf("Torpedoes     %d", 3);
+                        break;
+                    case 8:
+                        con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0);
+                        break;
+                    case 9:
+                        con.printf("Klingons Left %d", 12);
+                        break;
+                    case 10:
+                        con.printf("Time Left     %.2f", 3.72);
+                        break;
                 }
+            }
 
             con.printf("\n");
         }
 
-        private static int generateRandomNumber(int large) {
-            Random rand = new Random();
-    
-            // Generate random integers in range 0 to 999
-            return rand.nextInt(large);
-        }
-
+        con.printf("\n");
     }
+
+    static void ExecSTATUS() {
+        System.out.println("Stardate\t" + status.getStarDate());
+        System.out.println("Condition\t" + status.getCondition());
+        System.out.println("Position\t" + status.getQuadrantX() + " - " + status.getQuadrantY() + ", "
+                + status.getSectorX() + " - " + status.getSectorY());
+        System.out.println("Life Support\t" + (status.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
+        System.out.print("Warp Factor\t");
+        System.out.printf("%.1f\n", status.getWarp());
+        System.out.print("Energy\t\t");
+        System.out.printf("%.2f\n", status.getEnergy());
+        System.out.println("Torpedoes\t" + status.getTorpedoes());
+        System.out.print("Sheilds\t\t");
+        System.out.printf("%s, %.0f%% %.1f units\n", (status.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
+                status.getSheilds().getLevel() / 100, status.getSheilds().getUnits());
+        System.out.println("Klingons Left\t" + status.getKlingons());
+        System.out.print("Time Left\t");
+        System.out.printf("%.2f\n", status.getTime());
+    }
+
+}
