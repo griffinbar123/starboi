@@ -2,6 +2,12 @@ package sst;
 
 import java.io.Console;
 import Model.Status;
+import main.java.sst.Klingon;
+import main.java.sst.Entity;
+import main.java.sst.Planet;
+import main.java.sst.Position;
+import main.java.sst.Enterprise;
+import main.java.sst.Coordinate;
 
 public class App {
     public static Status status = new Status();
@@ -11,6 +17,8 @@ public class App {
     private static Klingon[] Klingons;
     private static Enterprise Enterprise;
     private static Planet[] Planets;
+
+    public static final char NOTHING = '\u00B7';
 
     enum Command {
         SRSCAN,
@@ -82,6 +90,7 @@ public class App {
         Map = new char[8][8][10][10];
 
         initializeEnterprise();
+        initializePlanets(30);
         initializeKlingons(3);
     
 
@@ -99,10 +108,12 @@ public class App {
                         // check if positions is a 
                         if(checkEntityListAgainstPosition(position, Klingons)) {
                             Map[i][j][k][l] = Klingons[0].symbol;
+                        } else if (checkEntityListAgainstPosition(position, Planets)) {
+                            Map[i][j][k][l] = Planets[0].symbol;
                         } else if (checkEntityAgainstPosition(position, Enterprise)) {
                             Map[i][j][k][l] = Enterprise.symbol;
                         } else {
-                            Map[i][j][k][l] = '.';
+                            Map[i][j][k][l] = NOTHING;
                         }
                     }
                 }
@@ -124,7 +135,7 @@ public class App {
         for(int i = 0; i < numberOfPlanets; i++){
             Position pos = generateNewPosition();
 
-            System.out.println("Planets Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
+            // System.out.println("Planets Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
             // make sure position is not being used by another klingon
             Planets[i] = new Planet(pos);
         }
@@ -136,7 +147,7 @@ public class App {
         for(int i = 0; i < numberOfKlingons; i++){
             Position pos = generateNewPosition();
             
-            System.out.println("Klingon Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
+            // System.out.println("Klingon Positions: " + pos.Quadrant.X + ", " + pos.Quadrant.Y + " - " + pos.Sector.X + ", " + pos.Sector.Y); 
             // make sure position is not being used by another klingon
             Klingons[i] = new Klingon(pos);
         }
@@ -144,8 +155,8 @@ public class App {
     }
 
     static Position generateNewPosition(){
-        Coordinate quadrant = new Coordinate(generateRandomNumber(1, 8), (generateRandomNumber(1, 8)));
-        Coordinate sector = new Coordinate(generateRandomNumber(1, 10), (generateRandomNumber(1, 10)));
+        Coordinate quadrant = new Coordinate(generateRandomNumber(0, 7), (generateRandomNumber(0, 7)));
+        Coordinate sector = new Coordinate(generateRandomNumber(0, 9), (generateRandomNumber(0, 9)));
         Position position = new Position(quadrant, sector);
         while(!isPositionEmpty(position)) {
             position = generateNewPosition();
@@ -159,11 +170,13 @@ public class App {
 
     static Boolean isPositionEmpty(Position position) {
         // use this to check if a position is empty, but can't check the map because it might not be updated
-        return !(checkEntityAgainstPosition(position, Enterprise) || checkEntityListAgainstPosition(position, Klingons));
+        return !(checkEntityAgainstPosition(position, Enterprise) || checkEntityListAgainstPosition(position, Klingons) || 
+        checkEntityListAgainstPosition(position, Planets));
     }
 
     static Boolean checkEntityListAgainstPosition(Position position, Entity[] entities){
         // checks if any entity in the list provided is is in the provided position
+        if(entities == null) return false;
 
         for(int i = 0; i < entities.length; i++){
             if(checkEntityAgainstPosition(position, entities[i])){
@@ -278,45 +291,26 @@ public class App {
                     {
                     con.printf(" ");
 
-                switch (r) {
-                    case 1:
-                        con.printf("Stardate      %.1f", 2516.3);
-                        break;
-                    case 2:
-                        con.printf("Condition     %s", "RED");
-                        break;
-                    case 3:
-                        con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);
-                        break;
-                    case 4:
-                        con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");
-                        break;
-                    case 5:
-                        con.printf("Warp Factor   %.1f", 5.0);
-                        break;
-                    case 6:
-                        con.printf("Energy        %.2f", 2176.24);
-                        break;
-                    case 7:
-                        con.printf("Torpedoes     %d", 3);
-                        break;
-                    case 8:
-                        con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0);
-                        break;
-                    case 9:
-                        con.printf("Klingons Left %d", 12);
-                        break;
-                    case 10:
-                        con.printf("Time Left     %.2f", 3.72);
-                        break;
+                    switch (r)   
+                        {
+                        case  1:  con.printf("Stardate      %.1f", 2516.3);                          break;
+                        case  2:  con.printf("Condition     %s", "RED");                             break;
+                        case  3:  con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);          break;
+                        case  4:  con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");        break;
+                        case  5:  con.printf("Warp Factor   %.1f", 5.0);                             break;
+                        case  6:  con.printf("Energy        %.2f", 2176.24);                         break;
+                        case  7:  con.printf("Torpedoes     %d", 3);                                 break;
+                        case  8:  con.printf("Shields       %s, %d%% %.1f units", "UP", 42, 1050.0); break;
+                        case  9:  con.printf("Klingons Left %d", 12);                                break;
+                        case 10:  con.printf("Time Left     %.2f", 3.72);                            break;
+                        }
+                    }
+
+                con.printf("\n");
                 }
-            }
 
             con.printf("\n");
         }
-
-        con.printf("\n");
-    }
 
     static void ExecSTATUS() {
         System.out.println("Stardate\t" + status.getStarDate());

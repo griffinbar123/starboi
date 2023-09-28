@@ -1,4 +1,5 @@
-package sst;
+package main.java.sst;
+
 
 import lombok.Data;
 
