@@ -1,12 +1,16 @@
 package Model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Klingon extends Entity {
+    @NonNull
     private Position position;
+
+    private char symbol = 'K';
 }

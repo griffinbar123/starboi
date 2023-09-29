@@ -111,13 +111,13 @@ public class App {
                         Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
                         // check if positions is a
                         if (checkEntityListAgainstPosition(position, Klingons)) {
-                            Map[i][j][k][l] = Klingons[0].getSymbol();
+                            Map[j][i][l][k] = Klingons[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, Planets)) {
-                            Map[i][j][k][l] = Planets[0].getSymbol();
+                            Map[j][i][l][k] = Planets[0].getSymbol();
                         } else if (checkEntityAgainstPosition(position, Enterprise)) {
-                            Map[i][j][k][l] = Enterprise.getSymbol();
+                            Map[j][i][l][k] = Enterprise.getSymbol();
                         } else {
-                            Map[i][j][k][l] = NOTHING;
+                            Map[j][i][l][k] = NOTHING;
                         }
                     }
                 }
@@ -349,9 +349,9 @@ public class App {
     static void ExecSTATUS() {
         System.out.println("Stardate\t" + Enterprise.getStarDate());
         System.out.println("Condition\t" + Enterprise.getCondition());
-        System.out.println("Position\t" + Enterprise.getPosition().getQuadrant().getX() + " - "
-                + Enterprise.getPosition().getQuadrant().getY() + ", "
-                + Enterprise.getPosition().getSector().getX() + " - " + Enterprise.getPosition().getSector().getY());
+        System.out.println("Position\t" + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - "
+                + (Enterprise.getPosition().getQuadrant().getY() + 1 ) + ", "
+                + (Enterprise.getPosition().getSector().getX() + 1) + " - " + (Enterprise.getPosition().getSector().getY() + 1));
         System.out.println("Life Support\t" + (Enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
         System.out.print("Warp Factor\t");
         System.out.printf("%.1f\n", Enterprise.getWarp());

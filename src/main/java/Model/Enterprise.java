@@ -7,13 +7,15 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Enterprise extends Entity {
     private float starDate;
     private String condition;
 
     @NonNull
     private Position position;
+
+    private char symbol = 'E';
 
     private byte lifeSupport;
 
