@@ -8,6 +8,7 @@ import Model.Entity;
 import Model.Klingon;
 import Model.Planet;
 import Model.Position;
+import Model.Starbase;
 import Utils.Utils;
 
 public class App {
@@ -17,6 +18,7 @@ public class App {
     private static Klingon[] Klingons;
     private static Enterprise Enterprise;
     private static Planet[] Planets;
+    private static Starbase[] Starbases;
 
     public static final char NOTHING = '\u00B7';
 
@@ -105,6 +107,7 @@ public class App {
         initializeEnterprise();
         initializePlanets(30);
         initializeKlingons(3);
+        initializeStarbases(4);
 
         System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
                 + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
@@ -112,12 +115,20 @@ public class App {
                 + Klingons.length + " battle cruisers. You have an initial allotment of " + "7"
                 + " stardates to complete your mission. As you proceed you may be given more time.\n");
         System.out.println("You will have " + "x"
-                + "supporting starbases. Starbase locations-   3 - 7   7 - 7   2 - 7   8 - 3\nThe Enterprise is currently in Quadrant "
-                + Enterprise.getPosition().getQuadrant().getX() + " - " + Enterprise.getPosition().getQuadrant().getY()
-                + " Sector " + Enterprise.getPosition().getSector().getX() + " - "
-                + Enterprise.getPosition().getSector().getY() + "\n\nGood Luck!\n\n");
+                + "supporting starbases. Starbase locations-   " + turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in Quadrant "
+                + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " + (Enterprise.getPosition().getQuadrant().getY() + 1)
+                + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
+                + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
 
         updateMap();
+    }
+
+    static String turnEntityQuadrantsToStrings(Entity[] entities){
+        String locs = "";
+        for (Entity entity : entities) {
+            locs += (entity.getPosition().getQuadrant().getX()+1) + " - " + (entity.getPosition().getQuadrant().getY()+1) + "  ";
+        }
+        return locs;
     }
 
     /**
@@ -138,6 +149,8 @@ public class App {
                             Map[j][i][l][k] = Planets[0].getSymbol();
                         } else if (checkEntityAgainstPosition(position, Enterprise)) {
                             Map[j][i][l][k] = Enterprise.getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, Starbases)) {
+                            Map[j][i][l][k] = Starbases[0].getSymbol();
                         } else {
                             Map[j][i][l][k] = NOTHING;
                         }
@@ -152,14 +165,19 @@ public class App {
         Enterprise = new Enterprise(pos);
     }
 
+    static void initializeStarbases(int numberOfStarbases) {
+        Starbases = new Starbase[numberOfStarbases];
+        for (int i = 0; i < numberOfStarbases; i++) {
+            Position pos = generateNewPosition();
+
+            Starbases[i] = new Starbase(pos);
+        }
+    }
+
     static void initializePlanets(int numberOfPlanets) {
         Planets = new Planet[numberOfPlanets];
         for (int i = 0; i < numberOfPlanets; i++) {
             Position pos = generateNewPosition();
-
-            // System.out.println("Planets Positions: " + pos.Quadrant.x + ", " +
-            // pos.Quadrant.y + " - " + pos.Sector.x + ", " + pos.Sector.y);
-            // make sure position is not being used by another klingon
             Planets[i] = new Planet(pos);
         }
     }
@@ -168,10 +186,6 @@ public class App {
         Klingons = new Klingon[numberOfKlingons];
         for (int i = 0; i < numberOfKlingons; i++) {
             Position pos = generateNewPosition();
-
-            // System.out.println("Klingon Positions: " + pos.Quadrant.x + ", " +
-            // pos.Quadrant.y + " - " + pos.Sector.x + ", " + pos.Sector.y);
-            // make sure position is not being used by another klingon
             Klingons[i] = new Klingon(pos);
         }
     }
