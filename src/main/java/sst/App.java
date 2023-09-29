@@ -95,6 +95,7 @@ public class App {
         ExecSTATUS(); // TODO: for testing
         ExecSRSCAN();
         ExecLRSCAN();
+        ExecCHART();
     }
 
     public void gameLevel(String levelChoice) {
@@ -374,6 +375,25 @@ public class App {
         con.printf("\n");
     }
 
+    static void ExecCHART() {
+        // int row = Enterprise.getPosition().getQuadrant().getX();
+        // int column = Enterprise.getPosition().getQuadrant().getY();
+        con.printf("\nSTAR CHART FOR THE KNOWN GALAXY\n\n");
+        con.printf("     1    2    3    4    5    6    7    8\n");
+        con.printf("   -----------------------------------------\n");
+        con.printf("  - \n");
+        con.printf("1 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("2 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("3 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("4 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("5 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("6 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
+        con.printf("\nThe Enterprise is currently in Quadrant %d - %d\n", Enterprise.getPosition().getQuadrant().getX() + 1, Enterprise.getPosition().getQuadrant().getY()+1);
+        
+    }
+
     static void ExecLRSCAN() {
         int row = Enterprise.getPosition().getQuadrant().getX();
         int column = Enterprise.getPosition().getQuadrant().getY();
@@ -381,7 +401,6 @@ public class App {
         con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column-1), getQuadrantNumber(row, column-1), getQuadrantNumber(row+1, column-1));
         con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column), getQuadrantNumber(row, column), getQuadrantNumber(row+1, column));
         con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column+1), getQuadrantNumber(row, column+1), getQuadrantNumber(row+1, column+1));
-
     }
 
     static int getQuadrantNumber(int row, int column) {
