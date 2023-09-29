@@ -300,10 +300,6 @@ public class App {
                 && entity.getPosition().getQuadrant().getY() == position.getQuadrant().getY() &&
                 entity.getPosition().getSector().getX() == position.getSector().getX()
                 && entity.getPosition().getSector().getY() == position.getSector().getY();
-        // return entity != null && entity.position.Quadrant.x == position.Quadrant.x &&
-        // entity.position.Quadrant.y == position.Quadrant.y &&
-        // entity.position.Sector.x == position.Sector.x && entity.position.Sector.y ==
-        // position.Sector.y;
     }
 
     static void getAndExecuteCommands() {
@@ -380,7 +376,7 @@ public class App {
         int column = Enterprise.getPosition().getQuadrant().getY();
         int r, c;
 
-        con.printf("\nShort-range scan (MOCK):\n\n");
+        con.printf("\nShort-range scan:\n\n");
         boolean leftside = true;
         boolean rightside = true;
 
