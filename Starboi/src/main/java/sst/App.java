@@ -9,24 +9,11 @@ public class App {
         //System.out.println("Here is the player choice after passed in: "+levelChoice);
         switch (levelChoice) {
             case "novice":
-                System.out.print("Please type in a secret password (9 characters maximum)- ");
-                System.out.println();
-                break;
             case "fair":
-                System.out.print("Please type in a secret password (9 characters maximum)- ");
-                System.out.println();
-                break;
             case "good":
-                System.out.print("Please type in a secret password (9 characters maximum)- ");
-                System.out.println();
-                break;
             case "expert":
-                System.out.print("Please type in a secret password (9 characters maximum)- ");
-                System.out.println();
-                break;
             case "emeritus":
                 System.out.print("Please type in a secret password (9 characters maximum)- ");
-                System.out.println();
                 break;
             default:
                 System.out.println("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus");
@@ -37,25 +24,13 @@ public class App {
     public void gameType(String gameChoice) {
         switch (gameChoice) {
             case "short":
+            case "medium":
+            case "long":
                 System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
                 String playerChoiceOne = scanner.nextLine().trim().toLowerCase();
                 System.out.println();
                 //System.out.println("Here is the player choice before passed in: "+playerChoice);
                 gameLevel(playerChoiceOne); 
-                break;
-            case "medium":
-                System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
-                String playerChoiceTwo = scanner.nextLine().trim().toLowerCase();
-                System.out.println();
-                //System.out.println("Here is the player choice before passed in: "+playerChoice);
-                gameLevel(playerChoiceTwo); 
-                break;
-            case "long":
-                System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
-                String playerChoiceThree = scanner.nextLine().trim().toLowerCase();
-                System.out.println();
-                //System.out.println("Here is the player choice before passed in: "+playerChoice);
-                gameLevel(playerChoiceThree); 
                 break;
             default:
                 System.out.println("Invalid choice. Please choose short, medium, or long.");
@@ -96,7 +71,6 @@ public class App {
                 System.out.println("Invalid choice. Please choose regular, tournament, or frozen.");
                 break;
         }
-
         app.scanner.close();
     }
 }
