@@ -12,5 +12,5 @@ public class Romulan extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = 'R';
+    private final char symbol = 'R';
 }

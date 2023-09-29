@@ -13,5 +13,5 @@ public class Planet extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = 'P';
+    private final char symbol = 'P';
 }

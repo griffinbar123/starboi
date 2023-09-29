@@ -12,5 +12,5 @@ public class Klingon extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = 'K';
+    private final char symbol = 'K';
 }

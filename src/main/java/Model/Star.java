@@ -12,5 +12,5 @@ public class Star extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = '*';
+    private final char symbol = '*';
 }

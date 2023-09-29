@@ -15,7 +15,7 @@ public class Enterprise extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = 'E';
+    private final char symbol = 'E';
 
     private byte lifeSupport;
 

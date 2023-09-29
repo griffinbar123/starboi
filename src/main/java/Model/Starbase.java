@@ -12,5 +12,5 @@ public class Starbase extends Entity {
     @NonNull
     private Position position;
 
-    private char symbol = 'B';
+    private final char symbol = 'B';
 }

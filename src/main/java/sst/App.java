@@ -1,6 +1,7 @@
 package sst;
 
 import java.io.Console;
+import java.util.Scanner;
 
 import Model.Coordinate;
 import Model.Enterprise;
@@ -14,6 +15,7 @@ import Model.Starbase;
 import Utils.Utils;
 
 public class App {
+    private Scanner scanner = new Scanner(System.in);
     private static String cmdstr;
     private static Console con;
     private static char[][][][] Map;
@@ -130,16 +132,16 @@ public class App {
     static void initializeGame() {
         Map = new char[8][8][10][10];
 
-        System.out.println("-SUPER- STAR TREK (JAVA EDITION)\n");
-        System.out.println("Latest update-prolly today\n");
-        System.out.print("Would you like a regular, tournament, or frozen game?");
-        System.out.println(" I'm going to assume regular\n");
-        System.out.print("Would you like a Short, Medium, or Long Game?");
-        System.out.println(" I'm going to assume short");
-        System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
-        System.out.println(" Def a novice");
-        System.out.print("Please type in a secret password (9 characters maximum)-");
-        System.out.println("changeit");
+        // System.out.println("-SUPER- STAR TREK (JAVA EDITION)\n");
+        // System.out.println("Latest update-prolly today\n");
+        // System.out.print("Would you like a regular, tournament, or frozen game?");
+        // System.out.println(" I'm going to assume regular\n");
+        // System.out.print("Would you like a Short, Medium, or Long Game?");
+        // System.out.println(" I'm going to assume short");
+        // System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
+        // System.out.println(" Def a novice");
+        // System.out.print("Please type in a secret password (9 characters maximum)-");
+        // System.out.println("changeit");
 
         initializeEnterprise();
         initializePlanets(30);
@@ -148,16 +150,16 @@ public class App {
         initializeStars(300);
         initializeRomulans(4);
 
-        System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
-                + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
-                + "U.S.S. Enterprise, it is your mission to seek out and destroy this invasion force of "
-                + Klingons.length + " battle cruisers. You have an initial allotment of " + "7"
-                + " stardates to complete your mission. As you proceed you may be given more time.\n");
-        System.out.println("You will have " + "x"
-                + "supporting starbases. Starbase locations-   " + turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in Quadrant "
-                + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " + (Enterprise.getPosition().getQuadrant().getY() + 1)
-                + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
-                + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
+        // System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
+        //         + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
+        //         + "U.S.S. Enterprise, it is your mission to seek out and destroy this invasion force of "
+        //         + Klingons.length + " battle cruisers. You have an initial allotment of " + "7"
+        //         + " stardates to complete your mission. As you proceed you may be given more time.\n");
+        // System.out.println("You will have " + "x"
+        //         + "supporting starbases. Starbase locations-   " + turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in Quadrant "
+        //         + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " + (Enterprise.getPosition().getQuadrant().getY() + 1)
+        //         + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
+        //         + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
 
         updateMap();
     }
@@ -437,7 +439,7 @@ public class App {
      * @author Matthias Schrock
      * @see Enterprise
      */
-    static void ExecSTATUS() {
+    public static void ExecSTATUS() {
         System.out.println("Stardate\t" + Enterprise.getStarDate());
         System.out.println("Condition\t" + Enterprise.getCondition());
         System.out.println("Position\t" + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - "
