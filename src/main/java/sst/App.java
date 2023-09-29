@@ -8,6 +8,7 @@ import Model.Entity;
 import Model.Klingon;
 import Model.Planet;
 import Model.Position;
+import Model.Romulan;
 import Model.Star;
 import Model.Starbase;
 import Utils.Utils;
@@ -21,6 +22,7 @@ public class App {
     private static Planet[] Planets;
     private static Starbase[] Starbases;
     private static Star[] Stars;
+    private static Romulan[] Romulans;
 
     public static final char NOTHING = '\u00B7';
 
@@ -111,6 +113,7 @@ public class App {
         initializeKlingons(3);
         initializeStarbases(4);
         initializeStars(300);
+        initializeRomulans(4);
 
         System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
                 + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
@@ -156,6 +159,8 @@ public class App {
                             Map[j][i][l][k] = Starbases[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, Stars)) {
                             Map[j][i][l][k] = Stars[0].getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, Romulans)) {
+                            Map[j][i][l][k] = Romulans[0].getSymbol();
                         } else {
                             Map[j][i][l][k] = NOTHING;
                         }
@@ -168,6 +173,14 @@ public class App {
     static void initializeEnterprise() {
         Position pos = generateNewPosition();
         Enterprise = new Enterprise(pos);
+    }
+
+    static void initializeRomulans(int numberOfRomulans) {
+        Romulans = new Romulan[numberOfRomulans];
+        for (int i = 0; i < numberOfRomulans; i++) {
+            Position pos = generateNewPosition();
+            Romulans[i] = new Romulan(pos);
+        }
     }
 
     static void initializeStars(int numberOfStars) {
