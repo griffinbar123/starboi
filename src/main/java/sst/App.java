@@ -97,7 +97,8 @@ public class App {
     }
 
     public void gameLevel(String levelChoice) {
-        //System.out.println("Here is the player choice after passed in: "+levelChoice);
+        // System.out.println("Here is the player choice after passed in:
+        // "+levelChoice);
         switch (levelChoice) {
             case "novice":
             case "fair":
@@ -120,8 +121,9 @@ public class App {
                 System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
                 String playerChoiceOne = scanner.nextLine().trim().toLowerCase();
                 System.out.println();
-                //System.out.println("Here is the player choice before passed in: "+playerChoice);
-                gameLevel(playerChoiceOne); 
+                // System.out.println("Here is the player choice before passed in:
+                // "+playerChoice);
+                gameLevel(playerChoiceOne);
                 break;
             default:
                 System.out.println("Invalid choice. Please choose short, medium, or long.");
@@ -138,7 +140,8 @@ public class App {
         // System.out.println(" I'm going to assume regular\n");
         // System.out.print("Would you like a Short, Medium, or Long Game?");
         // System.out.println(" I'm going to assume short");
-        // System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
+        // System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus
+        // player?");
         // System.out.println(" Def a novice");
         // System.out.print("Please type in a secret password (9 characters maximum)-");
         // System.out.println("changeit");
@@ -151,23 +154,31 @@ public class App {
         initializeRomulans(4);
 
         // System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
-        //         + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
-        //         + "U.S.S. Enterprise, it is your mission to seek out and destroy this invasion force of "
-        //         + Klingons.length + " battle cruisers. You have an initial allotment of " + "7"
-        //         + " stardates to complete your mission. As you proceed you may be given more time.\n");
+        // + ". The Federation is being attacked by a deadly Klingon invasion force. As
+        // captain of the United Starship "
+        // + "U.S.S. Enterprise, it is your mission to seek out and destroy this
+        // invasion force of "
+        // + Klingons.length + " battle cruisers. You have an initial allotment of " +
+        // "7"
+        // + " stardates to complete your mission. As you proceed you may be given more
+        // time.\n");
         // System.out.println("You will have " + "x"
-        //         + "supporting starbases. Starbase locations-   " + turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in Quadrant "
-        //         + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " + (Enterprise.getPosition().getQuadrant().getY() + 1)
-        //         + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
-        //         + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
+        // + "supporting starbases. Starbase locations- " +
+        // turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in
+        // Quadrant "
+        // + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " +
+        // (Enterprise.getPosition().getQuadrant().getY() + 1)
+        // + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
+        // + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
 
         updateMap();
     }
 
-    static String turnEntityQuadrantsToStrings(Entity[] entities){
+    static String turnEntityQuadrantsToStrings(Entity[] entities) {
         String locs = "";
         for (Entity entity : entities) {
-            locs += (entity.getPosition().getQuadrant().getX()+1) + " - " + (entity.getPosition().getQuadrant().getY()+1) + "  ";
+            locs += (entity.getPosition().getQuadrant().getX() + 1) + " - "
+                    + (entity.getPosition().getQuadrant().getY() + 1) + "  ";
         }
         return locs;
     }
@@ -398,9 +409,11 @@ public class App {
                         con.printf("Condition     %s", Enterprise.getCondition());
                         break;
                     case 3:
-                        con.printf("Position      %d - %d, %d - %d", (Enterprise.getPosition().getQuadrant().getX() + 1) + " - "
-                + (Enterprise.getPosition().getQuadrant().getY() + 1 ) + ", "
-                + (Enterprise.getPosition().getSector().getX() + 1) + " - " + (Enterprise.getPosition().getSector().getY() + 1));
+                        con.printf("Position      %d - %d, %d - %d",
+                                (Enterprise.getPosition().getQuadrant().getX() + 1),
+                                                (Enterprise.getPosition().getQuadrant().getY() + 1), (Enterprise.getPosition().getSector().getX() + 1),
+                                                (Enterprise.getPosition().getSector().getY() + 1));
+                                        
                         break;
                     case 4:
                         con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");
@@ -443,8 +456,9 @@ public class App {
         System.out.println("Stardate\t" + Enterprise.getStarDate());
         System.out.println("Condition\t" + Enterprise.getCondition());
         System.out.println("Position\t" + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - "
-                + (Enterprise.getPosition().getQuadrant().getY() + 1 ) + ", "
-                + (Enterprise.getPosition().getSector().getX() + 1) + " - " + (Enterprise.getPosition().getSector().getY() + 1));
+                + (Enterprise.getPosition().getQuadrant().getY() + 1) + ", "
+                + (Enterprise.getPosition().getSector().getX() + 1) + " - "
+                + (Enterprise.getPosition().getSector().getY() + 1));
         System.out.println("Life Support\t" + (Enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
         System.out.print("Warp Factor\t");
         System.out.printf("%.1f\n", Enterprise.getWarp());
