@@ -351,7 +351,7 @@ public class App {
         System.out.println("Condition\t" + Enterprise.getCondition());
         System.out.println("Position\t" + Enterprise.getPosition().getQuadrant().getX() + " - "
                 + Enterprise.getPosition().getQuadrant().getY() + ", "
-                + Enterprise.getPosition().getSector().getY() + " - " + Enterprise.getPosition().getSector().getY());
+                + Enterprise.getPosition().getSector().getX() + " - " + Enterprise.getPosition().getSector().getY());
         System.out.println("Life Support\t" + (Enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
         System.out.print("Warp Factor\t");
         System.out.printf("%.1f\n", Enterprise.getWarp());
