@@ -357,13 +357,15 @@ public class App {
 
                 switch (r) {
                     case 1:
-                        con.printf("Stardate      %.1f", 2516.3);
+                        con.printf("Stardate      %.1f", Enterprise.getStarDate());
                         break;
                     case 2:
-                        con.printf("Condition     %s", "RED");
+                        con.printf("Condition     %s", Enterprise.getCondition());
                         break;
                     case 3:
-                        con.printf("Position      %d - %d, %d - %d", 5, 1, 2, 4);
+                        con.printf("Position      %d - %d, %d - %d", (Enterprise.getPosition().getQuadrant().getX() + 1) + " - "
+                + (Enterprise.getPosition().getQuadrant().getY() + 1 ) + ", "
+                + (Enterprise.getPosition().getSector().getX() + 1) + " - " + (Enterprise.getPosition().getSector().getY() + 1));
                         break;
                     case 4:
                         con.printf("Life Support  %s", "DAMAGED, Reserves = 2.30");
