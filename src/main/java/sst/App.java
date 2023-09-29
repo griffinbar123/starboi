@@ -94,6 +94,39 @@ public class App {
         ExecSRSCAN();
     }
 
+    public void gameLevel(String levelChoice) {
+        //System.out.println("Here is the player choice after passed in: "+levelChoice);
+        switch (levelChoice) {
+            case "novice":
+            case "fair":
+            case "good":
+            case "expert":
+            case "emeritus":
+                System.out.print("Please type in a secret password (9 characters maximum)- ");
+                break;
+            default:
+                System.out.println("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus");
+                break;
+        }
+    }
+
+    public void gameType(String gameChoice) {
+        switch (gameChoice) {
+            case "short":
+            case "medium":
+            case "long":
+                System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
+                String playerChoiceOne = scanner.nextLine().trim().toLowerCase();
+                System.out.println();
+                //System.out.println("Here is the player choice before passed in: "+playerChoice);
+                gameLevel(playerChoiceOne); 
+                break;
+            default:
+                System.out.println("Invalid choice. Please choose short, medium, or long.");
+                break;
+        }
+    }
+
     static void initializeGame() {
         Map = new char[8][8][10][10];
 
