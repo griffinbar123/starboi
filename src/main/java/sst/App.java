@@ -81,21 +81,43 @@ public class App {
         if (con == null)
             return;
 
-        // getAndExecuteCommands(); // TODO: uncomment
         initializeGame(); // TODO: for testing
+
+        // getAndExecuteCommands(); // TODO: uncomment
         ExecSTATUS(); // TODO: for testing
+        ExecSRSCAN();
     }
 
     static void initializeGame() {
         Map = new char[8][8][10][10];
 
+        System.out.println("-SUPER- STAR TREK (JAVA EDITION)\n");
+        System.out.println("Latest update-prolly today\n");
+        System.out.print("Would you like a regular, tournament, or frozen game?");
+        System.out.println(" I'm going to assume regular\n");
+        System.out.print("Would you like a Short, Medium, or Long Game?");
+        System.out.println(" I'm going to assume short");
+        System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
+        System.out.println(" Def a novice");
+        System.out.print("Please type in a secret password (9 characters maximum)-");
+        System.out.println("changeit");
+
         initializeEnterprise();
         initializePlanets(30);
         initializeKlingons(3);
 
-        updateMap();
-        ExecSRSCAN();
+        System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
+                + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
+                + "U.S.S. Enterprise, it is your mission to seek out and destroy this invasion force of "
+                + Klingons.length + " battle cruisers. You have an initial allotment of " + "7"
+                + " stardates to complete your mission. As you proceed you may be given more time.\n");
+        System.out.println("You will have " + "x"
+                + "supporting starbases. Starbase locations-   3 - 7   7 - 7   2 - 7   8 - 3\nThe Enterprise is currently in Quadrant "
+                + Enterprise.getPosition().getQuadrant().getX() + " - " + Enterprise.getPosition().getQuadrant().getY()
+                + " Sector " + Enterprise.getPosition().getSector().getX() + " - "
+                + Enterprise.getPosition().getSector().getY() + "\n\nGood Luck!\n\n");
 
+        updateMap();
     }
 
     /**
@@ -127,12 +149,7 @@ public class App {
 
     static void initializeEnterprise() {
         Position pos = generateNewPosition();
-
-        System.out.println("Enterprise Position: " + pos.getQuadrant().getX() + ", " + pos.getQuadrant().getY() + " - "
-                + pos.getSector().getX() + ", " + pos.getSector().getY());
-
         Enterprise = new Enterprise(pos);
-        System.out.println(" ");
     }
 
     static void initializePlanets(int numberOfPlanets) {
@@ -145,7 +162,6 @@ public class App {
             // make sure position is not being used by another klingon
             Planets[i] = new Planet(pos);
         }
-        System.out.println(" ");
     }
 
     static void initializeKlingons(int numberOfKlingons) {
@@ -158,7 +174,6 @@ public class App {
             // make sure position is not being used by another klingon
             Klingons[i] = new Klingon(pos);
         }
-        System.out.println(" ");
     }
 
     static Position generateNewPosition() {
