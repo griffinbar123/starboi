@@ -94,6 +94,7 @@ public class App {
         // getAndExecuteCommands(); // TODO: uncomment
         ExecSTATUS(); // TODO: for testing
         ExecSRSCAN();
+        ExecLRSCAN();
     }
 
     public void gameLevel(String levelChoice) {
@@ -217,14 +218,14 @@ public class App {
     }
 
     static void initializeEnterprise() {
-        Position pos = generateNewPosition();
+        Position pos = generateNewPosition(null, 9);
         Enterprise = new Enterprise(pos);
     }
 
     static void initializeRomulans(int numberOfRomulans) {
         Romulans = new Romulan[numberOfRomulans];
         for (int i = 0; i < numberOfRomulans; i++) {
-            Position pos = generateNewPosition();
+            Position pos = generateNewPosition(Romulans, 9);
             Romulans[i] = new Romulan(pos);
         }
     }
@@ -232,7 +233,7 @@ public class App {
     static void initializeStars(int numberOfStars) {
         Stars = new Star[numberOfStars];
         for (int i = 0; i < numberOfStars; i++) {
-            Position pos = generateNewPosition();
+            Position pos = generateNewPosition(Stars, 9);
 
             Stars[i] = new Star(pos);
         }
@@ -241,7 +242,7 @@ public class App {
     static void initializeStarbases(int numberOfStarbases) {
         Starbases = new Starbase[numberOfStarbases];
         for (int i = 0; i < numberOfStarbases; i++) {
-            Position pos = generateNewPosition();
+            Position pos = generateNewPosition(Starbases, 9);
 
             Starbases[i] = new Starbase(pos);
         }
@@ -250,7 +251,7 @@ public class App {
     static void initializePlanets(int numberOfPlanets) {
         Planets = new Planet[numberOfPlanets];
         for (int i = 0; i < numberOfPlanets; i++) {
-            Position pos = generateNewPosition();
+            Position pos = generateNewPosition(Planets, 9);
             Planets[i] = new Planet(pos);
         }
     }
@@ -258,17 +259,18 @@ public class App {
     static void initializeKlingons(int numberOfKlingons) {
         Klingons = new Klingon[numberOfKlingons];
         for (int i = 0; i < numberOfKlingons; i++) {
-            Position pos = generateNewPosition();
+            Position pos = generateNewPosition(Klingons, 9);
             Klingons[i] = new Klingon(pos);
+            System.out.println(pos.getQuadrant().getX() +" - " + pos.getQuadrant().getY() + ", " + pos.getSector().getX() + " - " + pos.getSector().getY());
         }
     }
 
-    static Position generateNewPosition() {
+    static Position generateNewPosition(Entity[] entities, int maxElementsInQuadrant) {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!isPositionEmpty(position)) {
-            position = generateNewPosition();
+        while (!isPositionEmpty(position) && entities != null && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
+            position = generateNewPosition(entities, maxElementsInQuadrant);
         }
         return position;
     }
@@ -345,6 +347,8 @@ public class App {
                     break;
                 case STATUS:
                     ExecSTATUS();
+                case LRSCAN:
+                    ExecLRSCAN();
                 case QUIT:
                     return;
                 case undefined:
@@ -368,6 +372,55 @@ public class App {
         con.printf("   COMPUTER  EMEXIT    PROBE     COMMANDS\n");
         con.printf("   SCORE     CLOAK     CAPTURE   HELP\n");
         con.printf("\n");
+    }
+
+    static void ExecLRSCAN() {
+        int row = Enterprise.getPosition().getQuadrant().getX();
+        int column = Enterprise.getPosition().getQuadrant().getY();
+        con.printf("\nLong-range scan for Quadrant %d - %d:\n", row + 1, column + 1);
+        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column-1), getQuadrantNumber(row, column-1), getQuadrantNumber(row+1, column-1));
+        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column), getQuadrantNumber(row, column), getQuadrantNumber(row+1, column));
+        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column+1), getQuadrantNumber(row, column+1), getQuadrantNumber(row+1, column+1));
+
+    }
+
+    static int getQuadrantNumber(int row, int column) {
+        // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO: add supernova
+        if(row < 0 || row >= 8 || column < 0 || column >= 8) {
+            return -1;
+        }
+        int thousands = 0;
+        // System.out.println(row + " " + column);
+        int hundreds  = getNumberOfEntiesInMapQuadrant(row, column, 'K')*100;
+        int tens = getNumberOfEntiesInMapQuadrant(row, column, 'B')*10;
+        int ones = getNumberOfEntiesInMapQuadrant(row, column, '*');
+
+        return  thousands + hundreds + tens + ones;
+    }
+
+    static int getNumberOfEntiesInMapQuadrant(int row, int column, char entity) {
+        int numberOfElements = 0;
+        for(int i = 0; i < Map[row][column].length; i++){
+            for(int j = 0; j < Map[row][column][i].length; j++){
+                if(Map[row][column][i][j] == entity) {
+                    numberOfElements += 1;
+                }
+            }
+        }
+        return numberOfElements;
+    }
+
+    static int getNumberOfEntiesBeforeMapUpdate(Entity[] entities, Position position) {
+        // function to get number of entities in a qudrant before a map update, used in iniitialzation to make
+        // sure a quadrant doesn't get too many of an entity type
+        int numberOfElements = 0;
+        for(int i = 0; i < entities.length; i++){
+            if(entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX() &&
+            entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
+                numberOfElements += 1;
+            }
+        }
+        return numberOfElements;
     }
 
     static void ExecSRSCAN() {
