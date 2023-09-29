@@ -8,6 +8,7 @@ import Model.Entity;
 import Model.Klingon;
 import Model.Planet;
 import Model.Position;
+import Model.Star;
 import Model.Starbase;
 import Utils.Utils;
 
@@ -19,6 +20,7 @@ public class App {
     private static Enterprise Enterprise;
     private static Planet[] Planets;
     private static Starbase[] Starbases;
+    private static Star[] Stars;
 
     public static final char NOTHING = '\u00B7';
 
@@ -108,6 +110,7 @@ public class App {
         initializePlanets(30);
         initializeKlingons(3);
         initializeStarbases(4);
+        initializeStars(300);
 
         System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
                 + ". The Federation is being attacked by a deadly Klingon invasion force. As captain of the United Starship "
@@ -151,6 +154,8 @@ public class App {
                             Map[j][i][l][k] = Enterprise.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, Starbases)) {
                             Map[j][i][l][k] = Starbases[0].getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, Stars)) {
+                            Map[j][i][l][k] = Stars[0].getSymbol();
                         } else {
                             Map[j][i][l][k] = NOTHING;
                         }
@@ -163,6 +168,15 @@ public class App {
     static void initializeEnterprise() {
         Position pos = generateNewPosition();
         Enterprise = new Enterprise(pos);
+    }
+
+    static void initializeStars(int numberOfStars) {
+        Stars = new Star[numberOfStars];
+        for (int i = 0; i < numberOfStars; i++) {
+            Position pos = generateNewPosition();
+
+            Stars[i] = new Star(pos);
+        }
     }
 
     static void initializeStarbases(int numberOfStarbases) {
