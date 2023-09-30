@@ -2,6 +2,9 @@ package sst;
 
 import java.io.Console;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
 
 import Model.Coordinate;
 import Model.Enterprise;
@@ -25,6 +28,7 @@ public class App {
     private static Starbase[] Starbases;
     private static Star[] Stars;
     private static Romulan[] Romulans;
+    private static HashMap<Coordinate, String> ScannedQuadrants;
 
     public static final char NOTHING = '\u00B7';
 
@@ -391,19 +395,44 @@ public class App {
         con.printf("7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
         con.printf("8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", "...", "...", "...", "...", "...", "...", "...", "...");
         con.printf("\nThe Enterprise is currently in Quadrant %d - %d\n", Enterprise.getPosition().getQuadrant().getX() + 1, Enterprise.getPosition().getQuadrant().getY()+1);
+    }
+
+    static String getStarCharValue(int x, int y){
+
+        Iterator scIterator = ScannedQuadrants.entrySet().iterator();
         
+        while (scIterator.hasNext()) {
+ 
+            Map.Entry mapElement = (Map.Entry) scIterator.next();
+ 
+            if(mapElement.getKey().getX() == x && mapElement.getKey().getY() == y) {
+                return mapElement.getValue();
+            }
+        }
+        return "...";
     }
 
     static void ExecLRSCAN() {
         int row = Enterprise.getPosition().getQuadrant().getX();
         int column = Enterprise.getPosition().getQuadrant().getY();
+
+        ScannedQuadrants.put(new Coordinate(row-1, column-1), getQuadrantNumber(row-1, column-1));
+        ScannedQuadrants.put(new Coordinate(row, column-1), getQuadrantNumber(row, column-1));
+        ScannedQuadrants.put(new Coordinate(row+1, column-1), getQuadrantNumber(row+1, column-1));
+        ScannedQuadrants.put(new Coordinate(row-1, column), getQuadrantNumber(row-1, column));
+        ScannedQuadrants.put(new Coordinate(row, column), getQuadrantNumber(row, column));
+        ScannedQuadrants.put(new Coordinate(row+1, column), getQuadrantNumber(row+1, column));
+        ScannedQuadrants.put(new Coordinate(row-1, column+1), getQuadrantNumber(row-1, column+1));
+        ScannedQuadrants.put(new Coordinate(row, column+1), getQuadrantNumber(row, column+1));
+        ScannedQuadrants.put(new Coordinate(row+1, column+1), getQuadrantNumber(row+1, column+1));
+
         con.printf("\nLong-range scan for Quadrant %d - %d:\n", row + 1, column + 1);
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column-1), getQuadrantNumber(row, column-1), getQuadrantNumber(row+1, column-1));
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column), getQuadrantNumber(row, column), getQuadrantNumber(row+1, column));
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column+1), getQuadrantNumber(row, column+1), getQuadrantNumber(row+1, column+1));
+        con.printf("%-5s%-5s%-5s\n", getStarCharValue(row-1, column-1), getStarCharValue(row, column-1), getStarCharValue(row+1, column-1));
+        con.printf("%-5s%-5s%-5s\n", getStarCharValue(row-1, column), getStarCharValue(row, column), getStarCharValue(row+1, column));
+        con.printf("%-5s%-5s%-5s\n", getStarCharValue(row-1, column+1), getStarCharValue(row, column+1), getStarCharValue(row+1, column+1));
     }
 
-    static int getQuadrantNumber(int row, int column) {
+    static String getQuadrantNumber(int row, int column) {
         // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO: add supernova
         if(row < 0 || row >= 8 || column < 0 || column >= 8) {
             return -1;
@@ -414,7 +443,7 @@ public class App {
         int tens = getNumberOfEntiesInMapQuadrant(row, column, 'B')*10;
         int ones = getNumberOfEntiesInMapQuadrant(row, column, '*');
 
-        return  thousands + hundreds + tens + ones;
+        return Integer.toString(thousands + hundreds + tens + ones);
     }
 
     static int getNumberOfEntiesInMapQuadrant(int row, int column, char entity) {
