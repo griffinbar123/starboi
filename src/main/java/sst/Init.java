@@ -33,8 +33,10 @@ public class Init {
         if (con == null)
             return;
 
+        // TODO: be able to load game
         this.game = new Game();
         initializeEnterprise();
+        // TODO: get entity numbers from Fabrice
         initializePlanets(30);
         initializeKlingons(3);
         initializeStarbases(4);
