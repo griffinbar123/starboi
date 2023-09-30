@@ -1,7 +1,6 @@
 package sst;
 
 import java.io.Console;
-import java.util.HashMap;
 
 import Model.Coordinate;
 import Model.Enterprise;

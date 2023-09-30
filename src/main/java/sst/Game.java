@@ -3,6 +3,8 @@ package sst;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Klingon;
@@ -27,7 +29,7 @@ public class Game {
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
 
-
+    @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
@@ -40,6 +42,7 @@ public class Game {
         ScannedQuadrants.put(coord, s);
     }
 
+    @JsonIgnore
     public String getCoordinateString(int row, int col){
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
@@ -51,6 +54,7 @@ public class Game {
         return  "...";
     }
 
+    @JsonIgnore
     private Boolean coordinatesAreEqual(Coordinate x, Coordinate y) {
         return x.getX() == y.getX() && x.getY() == y.getY();
     }

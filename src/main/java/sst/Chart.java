@@ -1,11 +1,8 @@
 package sst;
 
 import java.io.Console;
-import java.util.Map;
 
 import Model.Enterprise;
-import Model.Entity;
-import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

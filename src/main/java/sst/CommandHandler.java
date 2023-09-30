@@ -127,7 +127,9 @@ public class CommandHandler {
                     new Chart(this.game).ExecCHART();
                     break;
                 case QUIT:
-                    saveState(); // TODO: when does this happen?
+                    return;
+                case FREEZE:
+                    saveState();
                     return;
                 case undefined:
                     con.printf("'%s' is not a valid command.\n\n", cmdstr);
