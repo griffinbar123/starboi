@@ -123,6 +123,9 @@ public class CommandHandler {
                 case COMPUTER:
                     new Computer(this.game).ExecCOMPUTER();
                     break;
+                case CHART:
+                    new Chart(this.game).ExecCHART();
+                    break;
                 case QUIT:
                     saveState(); // TODO: when does this happen?
                     return;

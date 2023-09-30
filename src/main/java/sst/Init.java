@@ -1,6 +1,7 @@
 package sst;
 
 import java.io.Console;
+import java.util.HashMap;
 
 import Model.Coordinate;
 import Model.Enterprise;
@@ -190,6 +191,7 @@ public class Init {
         for (int i = 0; i < numberOfStarbases; i++) {
             pos = generateNewPosition(starBases, 9);
             starBases[i] = new Starbase(pos);
+            this.game.addCoordinateString(pos.getQuadrant(), ".1.");
         }
         this.game.setStarbases(starBases);
     }

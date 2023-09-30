@@ -2,6 +2,7 @@ package sst;
 
 import java.io.Console;
 
+import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
 import Model.Position;
@@ -31,17 +32,30 @@ public class LrScan {
         Enterprise enterprise = game.getEnterprise();
         int row = enterprise.getPosition().getQuadrant().getX();
         int column = enterprise.getPosition().getQuadrant().getY();
+
+        game.addCoordinateString(new Coordinate(row-1, column-1), getQuadrantNumber(row-1, column-1));
+        game.addCoordinateString(new Coordinate(row, column-1), getQuadrantNumber(row, column-1));
+        game.addCoordinateString(new Coordinate(row+1, column-1), getQuadrantNumber(row+1, column-1));
+        game.addCoordinateString(new Coordinate(row-1, column), getQuadrantNumber(row-1, column));
+        game.addCoordinateString(new Coordinate(row, column), getQuadrantNumber(row, column));
+        game.addCoordinateString(new Coordinate(row+1, column), getQuadrantNumber(row+1, column));
+        game.addCoordinateString(new Coordinate(row-1, column+1), getQuadrantNumber(row-1, column+1));
+        game.addCoordinateString(new Coordinate(row, column+1), getQuadrantNumber(row, column+1));
+        game.addCoordinateString(new Coordinate(row+1, column+1), getQuadrantNumber(row+1, column+1));
+
+
+
         con.printf("\nLong-range scan for Quadrant %d - %d:\n", row + 1, column + 1);
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column-1), getQuadrantNumber(row, column-1), getQuadrantNumber(row+1, column-1));
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column), getQuadrantNumber(row, column), getQuadrantNumber(row+1, column));
-        con.printf("%-5d%-5d%-5d\n", getQuadrantNumber(row-1, column+1), getQuadrantNumber(row, column+1), getQuadrantNumber(row+1, column+1));
+        con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row-1, column-1), game.getCoordinateString(row-1, column), game.getCoordinateString(row-1, column+1));
+        con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row, column-1), game.getCoordinateString(row, column), game.getCoordinateString(row, column+1));
+        con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row+1, column-1), game.getCoordinateString(row+1, column), game.getCoordinateString(row+1, column+1));
 
     }
 
-    private int getQuadrantNumber(int row, int column) {
+    private String getQuadrantNumber(int row, int column) {
         // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO: add supernova
         if(row < 0 || row >= 8 || column < 0 || column >= 8) {
-            return -1;
+            return "-1";
         }
         int thousands = 0;
         // System.out.println(row + " " + column);
@@ -49,7 +63,7 @@ public class LrScan {
         int tens = getNumberOfEntiesInMapQuadrant(row, column, 'B')*10;
         int ones = getNumberOfEntiesInMapQuadrant(row, column, '*');
 
-        return  thousands + hundreds + tens + ones;
+        return  Integer.toString(thousands + hundreds + tens + ones);
     }
 
     private int getNumberOfEntiesInMapQuadrant(int row, int column, char entity) {

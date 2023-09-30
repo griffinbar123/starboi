@@ -18,17 +18,6 @@ import Model.Starbase;
 import Utils.Utils;
 
 public class App {
-    private Scanner scanner = new Scanner(System.in);
-    private static String cmdstr;
-    private static Console con;
-    private static char[][][][] Map;
-    private static Klingon[] Klingons;
-    private static Enterprise Enterprise;
-    private static Planet[] Planets;
-    private static Starbase[] Starbases;
-    private static Star[] Stars;
-    private static Romulan[] Romulans;
-    private static HashMap<Coordinate, String> ScannedQuadrants;
 
     public static final char NOTHING = '\u00B7';
 
