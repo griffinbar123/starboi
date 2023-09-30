@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class SrScan {
-    @NonNull
     private Console con;
     @NonNull
     private Game game;
@@ -21,6 +20,11 @@ public class SrScan {
      * along with other status data
      */
     public void ExecSRSCAN() {
+        // Initialize console
+        con = System.console();
+        if (con == null)
+            return;
+
         Enterprise enterprise = game.getEnterprise();
         int row = enterprise.getPosition().getQuadrant().getX();
         int column = enterprise.getPosition().getQuadrant().getY();

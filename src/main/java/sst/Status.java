@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class Status {
-    @NonNull
     private Console con;
     @NonNull
     private Game game;
@@ -23,24 +22,29 @@ public class Status {
      * Prints the status of the Enterprise during the game
      */
     public void ExecSTATUS() {
+        // Initialize console
+        con = System.console();
+        if (con == null)
+            return;
+
+        // print status
         Enterprise enterprise = this.game.getEnterprise();
-        System.out.println("Stardate\t" + enterprise.getStarDate());
-        System.out.println("Condition\t" + enterprise.getCondition());
-        System.out.println("Position\t" + (enterprise.getPosition().getQuadrant().getX() + 1) + " - "
-                + (enterprise.getPosition().getQuadrant().getY() + 1) + ", "
-                + (enterprise.getPosition().getSector().getX() + 1) + " - "
-                + (enterprise.getPosition().getSector().getY() + 1));
-        System.out.println("Life Support\t" + (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
-        System.out.print("Warp Factor\t");
-        System.out.printf("%.1f\n", enterprise.getWarp());
-        System.out.print("Energy\t\t");
-        System.out.printf("%.2f\n", enterprise.getEnergy());
-        System.out.println("Torpedoes\t" + enterprise.getTorpedoes());
-        System.out.print("Sheilds\t\t");
-        System.out.printf("%s, %.0f%% %.1f units\n", (enterprise.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
-                enterprise.getSheilds().getLevel() / 100, enterprise.getSheilds().getUnits());
-        System.out.println("Klingons Left\t" + enterprise.getKlingons());
-        System.out.print("Time Left\t");
-        System.out.printf("%.2f\n", enterprise.getTime());
+        con.printf("Stardate      %.1f\n", enterprise.getStarDate());
+        con.printf("Condition     %s\n", enterprise.getCondition());
+        con.printf("Position      %d - %d, %d - %d\n",
+                (enterprise.getPosition().getQuadrant().getX() + 1),
+                (enterprise.getPosition().getQuadrant().getY() + 1),
+                (enterprise.getPosition().getSector().getX() + 1),
+                (enterprise.getPosition().getSector().getY() + 1));
+        con.printf("Life Support  %s\n", (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
+        con.printf("Warp Factor   %.1f\n", enterprise.getWarp());
+        con.printf("Energy        %.2f\n", enterprise.getEnergy());
+        con.printf("Torpedoes     %d\n", enterprise.getTorpedoes());
+        con.printf("Shields       %s, %.0f%% %.1f units\n",
+                (enterprise.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
+                enterprise.getSheilds().getLevel() / 100,
+                enterprise.getSheilds().getUnits());
+        con.printf("Klingons Left %d\n", enterprise.getKlingons());
+        con.printf("Time Left     %.2f\n", enterprise.getTime());
     }
 }

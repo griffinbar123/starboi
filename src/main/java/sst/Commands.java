@@ -2,15 +2,19 @@ package sst;
 
 import java.io.Console;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Commands {
-    @NonNull
     private Console con;
 
     public void ExecCOMMANDS() {
+        // Initialize console
+        con = System.console();
+        if (con == null)
+            return;
+
+        // print commands
         con.printf("   SRSCAN    MOVE      PHASERS   CALL\n");
         con.printf("   STATUS    IMPULSE   PHOTONS   ABANDON\n");
         con.printf("   LRSCAN    WARP      SHIELDS   DESTRUCT\n");

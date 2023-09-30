@@ -104,16 +104,16 @@ public class CommandHandler {
 
             switch (c) {
                 case SRSCAN:
-                    new SrScan(con, this.game).ExecSRSCAN();;
+                    new SrScan(this.game).ExecSRSCAN();;
                     break;
                 case COMMANDS:
-                    new Commands(con).ExecCOMMANDS();
+                    new Commands().ExecCOMMANDS();
                     break;
                 case STATUS:
-                    new Status(con, this.game).ExecSTATUS();
+                    new Status(this.game).ExecSTATUS();
                     break;
                 case LRSCAN:
-                    new LrScan(con, this.game).ExecLRSCAN();
+                    new LrScan(this.game).ExecLRSCAN();
                     break;
                 case QUIT:
                     return;
