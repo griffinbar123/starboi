@@ -29,24 +29,65 @@ public class Computer {
      * COMPUTER command implementation
      */
     public void ExecCOMPUTER() {
-        Position dest = new Position(null, null);
-        Optional<Position> res;
+        Optional<Integer> tm;
+        Position dest;
+        Integer time;
         // Initialize console
         con = System.console();
         if (con == null)
             return;
 
-        res = readCorodinates();
-        if (!res.isPresent()) {
+        dest = readCorodinates().orElse(null);
+        tm = readTime();
+        if (tm == null) {
             return;
         }
 
-        dest = res.get();
+        time = tm.orElse(null);
 
+        calc(dest, time);
+    }
+
+    /**
+     * calculate the time required for travel in stardates
+     * @param pos position to travel to
+     * @param time desired time to reach destination
+     * @return the time in stardates required to make the journey
+     * @author Matthias Schrock
+     */
+    public Integer calc(Position pos, Integer time) {
+        return -1;
+    }
+
+    /**
+     * calculate the time required for travel in stardates
+     * @param pos position to travel to
+     * @return the time in stardates required to make the journey
+     * @author Matthias Schrock
+     */
+    public Integer calc(Position pos) {
+        return -1;
     }
 
     private Optional<Integer> readTime() {
-        return Optional.ofNullable(null);
+        Pattern pattern = Pattern.compile("\\d");
+        Matcher matcher;
+        String cmd = "";
+
+        con.printf("Answer \"no\" if you don't know the value:\nTime or arrival date? ");
+        cmd = con.readLine().toUpperCase().trim();
+        if (cmd.contains("NO")) {
+            return Optional.empty();
+        }
+
+        matcher = pattern.matcher(cmd);
+        if (matcher.find()) {
+            return Optional.ofNullable(Integer.valueOf(matcher.group()));
+        } else {
+            con.printf("\n\nBeg your pardon, Captain?\n\n");
+        }
+
+        return null;
     }
 
     /**
@@ -54,43 +95,33 @@ public class Computer {
      * @return the targeted destination
      */
     private Optional<Position> readCorodinates() {
-        Coordinate sect = new Coordinate(-1, -1);
-        Coordinate quad = new Coordinate(-1, -1);
+        Coordinate sect = new Coordinate(null, null);
+        Coordinate quad = new Coordinate(null, null);
         List<Integer> cord = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher;
         String cmd = "";
-        int num = 0;
-        boolean accepted = false;
 
         con.printf("Destination quadrant and/or sector? ");
-        while (!accepted) {
-            cmd = con.readLine().trim();
+        cmd = con.readLine().trim();
+        matcher = pattern.matcher(cmd);
 
-            matcher = pattern.matcher(cmd);
+        while (matcher.find()) {
+            cord.add(Integer.valueOf(matcher.group()));
+        }
 
-            while (matcher.find()) {
-                cord.add(Integer.valueOf(matcher.group()));
-                num += 1;
-            }
-
-            switch (num) {
-                case 2:
-                    sect.setX(cord.get(0));
-                    sect.setY(cord.get(1));
-                    accepted = true;
-                    break;
-                case 4:
-                    sect.setX(cord.get(0));
-                    sect.setY(cord.get(1));
-                    quad.setX(cord.get(2));
-                    quad.setY(cord.get(3));
-                    accepted = true;
-                    break;
-                default:
-                    con.printf("\n\nBeg your pardon, Captain?\n\n");
-                    return Optional.empty();
-            }
+        switch (cord.size()) {
+            case 4:
+                quad.setX(cord.get(2));
+                quad.setY(cord.get(3));
+                // waterfall
+            case 2:
+                sect.setX(cord.get(0));
+                sect.setY(cord.get(1));
+                break;
+            default:
+                con.printf("\n\nBeg your pardon, Captain?\n\n");
+                return Optional.empty();
         }
 
         return Optional.ofNullable(new Position(quad, sect));

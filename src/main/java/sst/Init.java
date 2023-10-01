@@ -211,8 +211,7 @@ public class Init {
         for (int i = 0; i < numberOfKlingons; i++) {
             pos = generateNewPosition(klingons, 9);
             klingons[i] = new Klingon(pos);
-            // TODO
-            System.out.println(pos.getQuadrant().getX() +" - " + pos.getQuadrant().getY() + ", " + pos.getSector().getX() + " - " + pos.getSector().getY());
+            // System.out.println(pos.getQuadrant().getX() +" - " + pos.getQuadrant().getY() + ", " + pos.getSector().getX() + " - " + pos.getSector().getY());
         }
         this.game.setKlingons(klingons);
     }
