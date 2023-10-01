@@ -50,6 +50,7 @@ public class Init {
 
     /**
      * Allows the user to select a game level
+     * 
      * @param levelChoice
      * @author Fabrice Mpozenzi
      */
@@ -72,6 +73,7 @@ public class Init {
 
     /**
      * Allows the user to select a game type
+     * 
      * @param gameChoice
      * @author Fabrice Mpozenzi
      */
@@ -93,37 +95,62 @@ public class Init {
         }
     }
 
+    private void gameDifficulty(String gameDiff) {
+        System.out.print("Would you like a regular, tournament, or frozen game? ");
+        String initChoice = con.readLine().trim().toLowerCase();
+        switch (initChoice) {
+            case "regular":
+                System.out.println("Would you like a Short, Medium, or Long game? ");
+                String choice = con.readLine().trim().toLowerCase(null);
+                gameType(choice);
+                break;
+            case "tournament":
+                System.out.println("Type in tournament number-");
+                String tourNumber = con.readLine().trim();
+                System.out.println("Would you like a Short, Medium, or Long game? ");
+                choice = con.readLine().trim().toLowerCase();
+                gameType(choice);
+                break;
+            case "frozen":
+                System.out.println("File name: ");// build this later
+                break;
+            default:
+                System.out.println("Would you like a regular, tournament, or frozen game?");
+                break;
+
+        }
+    }
+
     // private void initializeGame() {
-    //     System.out.println("-SUPER- STAR TREK (JAVA EDITION)\n");
-    //     System.out.println("Latest update-prolly today\n");
-    //     System.out.print("Would you like a regular, tournament, or frozen game?");
-    //     System.out.println(" I'm going to assume regular\n");
-    //     System.out.print("Would you like a Short, Medium, or Long Game?");
-    //     System.out.println(" I'm going to assume short");
-    //     System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
-    //     System.out.println(" Def a novice");
-    //     System.out.print("Please type in a secret password (9 characters maximum)-");
-    //     System.out.println("changeit");
+    // System.out.println("-SUPER- STAR TREK (JAVA EDITION)\n");
+    // System.out.println("Latest update-prolly today\n");
+    // System.out.print("Would you like a regular, tournament, or frozen game?");
+    // System.out.println(" I'm going to assume regular\n");
+    // System.out.print("Would you like a Short, Medium, or Long Game?");
+    // System.out.println(" I'm going to assume short");
+    // System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus
+    // player?");
+    // System.out.println(" Def a novice");
+    // System.out.print("Please type in a secret password (9 characters maximum)-");
+    // System.out.println("changeit");
 
-
-
-    //     System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
-    //     + ". The Federation is being attacked by a deadly Klingon invasion force. As
-    //     captain of the United Starship "
-    //     + "U.S.S. Enterprise, it is your mission to seek out and destroy this
-    //     invasion force of "
-    //     + Klingons.length + " battle cruisers. You have an initial allotment of " +
-    //     "7"
-    //     + " stardates to complete your mission. As you proceed you may be given more
-    //     time.\n");
-    //     System.out.println("You will have " + "x"
-    //     + "supporting starbases. Starbase locations- " +
-    //     turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in
-    //     Quadrant "
-    //     + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " +
-    //     (Enterprise.getPosition().getQuadrant().getY() + 1)
-    //     + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
-    //     + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
+    // System.out.println("\n\n\nIt is stardate " + Enterprise.getStarDate()
+    // + ". The Federation is being attacked by a deadly Klingon invasion force. As
+    // captain of the United Starship "
+    // + "U.S.S. Enterprise, it is your mission to seek out and destroy this
+    // invasion force of "
+    // + Klingons.length + " battle cruisers. You have an initial allotment of " +
+    // "7"
+    // + " stardates to complete your mission. As you proceed you may be given more
+    // time.\n");
+    // System.out.println("You will have " + "x"
+    // + "supporting starbases. Starbase locations- " +
+    // turnEntityQuadrantsToStrings(Starbases) + "\nThe Enterprise is currently in
+    // Quadrant "
+    // + (Enterprise.getPosition().getQuadrant().getX() + 1) + " - " +
+    // (Enterprise.getPosition().getQuadrant().getY() + 1)
+    // + " Sector " + (Enterprise.getPosition().getSector().getX() + 1) + " - "
+    // + (Enterprise.getPosition().getSector().getY() + 1) + "\n\nGood Luck!\n\n");
     // }
 
     /**
@@ -211,7 +238,13 @@ public class Init {
         for (int i = 0; i < numberOfKlingons; i++) {
             pos = generateNewPosition(klingons, 9);
             klingons[i] = new Klingon(pos);
+<<<<<<< HEAD
+            // TODO
+            System.out.println(pos.getQuadrant().getX() + " - " + pos.getQuadrant().getY() + ", "
+                    + pos.getSector().getX() + " - " + pos.getSector().getY());
+=======
             // System.out.println(pos.getQuadrant().getX() +" - " + pos.getQuadrant().getY() + ", " + pos.getSector().getX() + " - " + pos.getSector().getY());
+>>>>>>> 72c1e19131dddb458e0508184fb919573dca0448
         }
         this.game.setKlingons(klingons);
     }
@@ -220,19 +253,22 @@ public class Init {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!isPositionEmpty(position) && entities != null && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
+        while (!isPositionEmpty(position) && entities != null
+                && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
             position = generateNewPosition(entities, maxElementsInQuadrant);
         }
         return position;
     }
 
     private int getNumberOfEntiesBeforeMapUpdate(Entity[] entities, Position position) {
-        // function to get number of entities in a qudrant before a map update, used in iniitialzation to make
+        // function to get number of entities in a qudrant before a map update, used in
+        // iniitialzation to make
         // sure a quadrant doesn't get too many of an entity type
         int numberOfElements = 0;
-        for(int i = 0; i < entities.length; i++){
-            if(entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX() &&
-            entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
+        for (int i = 0; i < entities.length; i++) {
+            if (entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX()
+                    &&
+                    entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
                 numberOfElements += 1;
             }
         }
