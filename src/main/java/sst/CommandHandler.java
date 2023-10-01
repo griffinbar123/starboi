@@ -1,11 +1,6 @@
 package sst;
 
 import java.io.Console;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import Utils.Utils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -127,7 +122,9 @@ public class CommandHandler {
                     new Chart(this.game).ExecCHART();
                     break;
                 case QUIT:
-                    saveState(); // TODO: when does this happen?
+                    return;
+                case FREEZE:
+                    new Freeze(this.game).ExecFREEZE();
                     return;
                 case undefined:
                     con.printf("'%s' is not a valid command.\n\n", cmdstr);
@@ -136,29 +133,6 @@ public class CommandHandler {
                     con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n", c.toString());
                     break;
             }
-        }
-    }
-
-    /**
-     * Save the current state of the game before quitting to session.txt
-     * @author Matthias Schrock
-     */
-    private void saveState() {
-        boolean write = true;
-        try {
-            File file = new File("session.txt");
-            if (!file.createNewFile()) {
-                System.out.println("Prompt for rewrite OK?");
-            }
-            if (write) {
-                FileWriter writer = new FileWriter("session.txt");
-                writer.write(Utils.serialize(this.game));
-                writer.close();
-                System.out.println("Session successfully saved");
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
         }
     }
 }
