@@ -40,7 +40,7 @@ public class Chart {
         con.printf("6 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", game.getCoordinateString(5, 0), game.getCoordinateString(5, 1), game.getCoordinateString(5, 2), game.getCoordinateString(5, 3), game.getCoordinateString(5, 4), game.getCoordinateString(5, 5), game.getCoordinateString(5, 6),  game.getCoordinateString(5, 7));
         con.printf("7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", game.getCoordinateString(6, 0), game.getCoordinateString(6, 1), game.getCoordinateString(6, 2), game.getCoordinateString(6, 3), game.getCoordinateString(6, 4), game.getCoordinateString(6, 5), game.getCoordinateString(6, 6),  game.getCoordinateString(6, 7));
         con.printf("8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n", game.getCoordinateString(7, 0), game.getCoordinateString(7, 1), game.getCoordinateString(7, 2), game.getCoordinateString(7, 3), game.getCoordinateString(7, 4), game.getCoordinateString(7, 5), game.getCoordinateString(7, 6),  game.getCoordinateString(7, 7));
-        con.printf("\nThe Enterprise is currently in Quadrant %d - %d\n", enterprise.getPosition().getQuadrant().getX() + 1, enterprise.getPosition().getQuadrant().getY()+1);
+        con.printf("\nThe Enterprise is currently in Quadrant %d - %d\n\n", enterprise.getPosition().getQuadrant().getX() + 1, enterprise.getPosition().getQuadrant().getY()+1);
 
     }
 

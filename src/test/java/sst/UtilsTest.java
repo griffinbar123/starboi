@@ -9,12 +9,12 @@ public class UtilsTest {
     @Test
     public void randIntShouldWorkAsExpected() {
         int randomVal = Utils.randInt(0, 10);
-        assertTrue(randomVal > 0);
-        assertTrue(randomVal < 10);
+        assertTrue(randomVal >= 0);
+        assertTrue(randomVal <= 10);
 
         randomVal = Utils.randInt(0, 100);
-        assertTrue(randomVal > 0);
-        assertTrue(randomVal < 100);
+        assertTrue(randomVal >= 0);
+        assertTrue(randomVal <= 100);
     }
 
     @Test

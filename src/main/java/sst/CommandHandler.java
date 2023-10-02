@@ -104,7 +104,6 @@ public class CommandHandler {
             switch (c) {
                 case SRSCAN:
                     new SrScan(this.game).ExecSRSCAN();
-                    ;
                     break;
                 case COMMANDS:
                     new Commands().ExecCOMMANDS();
