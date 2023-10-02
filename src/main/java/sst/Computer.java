@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import Model.Coordinate;
 import Model.Position;
 import lombok.NonNull;
@@ -24,13 +23,15 @@ public class Computer {
     private Console con;
     @NonNull
     private Game game;
+    public double aaitem = 0.5; //TODO: figure out what this is in original
+
 
     /**
      * COMPUTER command implementation
      */
     public void ExecCOMPUTER() {
         Optional<Integer> tm;
-        Position dest;
+        Position dest = new Position(null, null);
         Integer time;
         // Initialize console
         con = System.console();
@@ -45,28 +46,59 @@ public class Computer {
 
         time = tm.orElse(null);
 
-        calc(dest, time);
+        if (time == null) {
+            calcDistance(this.game.getEnterprise().getPosition(), dest);
+        } else {
+            calcTime(this.game.getEnterprise().getPosition(), dest, time);
+        }
     }
 
     /**
-     * calculate the time required for travel in stardates
-     * @param pos position to travel to
+     * calculate the time required for travel between two positions in stardates
+     * 
+     * @param pos starting position
+     * @param dest position to travel to
      * @param time desired time to reach destination
      * @return the time in stardates required to make the journey
      * @author Matthias Schrock
      */
-    public Integer calc(Position pos, Integer time) {
+    public double calcTime(Position pos, Position dest, Integer time) {
+        double distance = calcDistance(pos, dest);
         return -1;
     }
 
     /**
-     * calculate the time required for travel in stardates
-     * @param pos position to travel to
-     * @return the time in stardates required to make the journey
+     * calculate the distance bteween two positions
+     * 
+     * @param pos starting position
+     * @param dest position to travel to
+     * @return the distance between two points on the map
      * @author Matthias Schrock
      */
-    public Integer calc(Position pos) {
-        return -1;
+    private double calcDistance(Position pos, Position dest) {
+        double ix2 = dest.getQuadrant().getX();
+        double iy2 = dest.getQuadrant().getY();
+        double ix1 = aaitem + 0.5;
+        double iy1 = aaitem + 0.5;
+        double quadX = pos.getQuadrant().getY();
+        double quadY = pos.getQuadrant().getX();
+        double sectX = pos.getSector().getX();
+        double sectY = pos.getSector().getY();
+
+        if (dest.getQuadrant() == pos.getQuadrant()) {
+            ix2 = ix1;
+            iy2 = iy1;
+            ix1 = quadX;
+            iy1 = quadY;
+        }
+
+        if (ix1 > 8 || ix1 < 1 || iy1 > 8 || iy1 < 1 ||
+                ix2 > 10 || ix2 < 1 || iy2 > 10 || iy2 < 1) {
+            return -1;
+        }
+
+        return Math.sqrt(Math.pow(iy1 - quadX + 0.1 * (iy2 - sectY), 2) +
+                Math.pow(ix1 - quadY + 0.1 * (ix2 - sectX), 2));
     }
 
     private Optional<Integer> readTime() {
@@ -74,7 +106,8 @@ public class Computer {
         Matcher matcher;
         String cmd = "";
 
-        con.printf("Answer \"no\" if you don't know the value:\nTime or arrival date? ");
+        con.printf("Answer \"no\" if you don't know the value:\n");
+        con.printf("Time or arrival date? ");
         cmd = con.readLine().toUpperCase().trim();
         if (cmd.contains("NO")) {
             return Optional.empty();
@@ -92,11 +125,12 @@ public class Computer {
 
     /**
      * Reads destination input from console
+     * 
      * @return the targeted destination
      */
     private Optional<Position> readCorodinates() {
-        Coordinate sect = new Coordinate(null, null);
-        Coordinate quad = new Coordinate(null, null);
+        Coordinate sect = null;
+        Coordinate quad = null;
         List<Integer> cord = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher;
@@ -112,12 +146,14 @@ public class Computer {
 
         switch (cord.size()) {
             case 4:
-                quad.setX(cord.get(2));
-                quad.setY(cord.get(3));
+                quad = new Coordinate(cord.get(3), cord.get(2));
                 // waterfall
             case 2:
-                sect.setX(cord.get(0));
-                sect.setY(cord.get(1));
+                if (quad == null) {
+                    quad = new Coordinate(this.game.getEnterprise().getPosition().getQuadrant().getY(),
+                            this.game.getEnterprise().getPosition().getQuadrant().getX());
+                }
+                sect = new Coordinate(cord.get(1), cord.get(0));
                 break;
             default:
                 con.printf("\n\nBeg your pardon, Captain?\n\n");
