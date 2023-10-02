@@ -75,7 +75,7 @@ public class Computer {
      * @return the distance between two points on the map
      * @author Matthias Schrock
      */
-    private double calcDistance(Position pos, Position dest) {
+    public double calcDistance(Position pos, Position dest) {
         double ix2 = dest.getQuadrant().getX();
         double iy2 = dest.getQuadrant().getY();
         double ix1 = aaitem + 0.5;
@@ -116,18 +116,12 @@ public class Computer {
         matcher = pattern.matcher(cmd);
         if (matcher.find()) {
             return Optional.ofNullable(Integer.valueOf(matcher.group()));
-        } else {
-            con.printf("\n\nBeg your pardon, Captain?\n\n");
         }
 
+        con.printf("\n\nBeg your pardon, Captain?\n\n");
         return null;
     }
 
-    /**
-     * Reads destination input from console
-     * 
-     * @return the targeted destination
-     */
     private Optional<Position> readCorodinates() {
         Coordinate sect = null;
         Coordinate quad = null;
