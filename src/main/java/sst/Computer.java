@@ -39,10 +39,10 @@ public class Computer {
             return;
 
         dest = readCorodinates().orElse(null);
+        if (dest == null) return;
+
         tm = readTime();
-        if (tm == null) {
-            return;
-        }
+        if (tm == null) return;
 
         time = tm.orElse(null);
 

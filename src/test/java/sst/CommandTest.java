@@ -17,7 +17,6 @@ public class CommandTest {
         this.game = new Game();
         this.game.setEnterprise(new Enterprise(new Position(new Coordinate(1, 1), new Coordinate(1, 1))));
         this.game.setKlingons(new Klingon[] { new Klingon(new Position(new Coordinate(1, 1), new Coordinate(1, 1))) });
-        this.game.setMap(new char[8][8][10][10]);
     }
 
     @Test(expected = Test.None.class)
