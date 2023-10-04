@@ -7,7 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Handles the long range scan (LRSCAN) command
+ * Handles the Chart command
  * 
  * @author Griffin Barnard
  */

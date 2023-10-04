@@ -55,8 +55,6 @@ public class Init {
      * @author Fabrice Mpozenzi
      */
     private void gameLevel(String levelChoice) {
-        // System.out.println("Here is the player choice after passed in:
-        // "+levelChoice);
         switch (levelChoice) {
             case "novice":
             case "fair":
@@ -85,8 +83,6 @@ public class Init {
                 System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
                 String playerChoiceOne = con.readLine().trim().toLowerCase();
                 System.out.println();
-                // System.out.println("Here is the player choice before passed in:
-                // "+playerChoice);
                 gameLevel(playerChoiceOne);
                 break;
             default:
@@ -238,9 +234,6 @@ public class Init {
         for (int i = 0; i < numberOfKlingons; i++) {
             pos = generateNewPosition(klingons, 9);
             klingons[i] = new Klingon(pos);
-            // TODO
-            System.out.println(pos.getQuadrant().getX() + " - " + pos.getQuadrant().getY() + ", "
-                    + pos.getSector().getX() + " - " + pos.getSector().getY());
         }
         this.game.setKlingons(klingons);
     }
