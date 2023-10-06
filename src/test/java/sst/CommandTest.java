@@ -1,7 +1,7 @@
 package sst;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.Console;
 import org.junit.Before;
@@ -13,26 +13,32 @@ import Model.Sheild;
 
 public class CommandTest {
     private Game game;
-    private Status status;
     private Enterprise enterprise;
-    private Console console;
-    
+    private Status status;
+    private Commands commands;
+    private SrScan srScan;
+    private LrScan lrScan;
+
     @Before
     public void setUp() {
+        // Mocking the game
         this.game = mock(Game.class);
+        this.game.con = mock(Console.class);
         this.enterprise = mock(Enterprise.class);
-        this.console = mock(Console.class);
-        this.status = new Status(game);
-        when(game.getEnterprise()).thenReturn(enterprise);
-    }
-    
-    @Test
-    public void testExecSTATUS() {
+
+        // Mocking the commands
+        this.status = new Status(this.game);
+        this.commands = new Commands(this.game);
+        this.srScan = new SrScan(this.game);
+        this.lrScan = new LrScan(this.game);
+
+        // Mocking the Enterprise functionality
+        when(game.getEnterprise()).thenReturn(this.enterprise);
         when(enterprise.getStarDate()).thenReturn((float) 123.4);
         when(enterprise.getCondition()).thenReturn("GREEN");
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         when(enterprise.getPosition()).thenReturn(position);
-        when(enterprise.getLifeSupport()).thenReturn((byte)1);
+        when(enterprise.getLifeSupport()).thenReturn((byte) 1);
         when(enterprise.getWarp()).thenReturn((float) 1.0);
         when(enterprise.getEnergy()).thenReturn((float) 100.0);
         when(enterprise.getTorpedoes()).thenReturn(10);
@@ -43,52 +49,44 @@ public class CommandTest {
         when(enterprise.getSheilds()).thenReturn(shields);
         when(enterprise.getKlingons()).thenReturn(5);
         when(enterprise.getTime()).thenReturn((float) 10.0);
-
-        status.ExecSTATUS();
-    
-        String expectedOutput = "Stardate      123.4\n" +
-                "Condition     GREEN\n" +
-                "Position      1 - 1, 1 - 1\n" +
-                "Life Support  ACTIVE\n" +
-                "Warp Factor   1.0\n" +
-                "Energy        100.00\n" +
-                "Torpedoes     10\n" +
-                "Shields       ACTIVE, 100% 1.0 units\n" +
-                "Klingons Left 5\n" +
-                "Time Left     10.00\n";
-        assertEquals(expectedOutput, console.toString());
     }
-    
-    // @Before
-    // public void init() {
-    //     this.game = new Game();
-    //     this.game.setEnterprise(new Enterprise(new Position(new Coordinate(1, 1), new Coordinate(1, 1))));
-    //     this.game.setKlingons(new Klingon[] { new Klingon(new Position(new Coordinate(1, 1), new Coordinate(1, 1))) });
-    // }
 
-    // @Test(expected = Test.None.class)
-    // public void commandsCommandShouldNotHaveException() {
-    //     Commands commands = new Commands();
-    //     commands.ExecCOMMANDS();
-    // }
+    @Test
+    public void statusCommandShouldWorkAsExpected() {
+        this.game.con.flush();
+        status.ExecSTATUS();
+        String stat = "Stardate      %.1f\n" +
+                "Condition     %s\n" +
+                "Position      %d - %d, %d - %d\n" +
+                "Life Support  %s\n" +
+                "Warp Factor   %.1f\n" +
+                "Energy        %.2f\n" +
+                "Torpedoes     %d\n" +
+                "Shields       %s, %.0f%% %.1f units\n" +
+                "Klingons Left %d\n" +
+                "Time Left     %.2f\n";
 
-    // @Test(expected = Test.None.class)
-    // public void statusCommandShouldNotHaveException() {
-    //     Status stat = new Status(this.game);
-    //     stat.ExecSTATUS();
-    // }
+        verify(game.con).printf(stat, (float) 123.4, "GREEN", 0, 0, 0, 0, "ACTIVE", (float) 1.0, (float) 100.00, 10,
+                "ACTIVE", (float) 1.0, (float) 1.0, 5, (float) 10.00);
+    }
+
+    @Test(expected = Test.None.class)
+    public void statusCommandShouldNotHaveException() {
+        status.ExecSTATUS();
+    }
+
+    @Test(expected = Test.None.class)
+    public void commandsCommandShouldNotHaveException() {
+    commands.ExecCOMMANDS();
+    }
 
     // @Test(expected = Test.None.class)
     // public void srScanCommandShouldNotHaveException() {
-    //     SrScan srScan = new SrScan(this.game);
-    //     srScan.ExecSRSCAN();
+    // srScan.ExecSRSCAN();
     // }
 
     // @Test(expected = Test.None.class)
     // public void lrScanCommandShouldNotHaveException() {
-    //     LrScan lrScan = new LrScan(this.game);
-    //     lrScan.ExecLRSCAN();
+    // lrScan.ExecLRSCAN();
     // }
 }
-
-

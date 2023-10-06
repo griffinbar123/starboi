@@ -1,7 +1,5 @@
 package sst;
 
-import java.io.Console;
-
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;

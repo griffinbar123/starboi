@@ -1,7 +1,5 @@
 package sst;
 
-import java.io.Console;
-
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -18,7 +16,6 @@ import Utils.Utils;
  * to restore a saved game state
  */
 public class Init {
-    private static Console con;
     private Game game;
     public static final char NOTHING = '\u00B7';
 
@@ -76,7 +73,7 @@ public class Init {
             case "medium":
             case "long":
                 System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
-                String playerChoiceOne = con.readLine().trim().toLowerCase();
+                String playerChoiceOne = this.game.con.readLine().trim().toLowerCase();
                 System.out.println();
                 gameLevel(playerChoiceOne);
                 break;
@@ -88,18 +85,18 @@ public class Init {
 
     private void gameDifficulty(String gameDiff) {
         System.out.print("Would you like a regular, tournament, or frozen game? ");
-        String initChoice = con.readLine().trim().toLowerCase();
+        String initChoice = this.game.con.readLine().trim().toLowerCase();
         switch (initChoice) {
             case "regular":
                 System.out.println("Would you like a Short, Medium, or Long game? ");
-                String choice = con.readLine().trim().toLowerCase(null);
+                String choice = this.game.con.readLine().trim().toLowerCase(null);
                 gameType(choice);
                 break;
             case "tournament":
                 System.out.println("Type in tournament number-");
-                String tourNumber = con.readLine().trim();
+                String tourNumber = this.game.con.readLine().trim();
                 System.out.println("Would you like a Short, Medium, or Long game? ");
-                choice = con.readLine().trim().toLowerCase();
+                choice = this.game.con.readLine().trim().toLowerCase();
                 gameType(choice);
                 break;
             case "frozen":
