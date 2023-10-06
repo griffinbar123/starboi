@@ -28,11 +28,6 @@ public class Init {
      * @author Matthias Schrock
      */
     public void start() {
-        // Initialize console
-        con = System.console();
-        if (con == null)
-            return;
-
         // TODO: be able to load game
         this.game = new Game();
         initializeEnterprise();
@@ -43,7 +38,7 @@ public class Init {
         initializeStars(300);
         initializeRomulans(4);
         updateMap();
-        CommandHandler handler = new CommandHandler(con, this.game);
+        CommandHandler handler = new CommandHandler(this.game);
 
         handler.getAndExecuteCommands();
     }

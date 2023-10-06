@@ -1,6 +1,5 @@
 package sst;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class Computer {
-    private Console con;
     @NonNull
     private Game game;
     public double aaitem = 0.5; //TODO: figure out what this is in original
@@ -33,10 +31,6 @@ public class Computer {
         Optional<Integer> tm;
         Position dest = new Position(null, null);
         Integer time;
-        // Initialize console
-        con = System.console();
-        if (con == null)
-            return;
 
         dest = readCorodinates().orElse(null);
         if (dest == null) return;
@@ -64,7 +58,8 @@ public class Computer {
      */
     public double calcTime(Position pos, Position dest, Integer time) {
         double distance = calcDistance(pos, dest);
-        return -1;
+        this.game.setEnterprise(null);
+        return 1;
     }
 
     /**
@@ -106,9 +101,9 @@ public class Computer {
         Matcher matcher;
         String cmd = "";
 
-        con.printf("Answer \"no\" if you don't know the value:\n");
-        con.printf("Time or arrival date? ");
-        cmd = con.readLine().toUpperCase().trim();
+        this.game.con.printf("Answer \"no\" if you don't know the value:\n");
+        this.game.con.printf("Time or arrival date? ");
+        cmd = this.game.con.readLine().toUpperCase().trim();
         if (cmd.contains("NO")) {
             return Optional.empty();
         }
@@ -118,7 +113,7 @@ public class Computer {
             return Optional.ofNullable(Integer.valueOf(matcher.group()));
         }
 
-        con.printf("\n\nBeg your pardon, Captain?\n\n");
+        this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
         return null;
     }
 
@@ -130,8 +125,8 @@ public class Computer {
         Matcher matcher;
         String cmd = "";
 
-        con.printf("Destination quadrant and/or sector? ");
-        cmd = con.readLine().trim();
+        this.game.con.printf("Destination quadrant and/or sector? ");
+        cmd = this.game.con.readLine().trim();
         matcher = pattern.matcher(cmd);
 
         while (matcher.find()) {
@@ -150,7 +145,7 @@ public class Computer {
                 sect = new Coordinate(cord.get(1), cord.get(0));
                 break;
             default:
-                con.printf("\n\nBeg your pardon, Captain?\n\n");
+                this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
                 return Optional.empty();
         }
 

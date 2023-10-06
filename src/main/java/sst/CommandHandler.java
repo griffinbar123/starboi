@@ -1,14 +1,11 @@
 package sst;
 
-import java.io.Console;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CommandHandler {
     private static String cmdstr;
-    @NonNull
-    private Console con;
     @NonNull
     private Game game;
 
@@ -71,11 +68,11 @@ public class CommandHandler {
         // main polling loop
         String str;
 
-        con.printf("\n            SUPER STAR TREK (Java Edition)\n");
-        con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
+        this.game.con.printf("\n            SUPER STAR TREK (Java Edition)\n");
+        this.game.con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
 
         while (true) {
-            str = con.readLine("COMMAND> ");
+            str = this.game.con.readLine("COMMAND> ");
             cmdstr = str.toUpperCase().trim();
 
             Command c = Command.undefined;
@@ -106,7 +103,7 @@ public class CommandHandler {
                     new SrScan(this.game).ExecSRSCAN();
                     break;
                 case COMMANDS:
-                    new Commands().ExecCOMMANDS();
+                    new Commands(this.game).ExecCOMMANDS();
                     break;
                 case STATUS:
                     new Status(this.game).ExecSTATUS();
@@ -126,10 +123,10 @@ public class CommandHandler {
                     new Freeze(this.game).ExecFREEZE();
                     return;
                 case undefined:
-                    con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                    this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
                     break;
                 default:
-                    con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n", c.toString());
+                    this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n", c.toString());
                     break;
             }
         }

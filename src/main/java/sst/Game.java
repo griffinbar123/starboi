@@ -1,5 +1,6 @@
 package sst;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import lombok.Data;
  */
 @Data
 public class Game {
+    public Console con = System.console();
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
     private Enterprise enterprise;
