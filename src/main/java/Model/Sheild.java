@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Sheild {
-    private byte active;
-    private float level;
+    private String active;
+    private int level;
     private float units;
 }
