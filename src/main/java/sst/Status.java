@@ -1,8 +1,7 @@
 package sst;
 
-import java.io.Console;
-
 import Model.Enterprise;
+import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -21,24 +20,30 @@ public class Status {
      * Prints the status of the Enterprise during the game
      */
     public void ExecSTATUS() {
-        // print status
         Enterprise enterprise = this.game.getEnterprise();
-        this.game.con.printf("Stardate      %.1f\n", enterprise.getStarDate());
-        this.game.con.printf("Condition     %s\n", enterprise.getCondition());
-        this.game.con.printf("Position      %d - %d, %d - %d\n",
-                (enterprise.getPosition().getQuadrant().getX() + 1),
-                (enterprise.getPosition().getQuadrant().getY() + 1),
-                (enterprise.getPosition().getSector().getX() + 1),
-                (enterprise.getPosition().getSector().getY() + 1));
-        this.game.con.printf("Life Support  %s\n", (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"));
-        this.game.con.printf("Warp Factor   %.1f\n", enterprise.getWarp());
-        this.game.con.printf("Energy        %.2f\n", enterprise.getEnergy());
-        this.game.con.printf("Torpedoes     %d\n", enterprise.getTorpedoes());
-        this.game.con.printf("Shields       %s, %.0f%% %.1f units\n",
+        String stat = "Stardate      %.1f\n" +
+                "Condition     %s\n" +
+                "Position      %d - %d, %d - %d\n" +
+                "Life Support  %s\n" +
+                "Warp Factor   %.1f\n" +
+                "Energy        %.2f\n" +
+                "Torpedoes     %d\n" +
+                "Shields       %s, %.0f%% %.1f units\n" +
+                "Klingons Left %d\n" +
+                "Time Left     %.2f\n";
+        this.game.con.printf(stat,
+                enterprise.getStarDate(),
+                enterprise.getCondition(),
+                enterprise.getPosition().getQuadrant().getX(),
+                enterprise.getPosition().getQuadrant().getY(),
+                enterprise.getPosition().getSector().getX(),
+                enterprise.getPosition().getSector().getY(),
+                (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"),
+                enterprise.getWarp(), enterprise.getEnergy(), enterprise.getTorpedoes(),
                 (enterprise.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
                 enterprise.getSheilds().getLevel() / 100,
-                enterprise.getSheilds().getUnits());
-        this.game.con.printf("Klingons Left %d\n", enterprise.getKlingons());
-        this.game.con.printf("Time Left     %.2f\n", enterprise.getTime());
+                enterprise.getSheilds().getUnits(),
+                game.getKlingons().length,
+                game.getTime());
     }
 }

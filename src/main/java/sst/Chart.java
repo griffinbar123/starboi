@@ -3,6 +3,7 @@ package sst;
 import java.io.Console;
 
 import Model.Enterprise;
+import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

@@ -3,6 +3,8 @@ package sst;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import Model.Game;
 import Utils.Utils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
