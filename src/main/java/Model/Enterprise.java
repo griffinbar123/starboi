@@ -19,7 +19,7 @@ public class Enterprise extends Entity {
 
     private byte lifeSupport;
 
-    private float warp;
+    private float warp = 1.0f;
     private float energy;
 
     private int torpedoes;

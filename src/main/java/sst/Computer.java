@@ -58,8 +58,10 @@ public class Computer {
      */
     public double calcTime(Position pos, Position dest, Integer time) {
         double distance = calcDistance(pos, dest);
-        this.game.setEnterprise(null);
-        return 1;
+        double warpSpeed = game.getEnterprise().getWarp();
+        double travelTime = (distance) / (warpSpeed * warpSpeed);
+        System.out.println(travelTime);
+        return travelTime;
     }
 
     /**
@@ -68,33 +70,31 @@ public class Computer {
      * @param pos starting position
      * @param dest position to travel to
      * @return the distance between two points on the map
-     * @author Matthias Schrock
+     * @author Griffin Barnard
      */
     public double calcDistance(Position pos, Position dest) {
-        double ix2 = dest.getQuadrant().getX();
-        double iy2 = dest.getQuadrant().getY();
-        double ix1 = aaitem + 0.5;
-        double iy1 = aaitem + 0.5;
-        double quadX = pos.getQuadrant().getY();
-        double quadY = pos.getQuadrant().getX();
-        double sectX = pos.getSector().getX();
-        double sectY = pos.getSector().getY();
+        double destQuadX = dest.getQuadrant().getX();
+        double destQuadY = dest.getQuadrant().getY();
+        double destSectX = dest.getSector().getX();
+        double destSectY = dest.getSector().getY();
 
-        if (dest.getQuadrant() == pos.getQuadrant()) {
-            ix2 = ix1;
-            iy2 = iy1;
-            ix1 = quadX;
-            iy1 = quadY;
-        }
+        double posQuadX = pos.getQuadrant().getX() + 1;
+        double posQuadY = pos.getQuadrant().getY() + 1;
+        double posSectX = pos.getSector().getX() + 1;
+        double posSectY = pos.getSector().getY() + 1;
 
-        if (ix1 > 8 || ix1 < 1 || iy1 > 8 || iy1 < 1 ||
-                ix2 > 10 || ix2 < 1 || iy2 > 10 || iy2 < 1) {
-            return -1;
-        }
+        double x1 = (posQuadX * 10) +  posSectX;
+        double y1 = (posQuadY * 10) + posSectY;
 
-        return Math.sqrt(Math.pow(iy1 - quadX + 0.1 * (iy2 - sectY), 2) +
-                Math.pow(ix1 - quadY + 0.1 * (ix2 - sectX), 2));
+        double x2 = (destQuadX * 10) + destSectX;
+        double y2 = (destQuadY * 10) + destSectY;
+
+        System.out.println("x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
+
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+        
     }
+
 
     private Optional<Integer> readTime() {
         Pattern pattern = Pattern.compile("\\d");
@@ -121,7 +121,7 @@ public class Computer {
         Coordinate sect = null;
         Coordinate quad = null;
         List<Integer> cord = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\d");
+        Pattern pattern = Pattern.compile("[1-9]|10");
         Matcher matcher;
         String cmd = "";
 
@@ -135,14 +135,14 @@ public class Computer {
 
         switch (cord.size()) {
             case 4:
-                quad = new Coordinate(cord.get(3), cord.get(2));
+                quad = new Coordinate(cord.get(1), cord.get(0));
                 // waterfall
             case 2:
                 if (quad == null) {
                     quad = new Coordinate(this.game.getEnterprise().getPosition().getQuadrant().getY(),
                             this.game.getEnterprise().getPosition().getQuadrant().getX());
                 }
-                sect = new Coordinate(cord.get(1), cord.get(0));
+                sect = new Coordinate(cord.get(3), cord.get(2));
                 break;
             default:
                 this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
