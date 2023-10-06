@@ -1,6 +1,7 @@
 package sst;
 
 import Model.Enterprise;
+import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +43,7 @@ public class Status {
                 (enterprise.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
                 enterprise.getSheilds().getLevel() / 100,
                 enterprise.getSheilds().getUnits(),
-                enterprise.getKlingons(),
-                enterprise.getTime());
+                game.getKlingons().length,
+                game.getTime());
     }
 }

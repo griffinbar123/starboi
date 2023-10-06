@@ -3,6 +3,7 @@ package sst;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
+import Model.Game;
 import Model.Klingon;
 import Model.Planet;
 import Model.Position;

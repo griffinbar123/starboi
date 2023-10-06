@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
 import Model.Enterprise;
+import Model.Game;
 import Model.Position;
 import Model.Sheild;
 
@@ -22,18 +23,18 @@ public class CommandTest {
     @Before
     public void setUp() {
         // Mocking the game
-        this.game = mock(Game.class);
-        this.game.con = mock(Console.class);
-        this.enterprise = mock(Enterprise.class);
+        game = mock(Game.class);
+        game.con = mock(Console.class);
+        enterprise = mock(Enterprise.class);
 
         // Mocking the commands
-        this.status = new Status(this.game);
-        this.commands = new Commands(this.game);
-        this.srScan = new SrScan(this.game);
-        this.lrScan = new LrScan(this.game);
+        status = new Status(game);
+        commands = new Commands(game);
+        srScan = new SrScan(game);
+        lrScan = new LrScan(game);
 
         // Mocking the Enterprise functionality
-        when(game.getEnterprise()).thenReturn(this.enterprise);
+        when(game.getEnterprise()).thenReturn(enterprise);
         when(enterprise.getStarDate()).thenReturn((float) 123.4);
         when(enterprise.getCondition()).thenReturn("GREEN");
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
@@ -47,13 +48,13 @@ public class CommandTest {
         shields.setLevel((float) 100.0);
         shields.setUnits((float) 1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
-        when(enterprise.getKlingons()).thenReturn(5);
-        when(enterprise.getTime()).thenReturn((float) 10.0);
+        when(game.getKlingons().length).thenReturn(5);
+        when(game.getTime()).thenReturn((float) 10.0);
     }
 
     @Test
     public void statusCommandShouldWorkAsExpected() {
-        this.game.con.flush();
+        game.con.flush();
         status.ExecSTATUS();
         String stat = "Stardate      %.1f\n" +
                 "Condition     %s\n" +

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import Model.Coordinate;
+import Model.Game;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

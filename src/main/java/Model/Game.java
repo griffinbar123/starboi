@@ -1,4 +1,4 @@
-package sst;
+package Model;
 
 import java.io.Console;
 import java.util.HashMap;
@@ -6,13 +6,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import Model.Coordinate;
-import Model.Enterprise;
-import Model.Klingon;
-import Model.Planet;
-import Model.Romulan;
-import Model.Star;
-import Model.Starbase;
 import lombok.Data;
 
 /**
@@ -21,6 +14,7 @@ import lombok.Data;
  */
 @Data
 public class Game {
+    @JsonIgnore
     public Console con = System.console();
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
@@ -30,6 +24,7 @@ public class Game {
     private Star[] stars;
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
+    private float time;
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){

@@ -1,5 +1,6 @@
 package sst;
 
+import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
