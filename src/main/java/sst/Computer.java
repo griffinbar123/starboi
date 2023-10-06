@@ -30,22 +30,68 @@ public class Computer {
      */
     public void ExecCOMPUTER() {
         Optional<Integer> tm;
+        Optional<Float> wf;
         Position dest = new Position(null, null);
         Integer time;
+        Float warp;
 
         dest = readCorodinates().orElse(null);
         if (dest == null) return;
 
-        tm = readTime();
-        if (tm == null) return;
+        this.game.con.printf("Answer \"no\" if you don't know the value:\n");
+        while(true) {
+            tm = readTime();
+            if (tm != null) break;
+            wf = readWarpFactor();
+            if (wf != null) break;
+            this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
+        }
 
         time = tm.orElse(null);
+        warp = wf.orElse(null);
 
-        if (time == null) {
-            calcDistance(this.game.getEnterprise().getPosition(), dest);
-        } else {
-            calcTime(this.game.getEnterprise().getPosition(), dest, time);
+        if(warp != null) {
+            this.game.getEnterprise().setWarp(warp);
+            this.game.con.printf("\nRemaining energy will be %d", calcPower(this.game.getEnterprise().getPosition(), dest));
+            if(time != null)
+                this.game.con.printf("\nMinimum warp needed is %d", calcWarpDrive(this.game.getEnterprise().getPosition(), dest, time));
+            this.game.con.printf("\nAnd we will arrive at stardate %d", calcTime(this.game.getEnterprise().getPosition(), dest));
         }
+
+    }
+
+    /**
+     * calculate the minimum warp needed to travel a certain distance in a certain amount of time
+     * 
+     * @param pos starting position
+     * @param dest position to travel to
+     * @return the power required to make the journey
+     * @author Griffin Barnard
+     */
+    public double calcWarpDrive(Position pos, Position dest, Integer Time) {
+        double distance = calcDistance(pos, dest);
+        double warpSpeed = game.getEnterprise().getWarp();
+        // tpower = dist*twarp*twarp*twarp*(shldup+1);
+        double powerNeeded = 0.0;
+        System.out.println(powerNeeded);
+        return powerNeeded;
+    }
+
+     /**
+     * calculate the power required for travel between two positions
+     * 
+     * @param pos starting position
+     * @param dest position to travel to
+     * @return the power required to make the journey
+     * @author Griffin Barnard
+     */
+    public double calcPower(Position pos, Position dest) {
+        double distance = calcDistance(pos, dest);
+        double warpSpeed = game.getEnterprise().getWarp();
+        // tpower = dist*twarp*twarp*twarp*(shldup+1);
+        double powerNeeded = 0.0;
+        System.out.println(powerNeeded);
+        return powerNeeded;
     }
 
     /**
@@ -53,11 +99,10 @@ public class Computer {
      * 
      * @param pos starting position
      * @param dest position to travel to
-     * @param time desired time to reach destination
      * @return the time in stardates required to make the journey
-     * @author Matthias Schrock
+     * @author Matthias Schrock & Griffin Barnard
      */
-    public double calcTime(Position pos, Position dest, Integer time) {
+    public double calcTime(Position pos, Position dest) {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double travelTime = (distance) / (warpSpeed * warpSpeed);
@@ -98,11 +143,10 @@ public class Computer {
 
 
     private Optional<Integer> readTime() {
-        Pattern pattern = Pattern.compile("\\d");
+        Pattern pattern = Pattern.compile("[1-9]|10");
         Matcher matcher;
         String cmd = "";
 
-        this.game.con.printf("Answer \"no\" if you don't know the value:\n");
         this.game.con.printf("Time or arrival date? ");
         cmd = this.game.con.readLine().toUpperCase().trim();
         if (cmd.contains("NO")) {
@@ -113,8 +157,24 @@ public class Computer {
         if (matcher.find()) {
             return Optional.ofNullable(Integer.valueOf(matcher.group()));
         }
+        return null;
+    }
 
-        this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
+     private Optional<Float> readWarpFactor() {
+        Pattern pattern = Pattern.compile("([1-9]|10)?([0-9]+)");
+        Matcher matcher;
+        String cmd = "";
+
+        this.game.con.printf("Warp Factor? ");
+        cmd = this.game.con.readLine().toUpperCase().trim();
+        if (cmd.contains("NO")) {
+            return Optional.empty();
+        }
+
+        matcher = pattern.matcher(cmd);
+        if (matcher.find()) {
+            return Optional.ofNullable(Float.valueOf(matcher.group()));
+        }
         return null;
     }
 
