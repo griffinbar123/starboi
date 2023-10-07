@@ -41,7 +41,7 @@ public class LrScan {
         this.game.con.printf("\nLong-range scan for Quadrant %d - %d:\n", row + 1, column + 1);
         this.game.con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row-1, column-1), game.getCoordinateString(row-1, column), game.getCoordinateString(row-1, column+1));
         this.game.con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row, column-1), game.getCoordinateString(row, column), game.getCoordinateString(row, column+1));
-        this.game.con.printf("%-5s%-5s%-5s\n\n", game.getCoordinateString(row+1, column-1), game.getCoordinateString(row+1, column), game.getCoordinateString(row+1, column+1));
+        this.game.con.printf("%-5s%-5s%-5s\n", game.getCoordinateString(row+1, column-1), game.getCoordinateString(row+1, column), game.getCoordinateString(row+1, column+1));
 
     }
 

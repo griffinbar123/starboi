@@ -85,6 +85,6 @@ public class SrScan {
             this.game.con.printf("\n");
         }
 
-        this.game.con.printf("\n");
+        // this.game.con.printf("\n");
     }
 }

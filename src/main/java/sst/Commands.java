@@ -20,6 +20,6 @@ public class Commands {
         this.game.con.printf("   PLANETS   REQUEST   DEATHRAY  FREEZE\n");
         this.game.con.printf("   COMPUTER  EMEXIT    PROBE     COMMANDS\n");
         this.game.con.printf("   SCORE     CLOAK     CAPTURE   HELP\n");
-        this.game.con.printf("\n");
+        // this.game.con.printf("\n");
     }
 }

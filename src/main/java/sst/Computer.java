@@ -41,22 +41,31 @@ public class Computer {
         this.game.con.printf("Answer \"no\" if you don't know the value:\n");
         while(true) {
             tm = readTime();
-            if (tm != null) break;
+            if (tm != null) {
+                wf = Optional.empty();
+                break;
+            }
+
             wf = readWarpFactor();
-            if (wf != null) break;
+            if (wf != null) {
+                tm = Optional.empty();
+                break;
+            };
+
             this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
         }
 
         time = tm.orElse(null);
-        warp = wf.orElse(null);
+        warp = wf.orElse(this.game.getEnterprise().getWarp());
 
-        if(warp != null) {
-            this.game.getEnterprise().setWarp(warp);
-            this.game.con.printf("\nRemaining energy will be %d", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
-            if(time != null)
-                this.game.con.printf("\nMinimum warp needed is %d", calcWarpDrive(this.game.getEnterprise().getPosition(), dest, time));
-            this.game.con.printf("\nAnd we will arrive at stardate %d", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
-        }
+
+        this.game.getEnterprise().setWarp(warp);
+        this.game.con.printf("\nRemaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
+        if(time != null)
+            this.game.con.printf("\nMinimum warp needed is %f", calcWarpDrive(this.game.getEnterprise().getPosition(), dest, time));
+        this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
+        
+        this.game.con.printf("\n");
 
     }
 
@@ -74,7 +83,7 @@ public class Computer {
         double warpSpeed = game.getEnterprise().getWarp();
         // tpower = dist*twarp*twarp*twarp*(shldup+1);
         double powerNeeded = 0.0;
-        System.out.println(powerNeeded);
+        // System.out.println(powerNeeded);
         return powerNeeded;
     }
 
@@ -90,7 +99,7 @@ public class Computer {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double powerNeeded = distance*warpSpeed*warpSpeed*warpSpeed*(0+1); //TODO: implement draining power based off shields * (shldup+1)
-        System.out.println(powerNeeded);
+        // System.out.println(powerNeeded);
         return powerNeeded;
     }
 
@@ -106,7 +115,7 @@ public class Computer {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double travelTime = (distance) / (warpSpeed * warpSpeed);
-        System.out.println(travelTime);
+        // System.out.println(travelTime);
         return travelTime;
     }
 
@@ -135,7 +144,7 @@ public class Computer {
         double x2 = (destQuadX * 10) + destSectX;
         double y2 = (destQuadY * 10) + destSectY;
 
-        System.out.println("x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
+        // System.out.println("x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
 
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         

@@ -73,6 +73,7 @@ public class CommandHandler {
         this.game.con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
 
         while (true) {
+            this.game.con.printf("\n");
             str = this.game.con.readLine("COMMAND> ");
             cmdstr = str.toUpperCase().trim();
 
