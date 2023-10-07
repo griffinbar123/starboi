@@ -4,12 +4,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import Utils.Utils;
 
 @Data
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Enterprise extends Entity {
-    private float starDate;
+    private float starDate = Utils.randInt(21, 39) * 100;
     private String condition;
 
     @NonNull

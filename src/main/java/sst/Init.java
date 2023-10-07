@@ -177,6 +177,7 @@ public class Init {
 
     private void initializeEnterprise() {
         Position pos = generateNewPosition(null, 9);
+        
         this.game.setEnterprise(new Enterprise(pos));
     }
 

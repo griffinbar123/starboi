@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
  * Hopefully methods in the computer command can be
  * used for calculating time in the move command
  * 
- * @author Matthias Schrock
+ * @author Matthias Schrock and Griffin Barnard
  */
 @RequiredArgsConstructor
 public class Computer {
@@ -32,7 +32,6 @@ public class Computer {
         Optional<Integer> tm = Optional.empty();
         Optional<Float> wf = Optional.empty();
         Position dest = new Position(null, null);
-        Integer time;
         Float warp;
         Float twarp = null;
 
@@ -54,14 +53,12 @@ public class Computer {
 
             wf = readWarpFactor();
             if (wf != null) {
-                tm = Optional.empty();
                 break;
             };
 
             this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
         }
 
-        time = tm.orElse(null);
         warp = wf.orElse(this.game.getEnterprise().getWarp());
 
         Float warp2 = this.game.getEnterprise().getWarp(); //save warp as we change it on Enterprise
