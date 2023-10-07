@@ -29,11 +29,12 @@ public class Computer {
      * COMPUTER command implementation
      */
     public void ExecCOMPUTER() {
-        Optional<Integer> tm;
-        Optional<Float> wf;
+        Optional<Integer> tm = Optional.empty();
+        Optional<Float> wf = Optional.empty();
         Position dest = new Position(null, null);
         Integer time;
         Float warp;
+        Float twarp = null;
 
         dest = readCorodinates().orElse(null);
         if (dest == null) return;
@@ -43,6 +44,11 @@ public class Computer {
             tm = readTime();
             if (tm != null) {
                 wf = Optional.empty();
+                twarp = calcWarpDrive(this.game.getEnterprise().getPosition(), dest,  tm.orElse(null));
+                if(twarp > 10){
+                    this.game.con.printf("We'll never make it, sir.\n");
+                    continue;
+                }
                 break;
             }
 
@@ -58,12 +64,19 @@ public class Computer {
         time = tm.orElse(null);
         warp = wf.orElse(this.game.getEnterprise().getWarp());
 
+        Float warp2 = this.game.getEnterprise().getWarp(); //save warp as we change it on Enterprise
 
+        if(twarp != null) 
+            warp = twarp;
+            
         this.game.getEnterprise().setWarp(warp);
-        this.game.con.printf("\nRemaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
-        if(time != null)
-            this.game.con.printf("\nMinimum warp needed is %f", calcWarpDrive(this.game.getEnterprise().getPosition(), dest, time));
+        this.game.con.printf("Remaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
+        if(twarp != null)
+            this.game.con.printf("\nMinimum warp needed is %f", twarp);
         this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
+
+        if(twarp != null)
+            this.game.getEnterprise().setWarp(warp2);
         
         this.game.con.printf("\n");
 
@@ -74,17 +87,14 @@ public class Computer {
      * 
      * @param pos starting position
      * @param dest position to travel to
+     * @param time amount of time the distance needs to be travelled in
      * @return the power required to make the journey
      * @author Griffin Barnard
      */
-    public double calcWarpDrive(Position pos, Position dest, Integer Time) {
-        //TODO: This doesnt work yet
+    public Float calcWarpDrive(Position pos, Position dest, Integer time) {
         double distance = calcDistance(pos, dest);
-        double warpSpeed = game.getEnterprise().getWarp();
-        // tpower = dist*twarp*twarp*twarp*(shldup+1);
-        double powerNeeded = 0.0;
-        // System.out.println(powerNeeded);
-        return powerNeeded;
+        double calculatedWarp = Math.floor(Math.sqrt(distance/time));
+        return (float)calculatedWarp;
     }
 
      /**
@@ -98,8 +108,7 @@ public class Computer {
     public double calcPower(Position pos, Position dest) {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
-        double powerNeeded = distance*warpSpeed*warpSpeed*warpSpeed*(0+1); //TODO: implement draining power based off shields * (shldup+1)
-        // System.out.println(powerNeeded);
+        double powerNeeded = (distance/10.0)*warpSpeed*warpSpeed*warpSpeed*(0+1); //TODO: implement draining power based off shields * (shldup+1)
         return powerNeeded;
     }
 
