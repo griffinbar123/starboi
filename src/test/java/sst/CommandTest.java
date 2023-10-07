@@ -17,6 +17,7 @@ import Model.Sheild;
 public class CommandTest {
     private Game game;
     private Enterprise enterprise;
+    private Chart chart;
     private Status status;
     private Commands commands;
     private SrScan srScan;
@@ -30,6 +31,7 @@ public class CommandTest {
         enterprise = mock(Enterprise.class);
 
         // Mocking the commands
+        chart = new Chart(game);
         status = new Status(game);
         commands = new Commands(game);
         srScan = new SrScan(game);
@@ -37,6 +39,29 @@ public class CommandTest {
 
         // Mocking the game components
         mockObjects();
+    }
+
+    @Test
+    public void chartCommandShouldWorkAsExpected() {
+        chart.ExecCHART();
+        String chart = "\nSTAR CHART FOR THE KNOWN GALAXY\n\n" +
+                "     1    2    3    4    5    6    7    8\n" +
+                "   -----------------------------------------\n" +
+                "  - \n" +
+                "1 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "2 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "3 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "4 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "5 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "6 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "\nThe Enterprise is currently in Quadrant %d - %d\n";
+
+        verify(game.con).printf(chart, "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", 1, 1);
     }
 
     @Test
@@ -99,9 +124,9 @@ public class CommandTest {
         lrScan.ExecLRSCAN();
 
         String scan = "\nLong-range scan for Quadrant %d - %d:\n" +
-        "%-5s%-5s%-5s\n" +
-        "%-5s%-5s%-5s\n" +
-        "%-5s%-5s%-5s\n";
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n";
 
         verify(game.con).printf(scan, 1, 1, "1", "1", "1", "1", "1", "1", "1", "1", "1");
     }
@@ -135,7 +160,7 @@ public class CommandTest {
         shields.setLevel(100);
         shields.setUnits((float) 1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
-        Klingon klingons[] = new Klingon[]{new Klingon(position)};
+        Klingon klingons[] = new Klingon[] { new Klingon(position) };
         when(game.getKlingons()).thenReturn(klingons);
         when(game.getTime()).thenReturn((float) 10.0);
         when(game.getCoordinateString(anyInt(), anyInt())).thenReturn("1");
