@@ -16,7 +16,8 @@ import lombok.RequiredArgsConstructor;
  * Hopefully methods in the computer command can be
  * used for calculating time in the move command
  * 
- * @author Matthias Schrock and Griffin Barnard
+ * @author Matthias Schrock
+ * @author Griffin Barnard
  */
 @RequiredArgsConstructor
 public class Computer {

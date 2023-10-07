@@ -1,5 +1,6 @@
 package sst;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +17,7 @@ import Model.Sheild;
 public class CommandTest {
     private Game game;
     private Enterprise enterprise;
+    private Chart chart;
     private Status status;
     private Commands commands;
     private SrScan srScan;
@@ -29,6 +31,7 @@ public class CommandTest {
         enterprise = mock(Enterprise.class);
 
         // Mocking the commands
+        chart = new Chart(game);
         status = new Status(game);
         commands = new Commands(game);
         srScan = new SrScan(game);
@@ -36,6 +39,29 @@ public class CommandTest {
 
         // Mocking the game components
         mockObjects();
+    }
+
+    @Test
+    public void chartCommandShouldWorkAsExpected() {
+        chart.ExecCHART();
+        String chart = "\nSTAR CHART FOR THE KNOWN GALAXY\n\n" +
+                "     1    2    3    4    5    6    7    8\n" +
+                "   -----------------------------------------\n" +
+                "  - \n" +
+                "1 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "2 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "3 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "4 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "5 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "6 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "\nThe Enterprise is currently in Quadrant %d - %d\n";
+
+        verify(game.con).printf(chart, "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
+                "1", "1", "1", "1", "1", "1", 1, 1);
     }
 
     @Test
@@ -56,14 +82,21 @@ public class CommandTest {
                 "UP", 100, (float) 1.0, 1, (float) 10.00);
     }
 
-    @Test(expected = Test.None.class)
-    public void statusCommandShouldNotHaveException() {
-        status.ExecSTATUS();
-    }
-
-    @Test(expected = Test.None.class)
-    public void commandsCommandShouldNotHaveException() {
+    @Test
+    public void commandsCommandShouldWorkAsExpected() {
         commands.ExecCOMMANDS();
+
+        String out = "   SRSCAN    MOVE      PHASERS   CALL\n" +
+                "   STATUS    IMPULSE   PHOTONS   ABANDON\n" +
+                "   LRSCAN    WARP      SHIELDS   DESTRUCT\n" +
+                "   CHART     REST      DOCK      QUIT\n" +
+                "   DAMAGES   REPORT    SENSORS   ORBIT\n" +
+                "   TRANSPORT MIHE      CRYSTALS  SHUTTLE\n" +
+                "   PLANETS   REQUEST   DEATHRAY  FREEZE\n" +
+                "   COMPUTER  EMEXIT    PROBE     COMMANDS\n" +
+                "   SCORE     CLOAK     CAPTURE   HELP\n\n";
+
+        verify(game.con).printf("%s", out);
     }
 
     @Test
@@ -86,18 +119,20 @@ public class CommandTest {
         verify(game.con).printf("%s", scan);
     }
 
-    @Test(expected = Test.None.class)
-    public void srScanCommandShouldNotHaveException() {
-    srScan.ExecSRSCAN();
+    @Test
+    public void lrSacnShouldWorkAsExpected() {
+        lrScan.ExecLRSCAN();
+
+        String scan = "\nLong-range scan for Quadrant %d - %d:\n" +
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n";
+
+        verify(game.con).printf(scan, 1, 1, "1", "1", "1", "1", "1", "1", "1", "1", "1");
     }
 
-    // @Test(expected = Test.None.class)
-    // public void lrScanCommandShouldNotHaveException() {
-    // lrScan.ExecLRSCAN();
-    // }
-
     private void mockObjects() {
-        when(game.getEnterprise()).thenReturn(enterprise);
+        // Empty map
         char map[][][][] = new char[8][8][10][10];
         for (int a = 0; a < 8; a++) {
             for (int b = 0; b < 8; b++) {
@@ -108,6 +143,9 @@ public class CommandTest {
                 }
             }
         }
+
+        // Objects
+        when(game.getEnterprise()).thenReturn(enterprise);
         when(game.getMap()).thenReturn(map);
         when(enterprise.getStarDate()).thenReturn((float) 123.4);
         when(enterprise.getCondition()).thenReturn("GREEN");
@@ -122,8 +160,9 @@ public class CommandTest {
         shields.setLevel(100);
         shields.setUnits((float) 1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
-        Klingon klingons[] = new Klingon[]{new Klingon(position)};
+        Klingon klingons[] = new Klingon[] { new Klingon(position) };
         when(game.getKlingons()).thenReturn(klingons);
         when(game.getTime()).thenReturn((float) 10.0);
+        when(game.getCoordinateString(anyInt(), anyInt())).thenReturn("1");
     }
 }
