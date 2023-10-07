@@ -28,20 +28,20 @@ public class Status {
                 "Warp Factor   %.1f\n" +
                 "Energy        %.2f\n" +
                 "Torpedoes     %d\n" +
-                "Shields       %s, %.0f%% %.1f units\n" +
+                "Shields       %s, %d%% %.1f units\n" +
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
         this.game.con.printf(stat,
                 enterprise.getStarDate(),
                 enterprise.getCondition(),
-                enterprise.getPosition().getQuadrant().getX(),
-                enterprise.getPosition().getQuadrant().getY(),
-                enterprise.getPosition().getSector().getX(),
-                enterprise.getPosition().getSector().getY(),
+                enterprise.getPosition().getQuadrant().getX() + 1,
+                enterprise.getPosition().getQuadrant().getY() + 1,
+                enterprise.getPosition().getSector().getX() + 1,
+                enterprise.getPosition().getSector().getY() + 1,
                 (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"),
                 enterprise.getWarp(), enterprise.getEnergy(), enterprise.getTorpedoes(),
-                (enterprise.getSheilds().getActive() == 1 ? "ACTIVE" : "DOWN"),
-                enterprise.getSheilds().getLevel() / 100,
+                enterprise.getSheilds().getActive(),
+                enterprise.getSheilds().getLevel(),
                 enterprise.getSheilds().getUnits(),
                 game.getKlingons().length,
                 game.getTime());
