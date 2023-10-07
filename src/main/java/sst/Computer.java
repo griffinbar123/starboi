@@ -52,7 +52,7 @@ public class Computer {
                 break;
             }
 
-            wf = readWarpFactor();
+            wf = readWarpFactor(true);
             if (wf != null) {
                 break;
             };
@@ -67,16 +67,25 @@ public class Computer {
         if(twarp != null) 
             warp = twarp;
             
-        this.game.getEnterprise().setWarp(warp);
-        this.game.con.printf("Remaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
-        if(twarp != null)
-            this.game.con.printf("\nMinimum warp needed is %f", twarp);
-        this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
+        while(true){
+            if(warp == null) break;
+            this.game.getEnterprise().setWarp(warp);
+            this.game.con.printf("Remaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
+            if(twarp != null)
+                this.game.con.printf("\nMinimum warp needed is %f", twarp);
+            this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
+    
+            if(twarp != null)
+                this.game.getEnterprise().setWarp(warp2);
+            
+            this.game.con.printf("\n");
 
-        if(twarp != null)
-            this.game.getEnterprise().setWarp(warp2);
-        
-        this.game.con.printf("\n");
+            wf = readWarpFactor(false);
+
+            if(wf == null) break;
+
+            warp = wf.orElse(null);
+        }
 
     }
 
@@ -151,8 +160,6 @@ public class Computer {
         double x2 = (destQuadX * 10) + destSectX;
         double y2 = (destQuadY * 10) + destSectY;
 
-        // System.out.println("x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
-
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         
     }
@@ -176,22 +183,21 @@ public class Computer {
         return null;
     }
 
-     private Optional<Float> readWarpFactor() {
-        Pattern pattern = Pattern.compile("([1-9]|10)?([0-9]+)");
-        Matcher matcher;
+     private Optional<Float> readWarpFactor(Boolean prompt) {
         String cmd = "";
 
-        this.game.con.printf("Warp Factor? ");
+        this.game.con.printf(prompt ? "Warp Factor? " : "New warp factor to try? ");
         cmd = this.game.con.readLine().toUpperCase().trim();
         if (cmd.contains("NO")) {
             return Optional.empty();
         }
 
-        matcher = pattern.matcher(cmd);
-        if (matcher.find()) {
-            return Optional.ofNullable(Float.valueOf(matcher.group()));
+        Float num = Float.valueOf(cmd);
+
+        if (num >= 1.0 && num <= 10.0) {
+            return Optional.ofNullable(num);
         }
-        return null;
+        return Optional.empty();
     }
 
     private Optional<Position> readCorodinates() {
