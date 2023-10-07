@@ -22,19 +22,19 @@ public class SrScan {
         int row = enterprise.getPosition().getQuadrant().getX();
         int column = enterprise.getPosition().getQuadrant().getY();
         int r, c;
-        String out = "\nShort-range scan:\n\n";
+        String out = "\n"; //Short-range scan:\n
         boolean leftside = true;
         boolean rightside = true;
 
         // print column header
-        out += "        ";
+        out += "    ";
         for (c = 1; c <= 10; c++)
             out += String.format("%1d ", c);
         out += "\n";
 
         for (r = 1; r <= 10; r++) {
             if (leftside) {
-                out += String.format("    %2d  ", r);
+                out += String.format("%2d  ", r);
 
                 for (c = 1; c <= 10; c++)
                     out += String.format("%c ", this.game.getMap()[row][column][r - 1][c - 1]);
@@ -85,7 +85,6 @@ public class SrScan {
             }
             out += "\n";
         }
-        out += "\n";
 
         this.game.con.printf("%s", out);
     }
