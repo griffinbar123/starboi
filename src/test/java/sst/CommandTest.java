@@ -103,18 +103,17 @@ public class CommandTest {
     public void srScanShouldWorkAsExpected() {
         srScan.ExecSRSCAN();
 
-        String scan = "\nShort-range scan:\n\n" +
-                "        1 2 3 4 5 6 7 8 9 10 \n" +
-                "     1  . . . . . . . . . .  Stardate      123.4\n" +
-                "     2  . . . . . . . . . .  Condition     GREEN\n" +
-                "     3  . . . . . . . . . .  Position      1 - 1, 1 - 1\n" +
-                "     4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
-                "     5  . . . . . . . . . .  Warp Factor   1.0\n" +
-                "     6  . . . . . . . . . .  Energy        100.00\n" +
-                "     7  . . . . . . . . . .  Torpedoes     10\n" +
-                "     8  . . . . . . . . . .  Shields       UP, 100% 1.0 units\n" +
-                "     9  . . . . . . . . . .  Klingons Left 1\n" +
-                "    10  . . . . . . . . . .  Time Left     10.00\n\n";
+        String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
+                " 1  . . . . . . . . . .  Stardate      123.4\n" +
+                " 2  . . . . . . . . . .  Condition     GREEN\n" +
+                " 3  . . . . . . . . . .  Position      1 - 1, 1 - 1\n" +
+                " 4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
+                " 5  . . . . . . . . . .  Warp Factor   1.0\n" +
+                " 6  . . . . . . . . . .  Energy        100.00\n" +
+                " 7  . . . . . . . . . .  Torpedoes     10\n" +
+                " 8  . . . . . . . . . .  Shields       UP, 100% 1.0 units\n" +
+                " 9  . . . . . . . . . .  Klingons Left 1\n" +
+                "10  . . . . . . . . . .  Time Left     10.00\n";
 
         verify(game.con).printf("%s", scan);
     }
