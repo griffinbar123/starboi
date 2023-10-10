@@ -29,7 +29,7 @@ public class Computer {
     /**
      * COMPUTER command implementation
      */
-    public void ExecCOMPUTER() {
+    public void ExecCOMPUTER(Object... params) {
         Optional<Integer> tm = Optional.empty();
         Optional<Float> wf = Optional.empty();
         Position dest = new Position(null, null);
