@@ -24,6 +24,11 @@ public class Init {
     private Game game;
     public static final char NOTHING = '\u00B7';
 
+    /**
+     * Allows the user to select a game style
+     * 
+     * @author Matthias Schrock
+     */
     private void gameStyle() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
@@ -52,7 +57,6 @@ public class Init {
     /**
      * Allows the user to select a game level
      * 
-     * @param levelChoice
      * @author Fabrice Mpozenzi
      */
     private void gameLevel() {
@@ -86,7 +90,6 @@ public class Init {
     /**
      * Allows the user to select a game type
      * 
-     * @param gameChoice
      * @author Fabrice Mpozenzi
      */
     private void gameType() {
@@ -120,7 +123,14 @@ public class Init {
                 }
         }
     }
-    
+
+    /**
+     * Initializes the game to the type desired by the user
+     * 
+     * @return map of entities with their corresponding count throughout the map for initialization
+     * @author Matthias Schrock
+     * @author Fabrice Mpozenzi
+     */
     private Map<String, Integer> gameDifficulty() {
         Map<String, Integer> params = new HashMap<>(); // entities
 
@@ -146,11 +156,15 @@ public class Init {
         Map<String, Integer> params = gameDifficulty();
         initializeEnterprise();
         // TODO: get entity numbers from Fabrice
-        initializePlanets(params.get("planets"));
+        // initializePlanets(params.get("planets"));
+        initializePlanets(30);
         initializeKlingons(params.get("klingons"));
-        initializeStarbases(params.get("starbases"));
-        initializeStars(params.get("stars"));
-        initializeRomulans(params.get("romulans"));
+        // initializeStarbases(params.get("starbases"));
+        initializeStarbases(4);
+        // initializeStars(params.get("stars"));
+        initializeStars(300);
+        // initializeRomulans(params.get("romulans"));
+        initializeRomulans(4);
         updateMap();
         CommandHandler handler = new CommandHandler(this.game);
 
