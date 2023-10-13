@@ -14,6 +14,36 @@ import lombok.Data;
  */
 @Data
 public class Game {
+    public enum GameLevel {
+        NOVICE(1),
+        FAIR(2),
+        GOOD(3),
+        EXPERT(4),
+        EMERITUS(5);
+
+        private final int value;
+
+        private GameLevel(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public enum GameType {
+        SHORT,
+        MEDIUM,
+        LONG;
+    }
+
+    public enum GameStyle {
+        REGULAR,
+        TOURNAMENT,
+        FROZEN;
+    }
+
     @JsonIgnore
     public Console con = System.console();
     private char[][][][] map = new char[8][8][10][10];
@@ -25,6 +55,9 @@ public class Game {
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private float time;
+    private GameType type;
+    private GameLevel skill;
+    private GameStyle style;
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){

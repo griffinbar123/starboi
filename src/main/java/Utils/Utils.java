@@ -10,7 +10,7 @@ public class Utils {
      * @param max
      * @return a random integer between the specified minimum and maximum
      */
-    public static int randInt(int min, int max) {
+    public static int randInt(double min, double max) {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 

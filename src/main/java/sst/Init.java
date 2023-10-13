@@ -2,7 +2,6 @@ package sst;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -15,6 +14,8 @@ import Model.Star;
 import Model.Starbase;
 import Utils.Utils;
 
+import static Utils.Utils.randInt;
+
 /**
  * Initializes a game. In future versions, this class will be able
  * to restore a saved game state
@@ -22,26 +23,64 @@ import Utils.Utils;
 public class Init {
     private Game game;
     public static final char NOTHING = '\u00B7';
-    
+
+    private void gameStyle() {
+        CommandHandler handler = new CommandHandler(this.game);
+        String in = "";
+
+        this.game.con.printf("Would you like a regular, tournament, or frozen game?");
+        in = this.game.con.readLine();
+        String styl = handler.readCommands(in).get().get(0);
+
+        while (true) {
+            switch (styl) {
+                case "REGULAR":
+                    this.game.setStyle(Game.GameStyle.REGULAR);
+                    return;
+                case "TOURNAMENT":
+                    this.game.setStyle(Game.GameStyle.TOURNAMENT);
+                    return;
+                case "FROZEN":
+                    this.game.setStyle(Game.GameStyle.FROZEN);
+                    return;
+                default:
+                    this.game.con.printf("Invalid choice. Please choose regular, tournament, or frozen.\n");
+            }
+        }
+    }
+
     /**
      * Allows the user to select a game level
      * 
      * @param levelChoice
      * @author Fabrice Mpozenzi
      */
-    private void gameLevel(String levelChoice) {
-        switch (levelChoice) {
-            case "novice":
-            case "fair":
-            case "good":
-            case "expert":
-            case "emeritus":
-                System.out.print("Please type in a secret password (9 characters maximum)- ");
-                break;
-            default:
-                System.out.println("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus");
-                break;
+    private void gameLevel() {
+        CommandHandler handler = new CommandHandler(this.game);
+        String in = "";
+
+        this.game.con.printf("Would you like a Short, Medium, or Long game?");
+        in = this.game.con.readLine();
+        String len = handler.readCommands(in).get().get(0);
+
+        while (true) {
+            switch (len) {
+                case "SHORT":
+                    this.game.setType(Game.GameType.SHORT);
+                    return;
+                case "MEDIUM":
+                    this.game.setType(Game.GameType.MEDIUM);
+                    return;
+                case "LONG":
+                    this.game.setType(Game.GameType.LONG);
+                    return;
+                default:
+                    this.game.con.printf("Invalid choice. Please choose short, medium, or long.\n");
+                    break;
+            }
         }
+        
+        // System.out.print("Please type in a secret password (9 characters maximum)- ");
     }
     
     /**
@@ -50,48 +89,47 @@ public class Init {
      * @param gameChoice
      * @author Fabrice Mpozenzi
      */
-    private void gameType(String gameChoice) {
-        switch (gameChoice) {
-            case "short":
-            case "medium":
-            case "long":
-                System.out.print("Are you a Novice, Fair, Good, Expert, or Emeritus player? ");
-                String playerChoiceOne = this.game.con.readLine().trim().toLowerCase();
-                System.out.println();
-                gameLevel(playerChoiceOne);
-                break;
-            default:
-                System.out.println("Invalid choice. Please choose short, medium, or long.");
-                break;
+    private void gameType() {
+        CommandHandler handler = new CommandHandler(this.game);
+        String in = "";
+
+        this.game.con.printf("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
+        in = this.game.con.readLine();
+        String lvl = handler.readCommands(in).get().get(0);
+
+        while (true) {
+            switch (lvl) {
+                case "NOVICE":
+                    this.game.setSkill(Game.GameLevel.NOVICE);
+                    return;
+                case "FAIR":
+                    this.game.setSkill(Game.GameLevel.FAIR);
+                    return;
+                case "GOOD":
+                    this.game.setSkill(Game.GameLevel.GOOD);
+                    return;
+                case "EXPERT":
+                    this.game.setSkill(Game.GameLevel.EXPERT);
+                    return;
+                case "EMERITUS":
+                    this.game.setSkill(Game.GameLevel.EMERITUS);
+                    return;
+                default:
+                    this.game.con.printf("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus\n");
+                    return;
+                }
         }
     }
     
     private Map<String, Integer> gameDifficulty() {
-        Map<String, Integer> params = new HashMap<>();
-        // TODO: implement from original for number of klingons: d.remkl = 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15); // d.remkl and inkling includes commanders and SC
-        System.out.print("Would you like a regular, tournament, or frozen game? ");
-        String initChoice = this.game.con.readLine().trim().toLowerCase();
-        switch (initChoice) {
-            case "regular":
-                System.out.println("Would you like a Short, Medium, or Long game? ");
-                String choice = this.game.con.readLine().trim().toLowerCase(null);
-                gameType(choice);
-                break;
-            case "tournament":
-                System.out.println("Type in tournament number-");
-                String tourNumber = this.game.con.readLine().trim();
-                System.out.println("Would you like a Short, Medium, or Long game? ");
-                choice = this.game.con.readLine().trim().toLowerCase();
-                gameType(choice);
-                break;
-            case "frozen":
-                System.out.println("File name: ");// build this later
-                break;
-            default:
-                System.out.println("Would you like a regular, tournament, or frozen game?");
-                break;
-    
-        }
+        Map<String, Integer> params = new HashMap<>(); // entities
+
+        gameStyle();
+        gameLevel();
+        gameType();
+        int skill = this.game.getSkill().getValue();
+        params.put("klingons", randInt(0.15, 0.15 + (skill + 1) * skill * 0.1)); // All Klingons (any type)
+
         return params;
     }
 
@@ -101,11 +139,11 @@ public class Init {
      * @author Matthias Schrock
      */
     public void start() {
-        Map<String, Integer> params = gameDifficulty();
-
         // TODO: be able to load game
         // TODO: implement original code for initializing stardate: d.date = indate = 100.0*(int)(31.0*Rand()+20.0)
         this.game = new Game();
+
+        Map<String, Integer> params = gameDifficulty();
         initializeEnterprise();
         // TODO: get entity numbers from Fabrice
         initializePlanets(params.get("planets"));
