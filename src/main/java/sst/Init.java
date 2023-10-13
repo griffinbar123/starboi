@@ -1,5 +1,8 @@
 package sst;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -19,28 +22,7 @@ import Utils.Utils;
 public class Init {
     private Game game;
     public static final char NOTHING = '\u00B7';
-
-    /**
-     * Starts the game
-     * 
-     * @author Matthias Schrock
-     */
-    public void start() {
-        // TODO: be able to load game
-        this.game = new Game();
-        initializeEnterprise();
-        // TODO: get entity numbers from Fabrice
-        initializePlanets(30);
-        initializeKlingons(3);
-        initializeStarbases(4);
-        initializeStars(300);
-        initializeRomulans(4);
-        updateMap();
-        CommandHandler handler = new CommandHandler(this.game);
-
-        handler.getAndExecuteCommands();
-    }
-
+    
     /**
      * Allows the user to select a game level
      * 
@@ -61,7 +43,7 @@ public class Init {
                 break;
         }
     }
-
+    
     /**
      * Allows the user to select a game type
      * 
@@ -83,8 +65,9 @@ public class Init {
                 break;
         }
     }
-
-    private void gameDifficulty(String gameDiff) {
+    
+    private Map<String, Integer> gameDifficulty() {
+        Map<String, Integer> params = new HashMap<>();
         System.out.print("Would you like a regular, tournament, or frozen game? ");
         String initChoice = this.game.con.readLine().trim().toLowerCase();
         switch (initChoice) {
@@ -106,8 +89,33 @@ public class Init {
             default:
                 System.out.println("Would you like a regular, tournament, or frozen game?");
                 break;
-
+    
         }
+        return params;
+    }
+
+    /**
+     * Starts the game
+     * 
+     * @author Matthias Schrock
+     */
+    public void start() {
+        Map<String, Integer> params = gameDifficulty();
+
+        // TODO: be able to load game
+        // TODO: implement original code for initializing stardate: d.date = indate = 100.0*(int)(31.0*Rand()+20.0)
+        this.game = new Game();
+        initializeEnterprise();
+        // TODO: get entity numbers from Fabrice
+        initializePlanets(params.get("planets"));
+        initializeKlingons(params.get("klingons"));
+        initializeStarbases(params.get("starbases"));
+        initializeStars(params.get("stars"));
+        initializeRomulans(params.get("romulans"));
+        updateMap();
+        CommandHandler handler = new CommandHandler(this.game);
+
+        handler.getAndExecuteCommands();
     }
 
     // private void initializeGame() {

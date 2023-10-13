@@ -8,50 +8,20 @@ import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This class contains the main game loop in getAndExecuteCommands(). Also
+ * contains functionality for parsing the command line
+ */
 @RequiredArgsConstructor
 public class CommandHandler {
     @NonNull
     private Game game;
 
     enum Command {
-        SRSCAN,
-        LRSCAN,
-        PHASERS,
-        PHOTONS,
-        MOVE,
-        SHIELDS,
-        DOCK,
-        DAMAGES,
-        CHART,
-        IMPULSE,
-        REST,
-        WARP,
-        STATUS,
-        SENSORS,
-        ORBIT,
-        TRANSPORT,
-        MINE,
-        CRYSTALS,
-        SHUTTLE,
-        PLANETS,
-        REQUEST,
-        REPORT,
-        COMPUTER,
-        COMMANDS,
-        EMEXIT,
-        PROBE,
-        CLOAK,
-        CAPTURE,
-        SCORE,
-        ABANDON(false),
-        DESTRUCT(false),
-        FREEZE(false),
-        DEATHRAY(false),
-        DEBUG(false),
-        CALL(false),
-        QUIT(false),
-        HELP(false),
-        undefined;
+        SRSCAN, LRSCAN, PHASERS, PHOTONS, MOVE, SHIELDS, DOCK, DAMAGES, CHART, IMPULSE, REST, WARP, STATUS, SENSORS,
+        ORBIT, TRANSPORT, MINE, CRYSTALS, SHUTTLE, PLANETS, REQUEST, REPORT, COMPUTER, COMMANDS, EMEXIT, PROBE, CLOAK,
+        CAPTURE, SCORE, ABANDON(false), DESTRUCT(false), FREEZE(false), DEATHRAY(false), DEBUG(false), CALL(false),
+        QUIT(false), HELP(false), undefined;
 
         private boolean canAbbrev;
 
@@ -68,6 +38,10 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Contains the main game loop. Reads commands from console and directs them
+     * (and their parameters) to their handler methods.
+     */
     public void getAndExecuteCommands() {
         Command c = Command.undefined;
         List<String> params;
@@ -152,6 +126,13 @@ public class CommandHandler {
         return c;
     }
 
+    /**
+     * Parse commands from command line
+     * 
+     * @param cmd
+     * @return list containing command at index 0 and parameters at index 1+
+     * @author Matthias Schrock
+     */
     public Optional<List<String>> readCommands(String cmd) {
         return Optional.ofNullable(Stream.of(cmd.split("[\\s\\p{Punct}]"))
                 .filter(s -> !s.isEmpty())
@@ -160,6 +141,13 @@ public class CommandHandler {
                 .toList());
     }
 
+    /**
+     * Parse integers from command line
+     * 
+     * @param cmd
+     * @return list of integers in user command
+     * @author Matthias Schrock
+     */
     public Optional<List<Integer>> readIntegers(String cmd) {
         return Optional.ofNullable(Stream.of(cmd.split("[\\s\\p{Punct}]"))
                 .filter(s -> s.matches("\\d+"))
