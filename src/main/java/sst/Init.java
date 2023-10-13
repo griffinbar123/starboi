@@ -32,12 +32,13 @@ public class Init {
     private void gameStyle() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
-
-        this.game.con.printf("Would you like a regular, tournament, or frozen game?");
-        in = this.game.con.readLine();
-        String styl = handler.readCommands(in).get().get(0);
+        String styl = "";
 
         while (true) {
+            this.game.con.printf("Would you like a regular, tournament, or frozen game?");
+            in = this.game.con.readLine();
+            styl = handler.readCommands(in).get().get(0);
+
             switch (styl) {
                 case "REGULAR":
                     this.game.setStyle(Game.GameStyle.REGULAR);
@@ -62,12 +63,13 @@ public class Init {
     private void gameLevel() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
-
-        this.game.con.printf("Would you like a Short, Medium, or Long game?");
-        in = this.game.con.readLine();
-        String len = handler.readCommands(in).get().get(0);
+        String len = "";
 
         while (true) {
+            this.game.con.printf("Would you like a Short, Medium, or Long game?");
+            in = this.game.con.readLine();
+            len = handler.readCommands(in).get().get(0);
+
             switch (len) {
                 case "SHORT":
                     this.game.setType(Game.GameType.SHORT);
@@ -80,7 +82,6 @@ public class Init {
                     return;
                 default:
                     this.game.con.printf("Invalid choice. Please choose short, medium, or long.\n");
-                    break;
             }
         }
         
@@ -95,12 +96,13 @@ public class Init {
     private void gameType() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
-
-        this.game.con.printf("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
-        in = this.game.con.readLine();
-        String lvl = handler.readCommands(in).get().get(0);
+        String lvl = "";
 
         while (true) {
+            this.game.con.printf("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
+            in = this.game.con.readLine();
+            lvl = handler.readCommands(in).get().get(0);
+
             switch (lvl) {
                 case "NOVICE":
                     this.game.setSkill(Game.GameLevel.NOVICE);
@@ -119,7 +121,6 @@ public class Init {
                     return;
                 default:
                     this.game.con.printf("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus\n");
-                    return;
                 }
         }
     }
