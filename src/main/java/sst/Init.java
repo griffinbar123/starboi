@@ -68,6 +68,7 @@ public class Init {
     
     private Map<String, Integer> gameDifficulty() {
         Map<String, Integer> params = new HashMap<>();
+        // TODO: implement from original for number of klingons: d.remkl = 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15); // d.remkl and inkling includes commanders and SC
         System.out.print("Would you like a regular, tournament, or frozen game? ");
         String initChoice = this.game.con.readLine().trim().toLowerCase();
         switch (initChoice) {
