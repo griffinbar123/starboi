@@ -24,35 +24,57 @@ public class Init {
     private Game game;
     public static final char NOTHING = '\u00B7';
 
+    private Game.GameType matchType(String str) {
+        for (Game.GameType t : Game.GameType.values()) {
+            String lvlStr = t.toString();
+
+            String abrCheck = lvlStr.substring(0, 
+                    Math.min(lvlStr.length(), str.length()));
+
+            if (str.compareTo(abrCheck) == 0) {
+                return t;
+            }
+        }
+        return Game.GameType.UNDEFINED;
+    }
+
     /**
      * Allows the user to select a game style
      * 
      * @author Matthias Schrock
      */
-    private void gameStyle() {
+    private void gameType() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
-        String styl = "";
+        String typ = "";
 
         while (true) {
             this.game.con.printf("Would you like a regular, tournament, or frozen game?");
             in = this.game.con.readLine();
-            styl = handler.readCommands(in).get().get(0);
+            typ = handler.readCommands(in).get().get(0);
 
-            switch (styl) {
-                case "REGULAR":
-                    this.game.setStyle(Game.GameStyle.REGULAR);
-                    return;
-                case "TOURNAMENT":
-                    this.game.setStyle(Game.GameStyle.TOURNAMENT);
-                    return;
-                case "FROZEN":
-                    this.game.setStyle(Game.GameStyle.FROZEN);
-                    return;
-                default:
+            this.game.setType(matchType(typ));
+
+            if (this.game.getType() == Game.GameType.UNDEFINED) {
                     this.game.con.printf("Invalid choice. Please choose regular, tournament, or frozen.\n");
+            } else {
+                return;
             }
         }
+    }
+
+    private Game.GameLength matchLength(String str) {
+        for (Game.GameLength l : Game.GameLength.values()) {
+            String lvlStr = l.toString();
+
+            String abrCheck = lvlStr.substring(0, 
+                    Math.min(lvlStr.length(), str.length()));
+
+            if (str.compareTo(abrCheck) == 0) {
+                return l;
+            }
+        }
+        return Game.GameLength.UNDEFINED;
     }
 
     /**
@@ -60,7 +82,7 @@ public class Init {
      * 
      * @author Fabrice Mpozenzi
      */
-    private void gameLevel() {
+    private void gameLength() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
         String len = "";
@@ -70,30 +92,38 @@ public class Init {
             in = this.game.con.readLine();
             len = handler.readCommands(in).get().get(0);
 
-            switch (len) {
-                case "SHORT":
-                    this.game.setType(Game.GameType.SHORT);
-                    return;
-                case "MEDIUM":
-                    this.game.setType(Game.GameType.MEDIUM);
-                    return;
-                case "LONG":
-                    this.game.setType(Game.GameType.LONG);
-                    return;
-                default:
+            this.game.setLength(matchLength(len));
+
+            if (this.game.getLength() == Game.GameLength.UNDEFINED) {
                     this.game.con.printf("Invalid choice. Please choose short, medium, or long.\n");
+            } else {
+                return;
             }
         }
         
         // System.out.print("Please type in a secret password (9 characters maximum)- ");
     }
-    
+
+    private Game.GameLevel matchLevel(String str) {
+        for (Game.GameLevel lx : Game.GameLevel.values()) {
+            String lvlStr = lx.toString();
+
+            String abrCheck = lvlStr.substring(0, 
+                    Math.min(lvlStr.length(), str.length()));
+
+            if (str.compareTo(abrCheck) == 0) {
+                return lx;
+            }
+        }
+        return Game.GameLevel.UNDEFINED;
+    }
+
     /**
      * Allows the user to select a game type
      * 
      * @author Fabrice Mpozenzi
      */
-    private void gameType() {
+    private void gameLevel() {
         CommandHandler handler = new CommandHandler(this.game);
         String in = "";
         String lvl = "";
@@ -103,25 +133,13 @@ public class Init {
             in = this.game.con.readLine();
             lvl = handler.readCommands(in).get().get(0);
 
-            switch (lvl) {
-                case "NOVICE":
-                    this.game.setSkill(Game.GameLevel.NOVICE);
-                    return;
-                case "FAIR":
-                    this.game.setSkill(Game.GameLevel.FAIR);
-                    return;
-                case "GOOD":
-                    this.game.setSkill(Game.GameLevel.GOOD);
-                    return;
-                case "EXPERT":
-                    this.game.setSkill(Game.GameLevel.EXPERT);
-                    return;
-                case "EMERITUS":
-                    this.game.setSkill(Game.GameLevel.EMERITUS);
-                    return;
-                default:
+            this.game.setSkill(matchLevel(lvl));
+
+            if (this.game.getSkill() == Game.GameLevel.UNDEFINED) {
                     this.game.con.printf("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus\n");
-                }
+            } else {
+                return;
+            }
         }
     }
 
@@ -135,9 +153,9 @@ public class Init {
     private Map<String, Integer> gameDifficulty() {
         Map<String, Integer> params = new HashMap<>(); // entities
 
-        gameStyle();
-        gameLevel();
         gameType();
+        gameLength();
+        gameLevel();
         int skill = this.game.getSkill().getValue();
         params.put("klingons", randInt(0.15, 0.15 + (skill + 1) * skill * 0.1)); // All Klingons (any type)
 

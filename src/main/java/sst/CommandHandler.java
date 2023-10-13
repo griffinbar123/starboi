@@ -101,23 +101,25 @@ public class CommandHandler {
 
     private Command matchCommand(String cmdstr) {
         Command c = Command.undefined;
+        boolean matched = false;
+        int cmdlen = 0;
+        int tstlen = 0;
 
         for (Command cx : Command.values()) {
-            boolean Matched;
 
             if (cx.CanAbbrev()) {
                 String cmd = cx.toString();
 
-                int cmdlen = cmd.length();
-                int tstlen = cmdstr.length();
+                cmdlen = cmd.length();
+                tstlen = cmdstr.length();
 
                 String abrcheck = cmd.substring(0, Math.min(cmdlen, tstlen));
 
-                Matched = cmdstr.compareTo(abrcheck) == 0;
+                matched = cmdstr.compareTo(abrcheck) == 0;
             } else
-                Matched = cmdstr.compareTo(cx.toString()) == 0;
+                matched = cmdstr.compareTo(cx.toString()) == 0;
 
-            if (Matched) {
+            if (matched) {
                 c = cx;
                 break;
             }

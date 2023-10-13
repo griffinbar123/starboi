@@ -14,12 +14,27 @@ import lombok.Data;
  */
 @Data
 public class Game {
+    public enum GameType {
+        REGULAR,
+        TOURNAMENT,
+        FROZEN,
+        UNDEFINED;
+    }
+
+    public enum GameLength {
+        SHORT,
+        MEDIUM,
+        LONG,
+        UNDEFINED;
+    }
+
     public enum GameLevel {
         NOVICE(1),
         FAIR(2),
         GOOD(3),
         EXPERT(4),
-        EMERITUS(5);
+        EMERITUS(5),
+        UNDEFINED(0);
 
         private final int value;
 
@@ -30,18 +45,6 @@ public class Game {
         public int getValue() {
             return value;
         }
-    }
-
-    public enum GameType {
-        SHORT,
-        MEDIUM,
-        LONG;
-    }
-
-    public enum GameStyle {
-        REGULAR,
-        TOURNAMENT,
-        FROZEN;
     }
 
     @JsonIgnore
@@ -55,9 +58,9 @@ public class Game {
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private float time;
-    private GameType type;
     private GameLevel skill;
-    private GameStyle style;
+    private GameLength length;
+    private GameType type;
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
