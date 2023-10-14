@@ -32,7 +32,7 @@ public class Status {
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
         this.game.con.printf(stat,
-                enterprise.getStarDate(),
+                this.game.getStarDate(),
                 enterprise.getCondition(),
                 enterprise.getPosition().getQuadrant().getX() + 1,
                 enterprise.getPosition().getQuadrant().getY() + 1,

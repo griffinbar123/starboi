@@ -45,7 +45,7 @@ public class SrScan {
 
                 switch (r) {
                     case 1:
-                        out += String.format("Stardate      %.1f", enterprise.getStarDate());
+                        out += String.format("Stardate      %.1f", this.game.getStarDate());
                         break;
                     case 2:
                         out += String.format("Condition     %s", enterprise.getCondition());

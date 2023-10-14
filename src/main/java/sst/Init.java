@@ -11,10 +11,8 @@ import Model.Romulan;
 import Model.Star;
 import Model.Starbase;
 import Utils.Utils;
-
 import static Utils.Utils.randInt;
 
-import java.util.List;
 
 /**
  * Initializes a game. In future versions, this class will be able
