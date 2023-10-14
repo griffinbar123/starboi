@@ -1,7 +1,5 @@
 package sst;
 
-import java.util.HashMap;
-import java.util.Map;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -16,6 +14,8 @@ import Utils.Utils;
 
 import static Utils.Utils.randInt;
 
+import java.util.List;
+
 /**
  * Initializes a game. In future versions, this class will be able
  * to restore a saved game state
@@ -24,12 +24,46 @@ public class Init {
     private Game game;
     public static final char NOTHING = '\u00B7';
 
+    /**
+     * Starts the game
+     * 
+     * @author Matthias Schrock
+     */
+    public void start() {
+        // TODO: implement original code for initializing stardate: d.date = indate = 100.0*(int)(31.0*Rand()+20.0)
+        this.game = new Game();
+        CommandHandler handler = new CommandHandler(this.game);
+        int skill = 0;
+        int klingons = 0;
+
+        gameType();
+        gameLength();
+        gameLevel();
+        
+        skill = this.game.getSkill().getSkill();
+        klingons = randInt(0.15, 0.15 + (skill + 1) * skill * 0.1); // TODO: All Klingons (any type). The commanders and super commanders should be subtracted from this value
+
+        initializeEnterprise();
+        // TODO: get entity numbers from Fabrice
+        // initializePlanets(params.get("planets"));
+        initializePlanets(30);
+        initializeKlingons(klingons);
+        // initializeStarbases(params.get("starbases"));
+        initializeStarbases(4);
+        // initializeStars(params.get("stars"));
+        initializeStars(300);
+        // initializeRomulans(params.get("romulans"));
+        initializeRomulans(4);
+        updateMap();
+        handler.getAndExecuteCommands();
+    }
+
     private Game.GameType matchType(String str) {
         for (Game.GameType t : Game.GameType.values()) {
-            String lvlStr = t.toString();
+            String tStr = t.toString();
 
-            String abrCheck = lvlStr.substring(0, 
-                    Math.min(lvlStr.length(), str.length()));
+            String abrCheck = tStr.substring(0, 
+                    Math.min(tStr.length(), str.length()));
 
             if (str.compareTo(abrCheck) == 0) {
                 return t;
@@ -65,10 +99,10 @@ public class Init {
 
     private Game.GameLength matchLength(String str) {
         for (Game.GameLength l : Game.GameLength.values()) {
-            String lvlStr = l.toString();
+            String lStr = l.toString();
 
-            String abrCheck = lvlStr.substring(0, 
-                    Math.min(lvlStr.length(), str.length()));
+            String abrCheck = lStr.substring(0, 
+                    Math.min(lStr.length(), str.length()));
 
             if (str.compareTo(abrCheck) == 0) {
                 return l;
@@ -141,53 +175,6 @@ public class Init {
                 return;
             }
         }
-    }
-
-    /**
-     * Initializes the game to the type desired by the user
-     * 
-     * @return map of entities with their corresponding count throughout the map for initialization
-     * @author Matthias Schrock
-     * @author Fabrice Mpozenzi
-     */
-    private Map<String, Integer> gameDifficulty() {
-        Map<String, Integer> params = new HashMap<>(); // entities
-
-        gameType();
-        gameLength();
-        gameLevel();
-        int skill = this.game.getSkill().getValue();
-        params.put("klingons", randInt(0.15, 0.15 + (skill + 1) * skill * 0.1)); // All Klingons (any type)
-
-        return params;
-    }
-
-    /**
-     * Starts the game
-     * 
-     * @author Matthias Schrock
-     */
-    public void start() {
-        // TODO: be able to load game
-        // TODO: implement original code for initializing stardate: d.date = indate = 100.0*(int)(31.0*Rand()+20.0)
-        this.game = new Game();
-
-        Map<String, Integer> params = gameDifficulty();
-        initializeEnterprise();
-        // TODO: get entity numbers from Fabrice
-        // initializePlanets(params.get("planets"));
-        initializePlanets(30);
-        initializeKlingons(params.get("klingons"));
-        // initializeStarbases(params.get("starbases"));
-        initializeStarbases(4);
-        // initializeStars(params.get("stars"));
-        initializeStars(300);
-        // initializeRomulans(params.get("romulans"));
-        initializeRomulans(4);
-        updateMap();
-        CommandHandler handler = new CommandHandler(this.game);
-
-        handler.getAndExecuteCommands();
     }
 
     // private void initializeGame() {

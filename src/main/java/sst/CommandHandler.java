@@ -59,43 +59,39 @@ public class CommandHandler {
                 cmd = params.get(0);
                 c = matchCommand(cmd);
 
-                executeCommand(cmdstr, c, params.subList(1, params.size()));
+                switch (c) {
+                    case SRSCAN:
+                        new SrScan(this.game).ExecSRSCAN();
+                        break;
+                    case COMMANDS:
+                        new Commands(this.game).ExecCOMMANDS();
+                        break;
+                    case STATUS:
+                        new Status(this.game).ExecSTATUS();
+                        break;
+                    case LRSCAN:
+                        new LrScan(this.game).ExecLRSCAN();
+                        break;
+                    case COMPUTER:
+                        new Computer(this.game).ExecCOMPUTER(params);
+                        break;
+                    case CHART:
+                        new Chart(this.game).ExecCHART();
+                        break;
+                    case QUIT:
+                        return;
+                    case FREEZE:
+                        new Freeze(this.game).ExecFREEZE();
+                        return;
+                    case undefined:
+                        this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                        break;
+                    default:
+                        this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
+                                c.toString());
+                        break;
+                }
             }
-        }
-    }
-
-    private void executeCommand(String cmdstr, Command c, List<String> params) {
-        switch (c) {
-            case SRSCAN:
-                new SrScan(this.game).ExecSRSCAN();
-                break;
-            case COMMANDS:
-                new Commands(this.game).ExecCOMMANDS();
-                break;
-            case STATUS:
-                new Status(this.game).ExecSTATUS();
-                break;
-            case LRSCAN:
-                new LrScan(this.game).ExecLRSCAN();
-                break;
-            case COMPUTER:
-                new Computer(this.game).ExecCOMPUTER(params);
-                break;
-            case CHART:
-                new Chart(this.game).ExecCHART();
-                break;
-            case QUIT:
-                return;
-            case FREEZE:
-                new Freeze(this.game).ExecFREEZE();
-                return;
-            case undefined:
-                this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
-                break;
-            default:
-                this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
-                        c.toString());
-                break;
         }
     }
 
@@ -137,7 +133,7 @@ public class CommandHandler {
      */
     public Optional<List<String>> readCommands(String cmd) {
         return Optional.ofNullable(Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> !s.isEmpty())
+                .filter(s -> !s.equals("") || !s.equals("\n"))
                 .map(String::trim)
                 .map(String::toUpperCase)
                 .toList());

@@ -3,10 +3,9 @@ package Model;
 import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
+import static Utils.Utils.randInt;
 
 /**
  * Game entity container. In the future, this should help
@@ -36,19 +35,21 @@ public class Game {
         EMERITUS(5),
         UNDEFINED(0);
 
-        private final int value;
+        private final int skill;
 
-        private GameLevel(int value) {
-            this.value = value;
+        private GameLevel(int skill) {
+            this.skill = skill;
         }
 
-        public int getValue() {
-            return value;
+        public int getSkill() {
+            return skill;
         }
     }
 
     @JsonIgnore
     public Console con = System.console();
+
+    private float starDate = randInt(21, 39) * 100;
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
     private Enterprise enterprise;
