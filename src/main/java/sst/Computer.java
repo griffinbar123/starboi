@@ -1,15 +1,15 @@
 package sst;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import Model.Coordinate;
 import Model.Game;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import static Utils.Utils.readCommands;
+import static Utils.Utils.parseIntegers;
+import static Utils.Utils.parseDoubles;
 
 /**
  * implements the computer command.
@@ -29,22 +29,25 @@ public class Computer {
     /**
      * COMPUTER command implementation
      */
-    public void ExecCOMPUTER(Object... params) {
-        Optional<Integer> tm = Optional.empty();
-        Optional<Float> wf = Optional.empty();
+    public void ExecCOMPUTER(List<String> params) {
         Position dest = new Position(null, null);
-        Float warp;
-        Float twarp = null;
+        Double tm;
+        Double wf;
+        Double warp;
+        Double twarp = null;
 
-        dest = readCorodinates().orElse(null);
-        if (dest == null) return;
+        dest = readCorodinates(params).orElse(null);
+        if (dest == null) {
+            this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
+            return;
+        }
 
         this.game.con.printf("Answer \"no\" if you don't know the value:\n");
         while(true) {
-            tm = readTime();
+            tm = readTime().orElse(null);
             if (tm != null) {
-                wf = Optional.empty();
-                twarp = calcWarpDrive(this.game.getEnterprise().getPosition(), dest,  tm.orElse(null));
+                wf = null;
+                twarp = calcWarpDrive(this.game.getEnterprise().getPosition(), dest, tm);
                 if(twarp > 10){
                     this.game.con.printf("We'll never make it, sir.\n");
                     continue;
@@ -52,7 +55,7 @@ public class Computer {
                 break;
             }
 
-            wf = readWarpFactor(true);
+            wf = readWarpFactor(true).orElse(this.game.getEnterprise().getWarp());
             if (wf != null) {
                 break;
             };
@@ -60,9 +63,8 @@ public class Computer {
             this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
         }
 
-        warp = wf.orElse(this.game.getEnterprise().getWarp());
-
-        Float warp2 = this.game.getEnterprise().getWarp(); //save warp as we change it on Enterprise
+        warp = wf;
+        double warp2 = this.game.getEnterprise().getWarp(); //save warp as we change it on Enterprise
 
         if(twarp != null) 
             warp = twarp;
@@ -80,11 +82,11 @@ public class Computer {
             
             this.game.con.printf("\n");
 
-            wf = readWarpFactor(false);
+            wf = readWarpFactor(false).orElse(null);
 
             if(wf == null) break;
 
-            warp = wf.orElse(null);
+            warp = wf;
         }
 
     }
@@ -98,10 +100,10 @@ public class Computer {
      * @return the power required to make the journey
      * @author Griffin Barnard
      */
-    public Float calcWarpDrive(Position pos, Position dest, Integer time) {
+    public double calcWarpDrive(Position pos, Position dest, Double time) {
         double distance = calcDistance(pos, dest);
         double calculatedWarp = Math.floor(Math.sqrt(distance/time));
-        return (float)calculatedWarp;
+        return calculatedWarp;
     }
 
      /**
@@ -125,13 +127,13 @@ public class Computer {
      * @param pos starting position
      * @param dest position to travel to
      * @return the time in stardates required to make the journey
-     * @author Matthias Schrock & Griffin Barnard
+     * @author Matthias Schrock
+     * @author Griffin Barnard
      */
     public double calcTime(Position pos, Position dest) {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double travelTime = (distance) / (warpSpeed * warpSpeed);
-        // System.out.println(travelTime);
         return travelTime;
     }
 
@@ -164,68 +166,78 @@ public class Computer {
         
     }
 
-
-    private Optional<Integer> readTime() {
-        Pattern pattern = Pattern.compile("[1-9]|10");
-        Matcher matcher;
+    /**
+     * Read time from command line
+     * @return Optional containing time or empty Optional if no time was found
+     * @author Matthias Schrock
+     */
+    private Optional<Double> readTime() {
         String cmd = "";
 
-        this.game.con.printf("Time or arrival date? ");
-        cmd = this.game.con.readLine().toUpperCase().trim();
+        cmd = this.game.con.readLine("Time or arrival date? ").toUpperCase();
         if (cmd.contains("NO")) {
             return Optional.empty();
         }
 
-        matcher = pattern.matcher(cmd);
-        if (matcher.find()) {
-            return Optional.ofNullable(Integer.valueOf(matcher.group()));
-        }
-        return null;
+        return Optional.of(parseDoubles(cmd).orElse(null).get(0));
     }
 
-     private Optional<Float> readWarpFactor(Boolean prompt) {
+    /**
+     * Read warp factor from command line
+     * @param prompt true if prompt should be displayed, false otherwise
+     * @return Optional containing warp factor or empty Optional if no warp factor was found or user entered "no"
+     * @author Griffin Barnard
+     * @author Matthias Schrock
+     */
+     private Optional<Double> readWarpFactor(Boolean prompt) {
+        Double fact;
         String cmd = "";
 
         this.game.con.printf(prompt ? "Warp Factor? " : "New warp factor to try? ");
-        cmd = this.game.con.readLine().toUpperCase().trim();
+        cmd = this.game.con.readLine().toUpperCase();
         if (cmd.contains("NO")) {
             return Optional.empty();
         }
 
-        Float num = Float.valueOf(cmd);
+        fact = parseDoubles(cmd).orElse(null).get(0);
 
-        if (num >= 1.0 && num <= 10.0) {
-            return Optional.ofNullable(num);
+        if (fact >= 1.0 && fact <= 10.0) {
+            return Optional.ofNullable(fact);
         }
         return Optional.empty();
     }
 
-    private Optional<Position> readCorodinates() {
+    /**
+     * Establish destination coordinates for cacluations
+     * @param params list of parameters from command line (may be empty)
+     * @return Optional containing destination coordinates or empty Optional if no coordinates were found
+     * @author Matthias Schrock
+     */
+    public Optional<Position> readCorodinates(List<String> params) {
         Coordinate sect = null;
         Coordinate quad = null;
-        List<Integer> cord = new ArrayList<>();
-        Pattern pattern = Pattern.compile("[1-9]|10");
-        Matcher matcher;
-        String cmd = "";
+        List<String> cmd;
+        List<Integer> cord;
+        String cmdStr;
 
-        this.game.con.printf("Destination quadrant and/or sector? ");
-        cmd = this.game.con.readLine().trim();
-        matcher = pattern.matcher(cmd);
+        if (params.size() < 2) {
+            cmdStr = this.game.con.readLine("Destination quadrant and/or sector? ");
+            cmd = readCommands(cmdStr).orElse(null);
 
-        while (matcher.find()) {
-            cord.add(Integer.valueOf(matcher.group()));
+            cord = parseIntegers(cmd);
+        } else {
+            cord = parseIntegers(params);
         }
 
         switch (cord.size()) {
             case 4:
                 quad = new Coordinate(cord.get(1), cord.get(0));
-                // waterfall
-            case 2:
-                if (quad == null) {
-                    quad = new Coordinate(this.game.getEnterprise().getPosition().getQuadrant().getY(),
-                            this.game.getEnterprise().getPosition().getQuadrant().getX());
-                }
                 sect = new Coordinate(cord.get(3), cord.get(2));
+                break;
+            case 2:
+                quad = new Coordinate(this.game.getEnterprise().getPosition().getQuadrant().getY(),
+                        this.game.getEnterprise().getPosition().getQuadrant().getX());
+                sect = new Coordinate(cord.get(1), cord.get(0));
                 break;
             default:
                 this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");

@@ -1,5 +1,9 @@
 package Utils;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,15 +42,88 @@ public class Utils {
 
     /**
      * 
-     * @param <T> object return type
+     * @param <T>  object return type
      * @param json string to be deserialized into object
-     * @param obj type of object to be returned
+     * @param obj  type of object to be returned
      * @return a java objected of type T with data from json
      * @throws JsonProcessingException
      */
     public static <T> Object deserialize(String json, T obj) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, obj.getClass());
+    }
+
+    /**
+     * Parse command and parameters from string. The command is assumed to be at
+     * index 0
+     * 
+     * @param cmd
+     * @return list containing command at index 0 and parameters at index 1+
+     * @author Matthias Schrock
+     */
+    public static Optional<List<String>> readCommands(String cmd) {
+        List<String> params = Stream.of(cmd.split("[\\s\\p{Punct}]"))
+                .filter(s -> !s.equals("") || !s.equals(" ") || !s.equals("\n"))
+                .map(String::trim)
+                .map(String::toUpperCase)
+                .toList();
+        return (params.size() > 0 ? Optional.ofNullable(params) : Optional.empty());
+    }
+
+    /**
+     * Parse Integers from string
+     * 
+     * @param str input string
+     * @return list of Integers in user command
+     * @author Matthias Schrock
+     */
+    public static Optional<List<Integer>> parseIntegers(String str) {
+        return Optional.ofNullable(Stream.of(str.split("[\\s\\p{Punct}]"))
+                .filter(s -> s.matches("\\d+"))
+                .map(Integer::valueOf)
+                .toList());
+    }
+
+    /**
+     * Parse Doubles from string
+     * 
+     * @param str input string
+     * @return list of Doubles in the input string
+     * @author Matthias Schrock
+     */
+    public static Optional<List<Double>> parseDoubles(String str) {
+        return Optional.ofNullable(Stream.of(str.split("[\\s\\p{Punct}]"))
+                .filter(s -> s.matches("\\d+"))
+                .map(Double::valueOf)
+                .toList());
+    }
+
+    /**
+     * Parse Integers from list of string
+     * 
+     * @param params list of String
+     * @return list of Integers in original String list
+     * @author Matthias Schrock
+     */
+    public static List<Integer> parseIntegers(List<String> params) {
+        return params.stream()
+                .filter(s -> s.matches("\\d+"))
+                .map(Integer::valueOf)
+                .toList();
+    }
+
+    /**
+     * Parse Doubles from list of string
+     * 
+     * @param params list of String
+     * @return list of Doubles in original String list
+     * @author Matthias Schrock
+     */
+    public static List<Double> parseDoubles(List<String> params) {
+        return params.stream()
+                .filter(s -> s.matches("\\d+"))
+                .map(Double::valueOf)
+                .toList();
     }
 
     /**

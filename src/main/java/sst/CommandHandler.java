@@ -2,11 +2,10 @@ package sst;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
-
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import static Utils.Utils.readCommands;
 
 /**
  * This class contains the main game loop in getAndExecuteCommands(). Also
@@ -130,7 +129,8 @@ public class CommandHandler {
     }
 
     /**
-     * Match a string to an enum constant
+     * Match a string to an enum constant. Assumes abbreviation is allowed
+     * but will only match if the abbreviation is unique.
      * 
      * @param <T> Enum type
      * @param str String to match
@@ -188,35 +188,5 @@ public class CommandHandler {
         }
 
         return c;
-    }
-
-    /**
-     * Parse commands from command line
-     * 
-     * @param cmd
-     * @return list containing command at index 0 and parameters at index 1+
-     * @author Matthias Schrock
-     */
-    public Optional<List<String>> readCommands(String cmd) {
-        List<String> params = Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> !s.equals("") || !s.equals(" ") || !s.equals("\n"))
-                .map(String::trim)
-                .map(String::toUpperCase)
-                .toList();
-        return (params.size() > 0 ? Optional.ofNullable(params) : Optional.empty());
-    }
-
-    /**
-     * Parse integers from command line
-     * 
-     * @param cmd
-     * @return list of integers in user command
-     * @author Matthias Schrock
-     */
-    public Optional<List<Integer>> readIntegers(String cmd) {
-        return Optional.ofNullable(Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> s.matches("\\d+"))
-                .map(Integer::valueOf)
-                .toList());
     }
 }

@@ -9,9 +9,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Klingon extends Entity {
+    // TODO: extend klingon for different types
+    public enum KlingonType {
+        REGULAR,
+        SUPER,
+        COMMANDER;
+    }
+
     @NonNull
     private Position position;
 
-    private final char symbol = 'K';
+    private KlingonType type;
 
+    private double health;
+    private final char symbol = 'K';
 }

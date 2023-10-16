@@ -1,10 +1,16 @@
 package sst;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
 import java.io.Console;
+import java.io.PrintStream;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
@@ -22,15 +28,18 @@ public class CommandTest {
     private Commands commands;
     private SrScan srScan;
     private LrScan lrScan;
-
+    ByteArrayOutputStream out;
+    
     @Before
     public void setUp() {
         // Mocking the game
         game = mock(Game.class);
-        game.con = mock(Console.class);
         enterprise = mock(Enterprise.class);
 
-        // Mocking the commands
+        out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
+        // commands
         chart = new Chart(game);
         status = new Status(game);
         commands = new Commands(game);
@@ -39,6 +48,11 @@ public class CommandTest {
 
         // Mocking the game components
         mockObjects();
+    }
+
+    @After
+    public void tearDown() {
+        System.setOut(System.out);
     }
 
     @Test
@@ -151,8 +165,8 @@ public class CommandTest {
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         when(enterprise.getPosition()).thenReturn(position);
         when(enterprise.getLifeSupport()).thenReturn((byte) 1);
-        when(enterprise.getWarp()).thenReturn((float) 1.0);
-        when(enterprise.getEnergy()).thenReturn((float) 100.0);
+        when(enterprise.getWarp()).thenReturn(1.0);
+        when(enterprise.getEnergy()).thenReturn(100.0);
         when(enterprise.getTorpedoes()).thenReturn(10);
         Sheild shields = new Sheild();
         shields.setActive("UP");

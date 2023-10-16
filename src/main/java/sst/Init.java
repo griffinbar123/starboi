@@ -1,5 +1,6 @@
 package sst;
 
+import java.util.List;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -13,8 +14,7 @@ import Model.Starbase;
 import Utils.Utils;
 import static Utils.Utils.randInt;
 import static Utils.Utils.turnEntityQuadrantsToStrings;
-
-import java.util.List;
+import static Utils.Utils.readCommands;
 
 /**
  * Initializes a game. In future versions, this class will be able
@@ -93,7 +93,7 @@ public class Init {
 
         while (true) {
             in = this.game.con.readLine("Would you like a regular, tournament, or frozen game?");
-            typ = handler.readCommands(in).orElse(List.of("")).get(0);
+            typ = readCommands(in).orElse(List.of("")).get(0);
 
             Game.GameType type = handler.matcher(typ, Game.GameType.class).orElse(Game.GameType.UNDEFINED);
 
@@ -119,7 +119,7 @@ public class Init {
 
         while (true) {
             in = this.game.con.readLine("Would you like a Short, Medium, or Long game?");
-            len = handler.readCommands(in).orElse(List.of("")).get(0);
+            len = readCommands(in).orElse(List.of("")).get(0);
 
             Game.GameLength length = handler.matcher(len, Game.GameLength.class).orElse(Game.GameLength.UNDEFINED);
 
@@ -148,7 +148,7 @@ public class Init {
 
         while (true) {
             in = this.game.con.readLine("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
-            lvl = handler.readCommands(in).orElse(List.of("")).get(0);
+            lvl = readCommands(in).orElse(List.of("")).get(0);
 
             Game.GameLevel level = handler.matcher(lvl, Game.GameLevel.class).orElse(Game.GameLevel.UNDEFINED);
 
