@@ -17,11 +17,45 @@ public class CommandHandler {
     @NonNull
     private Game game;
 
-    enum Command {
-        SRSCAN, LRSCAN, PHASERS, PHOTONS, MOVE, SHIELDS, DOCK, DAMAGES, CHART, IMPULSE, REST, WARP, STATUS, SENSORS,
-        ORBIT, TRANSPORT, MINE, CRYSTALS, SHUTTLE, PLANETS, REQUEST, REPORT, COMPUTER, COMMANDS, EMEXIT, PROBE, CLOAK,
-        CAPTURE, SCORE, ABANDON(false), DESTRUCT(false), FREEZE(false), DEATHRAY(false), DEBUG(false), CALL(false),
-        QUIT(false), HELP(false), undefined;
+    private enum Command {
+        SRSCAN,
+        LRSCAN,
+        PHASERS,
+        PHOTONS,
+        MOVE,
+        SHIELDS,
+        DOCK,
+        DAMAGES,
+        CHART,
+        IMPULSE,
+        REST,
+        WARP,
+        STATUS,
+        SENSORS,
+        ORBIT,
+        TRANSPORT,
+        MINE,
+        CRYSTALS,
+        SHUTTLE,
+        PLANETS,
+        REQUEST,
+        REPORT,
+        COMPUTER,
+        COMMANDS,
+        EMEXIT,
+        PROBE,
+        CLOAK,
+        CAPTURE,
+        SCORE,
+        ABANDON(false),
+        DESTRUCT(false),
+        FREEZE(false),
+        DEATHRAY(false),
+        DEBUG(false),
+        CALL(false),
+        QUIT(false),
+        HELP(false),
+        undefined;
 
         private boolean canAbbrev;
 
@@ -95,6 +129,38 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Match a string to an enum constant
+     * 
+     * @param <T> Enum type
+     * @param str String to match
+     * @param e Enum class
+     * @return Enum constant if match, null otherwise
+     * @author Matthias Schrock
+     */
+    public <T extends Enum<T>> Optional<T> matcher(String str, Class<T> e) {
+        boolean prevMatch = false;
+        T match = null;
+
+        // e.getDeclaringClass().getEnumConstants()
+        for (T t : e.getEnumConstants()) {
+            String tStr = t.toString();
+
+            String abrCheck = tStr.substring(0, 
+                    Math.min(tStr.length(), str.length()));
+
+            if (str.compareTo(abrCheck) == 0) {
+                if (prevMatch) {
+                    return Optional.empty();
+                }
+
+                match = t;
+                prevMatch = true;
+            }
+        }
+        return Optional.ofNullable(match);
+    }
+
     private Command matchCommand(String cmdstr) {
         Command c = Command.undefined;
         boolean matched = false;
@@ -132,11 +198,12 @@ public class CommandHandler {
      * @author Matthias Schrock
      */
     public Optional<List<String>> readCommands(String cmd) {
-        return Optional.ofNullable(Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> !s.equals("") || !s.equals("\n"))
+        List<String> params = Stream.of(cmd.split("[\\s\\p{Punct}]"))
+                .filter(s -> !s.equals("") || !s.equals(" ") || !s.equals("\n"))
                 .map(String::trim)
                 .map(String::toUpperCase)
-                .toList());
+                .toList();
+        return (params.size() > 0 ? Optional.ofNullable(params) : Optional.empty());
     }
 
     /**

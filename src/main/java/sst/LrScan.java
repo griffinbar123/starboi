@@ -95,13 +95,4 @@ public class LrScan {
         }
         return numberOfElements;
     }
-
-    static String turnEntityQuadrantsToStrings(Entity[] entities) {
-        String locs = "";
-        for (Entity entity : entities) {
-            locs += (entity.getPosition().getQuadrant().getX() + 1) + " - "
-                    + (entity.getPosition().getQuadrant().getY() + 1) + "  ";
-        }
-        return locs;
-    }
 }

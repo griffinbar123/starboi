@@ -146,7 +146,7 @@ public class CommandTest {
         // Objects
         when(game.getEnterprise()).thenReturn(enterprise);
         when(game.getMap()).thenReturn(map);
-        when(game.getStarDate()).thenReturn((float) 123.4);
+        when(game.getStarDate()).thenReturn(123.4);
         when(enterprise.getCondition()).thenReturn("GREEN");
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         when(enterprise.getPosition()).thenReturn(position);

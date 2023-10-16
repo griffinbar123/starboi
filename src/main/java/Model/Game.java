@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import static Utils.Utils.randInt;
+import static Utils.Utils.randDouble;
 
 /**
  * Game entity container. In the future, this should help
@@ -35,21 +35,21 @@ public class Game {
         EMERITUS(5),
         UNDEFINED(0);
 
-        private final int skill;
+        private final int skillVal;
 
-        private GameLevel(int skill) {
-            this.skill = skill;
+        private GameLevel(int skillVal) {
+            this.skillVal = skillVal;
         }
 
-        public int getSkill() {
-            return skill;
+        public int getSkillValue() {
+            return skillVal;
         }
     }
 
     @JsonIgnore
     public Console con = System.console();
 
-    private float starDate = randInt(21, 39) * 100;
+    private double starDate = randDouble(21, 39) * 100;
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
     private Enterprise enterprise;

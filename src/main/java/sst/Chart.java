@@ -1,7 +1,5 @@
 package sst;
 
-import java.io.Console;
-
 import Model.Enterprise;
 import Model.Game;
 import lombok.NonNull;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class Chart {
-    private Console con;
     @NonNull
     private Game game;
 
