@@ -214,8 +214,8 @@ public class Computer {
      * @author Matthias Schrock
      */
     public Optional<Position> readCorodinates(List<String> params) {
-        Coordinate sect = null;
-        Coordinate quad = null;
+        Coordinate sect;
+        Coordinate quad;
         List<String> cmd;
         List<Integer> cord;
         String cmdStr;

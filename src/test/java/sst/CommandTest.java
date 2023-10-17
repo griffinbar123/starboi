@@ -1,16 +1,12 @@
 package sst;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Console;
-import java.io.PrintStream;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
@@ -28,16 +24,13 @@ public class CommandTest {
     private Commands commands;
     private SrScan srScan;
     private LrScan lrScan;
-    ByteArrayOutputStream out;
     
     @Before
     public void setUp() {
         // Mocking the game
         game = mock(Game.class);
+        game.con = mock(Console.class);
         enterprise = mock(Enterprise.class);
-
-        out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
 
         // commands
         chart = new Chart(game);
@@ -48,11 +41,6 @@ public class CommandTest {
 
         // Mocking the game components
         mockObjects();
-    }
-
-    @After
-    public void tearDown() {
-        System.setOut(System.out);
     }
 
     @Test
@@ -92,8 +80,8 @@ public class CommandTest {
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
 
-        verify(game.con).printf(stat, (float) 123.4, "GREEN", 1, 1, 1, 1, "ACTIVE", (float) 1.0, (float) 100.00, 10,
-                "UP", 100, (float) 1.0, 1, (float) 10.00);
+        verify(game.con).printf(stat, 123.4, "GREEN", 1, 1, 1, 1, "ACTIVE", 1.0, 100.00, 10,
+                "UP", 100, 1.0, 1, 10.00);
     }
 
     @Test
@@ -175,7 +163,7 @@ public class CommandTest {
         when(enterprise.getSheilds()).thenReturn(shields);
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
         when(game.getKlingons()).thenReturn(klingons);
-        when(game.getTime()).thenReturn((float) 10.0);
+        when(game.getTime()).thenReturn(10.0);
         when(game.getCoordinateString(anyInt(), anyInt())).thenReturn("1");
     }
 }
