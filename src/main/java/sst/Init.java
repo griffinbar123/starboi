@@ -35,6 +35,8 @@ public class Init {
         String initMessage;
         int skill, planets, klingons, starbases, stars, romulans;
 
+        this.game.con.printf("\n -SUPER- STAR TREK (in Java)\n\nLatest update- Prolly Today\n\n");
+
         setGameType();
         setGameLength();
         setGameLevel();

@@ -111,6 +111,9 @@ public class CommandHandler {
                     case CHART:
                         new Chart(this.game).ExecCHART();
                         break;
+                    case MOVE:
+                        new Move(this.game).ExecMOVE(params);
+                        break;
                     case QUIT:
                         return;
                     case FREEZE:
