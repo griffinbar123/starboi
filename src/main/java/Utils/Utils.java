@@ -3,10 +3,8 @@ package Utils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import Model.Entity;
 
 public class Utils {
@@ -37,7 +35,7 @@ public class Utils {
      */
     public static String serialize(Object obj) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        return mapper.writeValueAsString(obj);
     }
 
     /**
@@ -48,9 +46,9 @@ public class Utils {
      * @return a java objected of type T with data from json
      * @throws JsonProcessingException
      */
-    public static <T> Object deserialize(String json, T obj) throws JsonProcessingException {
+    public static <T> Object deserialize(String json, Class<T> obj) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, obj.getClass());
+        return mapper.readValue(json, obj);
     }
 
     /**
@@ -63,7 +61,9 @@ public class Utils {
      */
     public static Optional<List<String>> readCommands(String cmd) {
         List<String> params = Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> !s.equals("") || !s.equals(" ") || !s.equals("\n"))
+                .filter(s -> !s.equals(""))
+                .filter(s -> !s.equals(" "))
+                .filter(s -> !s.equals("\n"))
                 .map(String::trim)
                 .map(String::toUpperCase)
                 .toList();
@@ -78,10 +78,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Integer>> parseIntegers(String str) {
-        return Optional.ofNullable(Stream.of(str.split("[\\s\\p{Punct}]"))
+        List<Integer> integers = Stream.of(str.split("[\\s\\p{Punct}]"))
                 .filter(s -> s.matches("\\d+"))
                 .map(Integer::valueOf)
-                .toList());
+                .toList();
+        return (integers.size() > 0 ? Optional.ofNullable(integers) : Optional.empty());
     }
 
     /**
@@ -92,10 +93,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Double>> parseDoubles(String str) {
-        return Optional.ofNullable(Stream.of(str.split("[\\s\\p{Punct}]"))
-                .filter(s -> s.matches("\\d+"))
+        List<Double> doubles = Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]]"))
+                .filter(s -> s.matches("\\d+\\.?\\d*"))
                 .map(Double::valueOf)
-                .toList());
+                .toList();
+        return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
     }
 
     /**
@@ -121,7 +123,7 @@ public class Utils {
      */
     public static List<Double> parseDoubles(List<String> params) {
         return params.stream()
-                .filter(s -> s.matches("\\d+"))
+                .filter(s -> s.matches("\\d+\\.?\\d*"))
                 .map(Double::valueOf)
                 .toList();
     }

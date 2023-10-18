@@ -6,6 +6,8 @@ import Model.Enterprise;
 import Model.Entity;
 import Model.Game;
 import Model.Klingon;
+import Model.KlingonCommander;
+import Model.KlingonSuperCommander;
 import Model.Planet;
 import Model.Position;
 import Model.Romulan;
@@ -13,6 +15,7 @@ import Model.Star;
 import Model.Starbase;
 import Utils.Utils;
 import static Utils.Utils.randInt;
+import static Utils.Utils.randDouble;
 import static Utils.Utils.turnEntityQuadrantsToStrings;
 import static Utils.Utils.readCommands;
 
@@ -32,8 +35,7 @@ public class Init {
     public void start() {
         this.game = new Game();
         CommandHandler handler = new CommandHandler(this.game);
-        String initMessage;
-        int skill, planets, klingons, starbases, stars, romulans;
+        int planets, starbases, stars, romulans;
 
         this.game.con.printf("\n -SUPER- STAR TREK (in Java)\n\nLatest update- Prolly Today\n\n");
 
@@ -45,25 +47,27 @@ public class Init {
         System.out.print("Please type in a secret password (9 characters maximum)-");
         System.out.println("changeit");
 
-        skill = this.game.getSkill().getSkillValue();
         // TODO: initialize these numbers based on game type, length, and skill
         planets = 30;
-        klingons = randInt(0.15, 0.15 + (skill + 1) * skill * 0.1); // TODO: All Klingons (any type). The commanders and
-                                                                    // super commanders should be subtracted from this
-                                                                    // value
         starbases = 4;
         stars = 300;
         romulans = 4;
 
         initializeEnterprise();
         initializePlanets(planets);
-        initializeKlingons(klingons);
+        initializeKlingons();
         initializeStarbases(starbases);
         initializeStars(stars);
         initializeRomulans(romulans);
         updateMap();
 
-        initMessage = String.format("\n\n\nIt is stardate %.1f. The Federation is being attacked by " +
+        printStartupMessage();
+
+        handler.getAndExecuteCommands();
+    }
+
+    private void printStartupMessage() {
+        String initMessage = String.format("\n\n\nIt is stardate %.1f. The Federation is being attacked by " +
                 "a deadly Klingon invasion force. As captain of the United Starship " +
                 "U.S.S. Enterprise, it is your mission to seek out and destroy this " +
                 "invasion force of %d battle cruisers. You have an initial allotment " +
@@ -71,15 +75,13 @@ public class Init {
                 "given more time.\n\nYou will have %d supporting starbases. Starbase " +
                 "locations- %s\n\nThe Enterprise is currently in Quadrant %d - %d " +
                 "Sector %d - %d\n\nGood Luck!\n\n",
-                this.game.getStarDate(), klingons, -1, -1,
+                this.game.getStarDate(), this.game.getKlingons().length, -1, -1,
                 turnEntityQuadrantsToStrings(this.game.getStarbases()),
                 (this.game.getEnterprise().getPosition().getQuadrant().getX() + 1),
                 (this.game.getEnterprise().getPosition().getQuadrant().getY() + 1),
                 (this.game.getEnterprise().getPosition().getSector().getX() + 1),
                 (this.game.getEnterprise().getPosition().getSector().getY() + 1));
         this.game.con.printf("%s", initMessage);
-
-        handler.getAndExecuteCommands();
     }
 
     /**
@@ -197,7 +199,7 @@ public class Init {
     }
 
     private void initializeEnterprise() {
-        Position pos = generateNewPosition(null, 9);
+        Position pos = generateNewPosition(9, (Entity) null);
 
         this.game.setEnterprise(new Enterprise(pos));
     }
@@ -206,7 +208,7 @@ public class Init {
         Position pos;
         Romulan rom[] = new Romulan[numberOfRomulans];
         for (int i = 0; i < numberOfRomulans; i++) {
-            pos = generateNewPosition(rom, 9);
+            pos = generateNewPosition(9, rom);
             rom[i] = new Romulan(pos);
         }
         this.game.setRomulans(rom);
@@ -216,7 +218,7 @@ public class Init {
         Position pos;
         Star stars[] = new Star[numberOfStars];
         for (int i = 0; i < numberOfStars; i++) {
-            pos = generateNewPosition(stars, 9);
+            pos = generateNewPosition(9, stars);
             stars[i] = new Star(pos);
         }
         this.game.setStars(stars);
@@ -226,7 +228,7 @@ public class Init {
         Position pos;
         Starbase starBases[] = new Starbase[numberOfStarbases];
         for (int i = 0; i < numberOfStarbases; i++) {
-            pos = generateNewPosition(starBases, 9);
+            pos = generateNewPosition(9, starBases);
             starBases[i] = new Starbase(pos);
             this.game.addCoordinateString(pos.getQuadrant(), ".1.");
         }
@@ -237,29 +239,52 @@ public class Init {
         Position pos;
         Planet planets[] = new Planet[numberOfPlanets];
         for (int i = 0; i < numberOfPlanets; i++) {
-            pos = generateNewPosition(planets, 9);
+            pos = generateNewPosition(9, planets);
             planets[i] = new Planet(pos);
         }
         this.game.setPlanets(planets);
     }
 
-    private void initializeKlingons(int numberOfKlingons) {
+    private void initializeKlingons() {
+        int skill = this.game.getSkill().getSkillValue();
+        int initKling = randInt(0, 1 + (skill + 1) * skill * 0.1);
+        int sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
+                this.game.getSkill() == Game.GameLevel.EXPERT ||
+                this.game.getSkill() == Game.GameLevel.EMERITUS ? 1 : 0);
+        int cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
+        int ord = initKling - cmd - sCmd;
         Position pos;
-        Klingon klingons[] = new Klingon[numberOfKlingons];
-        for (int i = 0; i < numberOfKlingons; i++) {
-            pos = generateNewPosition(klingons, 9);
+        Klingon klingons[] = new Klingon[ord];
+        KlingonCommander klingonCommanders[] = new KlingonCommander[cmd];
+        KlingonSuperCommander klingonSuperCommander = null;
+
+        for (int i = 0; i < ord; i++) {
+            pos = generateNewPosition(9, klingons);
             klingons[i] = new Klingon(pos);
         }
+
+        for (int i = 0; i < cmd; i++) {
+            pos = generateNewPosition(9, klingonCommanders);
+            klingonCommanders[i] = new KlingonCommander(pos);
+        }
+
+        if (sCmd == 1) {
+            pos = generateNewPosition(9, klingonSuperCommander);
+            this.game.setKlingonSuperCommander(new KlingonSuperCommander(pos));
+        }
+
         this.game.setKlingons(klingons);
+        this.game.setKlingonCommanders(klingonCommanders);
+        this.game.setKlingonSuperCommander(klingonSuperCommander);
     }
 
-    private Position generateNewPosition(Entity[] entities, int maxElementsInQuadrant) {
+    private Position generateNewPosition(int maxElementsInQuadrant, Entity... entities) {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
         while (!isPositionEmpty(position) && entities != null
                 && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
-            position = generateNewPosition(entities, maxElementsInQuadrant);
+            position = generateNewPosition(maxElementsInQuadrant, entities);
         }
         return position;
     }

@@ -6,10 +6,10 @@ import lombok.NonNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Planet extends Entity {
-    private final char symbol = 'P';
+public class KlingonCommander extends Klingon {
+    private final char symbol = 'C';
 
-    public Planet(@NonNull Position position) {
+    public KlingonCommander(@NonNull Position position) {
         super(position);
     }
 }

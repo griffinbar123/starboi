@@ -52,13 +52,15 @@ public class Game {
     private double starDate = randDouble(21, 39) * 100;
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
+    private KlingonCommander[] klingonCommanders;
+    private KlingonSuperCommander klingonSuperCommander;
     private Enterprise enterprise;
     private Planet[] planets;
     private Starbase[] starbases;
     private Star[] stars;
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
-    private float time;
+    private double time;
     private GameLevel skill;
     private GameLength length;
     private GameType type;
@@ -67,7 +69,6 @@ public class Game {
     public void addCoordinateString(Coordinate coord, String s){
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
-            String value = entry.getValue();
             if(coordinatesAreEqual(key, coord)){
                 ScannedQuadrants.remove(key);
                 break;
