@@ -1,6 +1,8 @@
 package sst;
 
 import java.util.List;
+import java.util.Optional;
+
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -22,6 +24,9 @@ import static Utils.Utils.readCommands;
 /**
  * Initializes a game. In future versions, this class will be able
  * to restore a saved game state
+ * @author Griffin Barnard
+ * @author Matthias Schrock
+ * @author Fabrice Mpozenzi
  */
 public class Init {
     private Game game;
@@ -29,7 +34,6 @@ public class Init {
 
     /**
      * Starts the game
-     * 
      * @author Matthias Schrock
      */
     public void start() {
@@ -37,9 +41,9 @@ public class Init {
         CommandHandler handler = new CommandHandler(this.game);
         int planets, starbases, stars, romulans;
 
-        setGameType();
-        setGameLength();
-        setGameLevel();
+        this.game.setType(getGameParam(Game.GameType.class));
+        this.game.setLength(getGameParam(Game.GameLength.class));
+        this.game.setSkill(getGameParam(Game.GameLevel.class));
 
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
@@ -64,6 +68,10 @@ public class Init {
         handler.getAndExecuteCommands();
     }
 
+    /**
+     * Prints the startup message
+     * @author Matthias Schrock
+     */
     private void printStartupMessage() {
         String initMessage = String.format("\n\n\nIt is stardate %.1f. The Federation is being attacked by " +
                 "a deadly Klingon invasion force. As captain of the United Starship " +
@@ -83,84 +91,96 @@ public class Init {
     }
 
     /**
-     * Allows the user to select a game style
-     * 
-     * @aurhor Fabrice Mpozenzi
+     * Get a game parameter from the user
+     * @param <T> Enum type
+     * @param t Enum class
+     * @return Enum constant chosen by user
      * @author Matthias Schrock
+     * @author Fabrice Mpozenzi
      */
-    private void setGameType() {
-        CommandHandler handler = new CommandHandler(this.game);
+    private <T extends Enum<T>> T getGameParam(Class<T> t) {
+        T param;
         String in = "";
-        String typ = "";
+        String parsed = "";
 
         while (true) {
-            in = this.game.con.readLine("Would you like a regular, tournament, or frozen game?");
-            typ = readCommands(in).orElse(List.of("")).get(0);
-
-            Game.GameType type = handler.matcher(typ, Game.GameType.class).orElse(Game.GameType.UNDEFINED);
-
-            if (type == Game.GameType.UNDEFINED) {
-                this.game.con.printf("Invalid choice. Please choose regular, tournament, or frozen.\n");
+            if (t == Game.GameType.class) {
+                in = this.game.con.readLine("Are you a " + getEnumString(t) + " player?");
             } else {
-                this.game.setType(type);
-                return;
+                in = this.game.con.readLine("Would you like a " + getEnumString(t) + " game?");
             }
+
+            parsed = readCommands(in).orElse(List.of("")).get(0);
+            param = matcher(parsed, t).orElse(null);
+
+            if (param == null) {
+                this.game.con.printf("What is " + in + "?\n");
+                continue;
+            }
+
+            return param;
         }
     }
 
     /**
-     * Allows the user to select a game level
+     * Match a string to an enum constant. Assumes abbreviation is allowed
+     * but will only match if the abbreviation is unique.
      * 
-     * @author Fabrice Mpozenzi
+     * @param <T> Enum type
+     * @param str String to match
+     * @param e Enum class
+     * @return Enum constant if match, null otherwise
      * @author Matthias Schrock
      */
-    private void setGameLength() {
-        CommandHandler handler = new CommandHandler(this.game);
-        String in = "";
-        String len = "";
+    private <T extends Enum<T>> Optional<T> matcher(String str, Class<T> e) {
+        boolean prevMatch = false;
+        T match = null;
 
-        while (true) {
-            in = this.game.con.readLine("Would you like a Short, Medium, or Long game?");
-            len = readCommands(in).orElse(List.of("")).get(0);
+        // e.getDeclaringClass().getEnumConstants()
+        for (T t : e.getEnumConstants()) {
+            String tStr = t.toString();
 
-            Game.GameLength length = handler.matcher(len, Game.GameLength.class).orElse(Game.GameLength.UNDEFINED);
+            String abrCheck = tStr.substring(0, 
+                    Math.min(tStr.length(), str.length()));
 
-            if (length == Game.GameLength.UNDEFINED) {
-                this.game.con.printf("Invalid choice. Please choose short, medium, or long.\n");
-            } else {
-                this.game.setLength(length);
-                return;
+            if (str.compareTo(abrCheck) == 0) {
+                if (prevMatch) {
+                    return Optional.empty();
+                }
+
+                match = t;
+                prevMatch = true;
             }
         }
-
-        // System.out.print("Please type in a secret password (9 characters maximum)-
-        // ");
+        return Optional.ofNullable(match);
     }
 
     /**
-     * Allows the user to select a game type
+     * Get a comma-separated list of enum values
      * 
-     * @author Fabrice Mpozenzi
+     * @param <T> Enum type
+     * @param e   Enum class
+     * @return comma-separated list of enum values
      * @author Matthias Schrock
      */
-    private void setGameLevel() {
-        CommandHandler handler = new CommandHandler(this.game);
-        String in = "";
-        String lvl = "";
-
-        while (true) {
-            in = this.game.con.readLine("Are you a Novice, Fair, Good, Expert, or Emeritus player?");
-            lvl = readCommands(in).orElse(List.of("")).get(0);
-
-            Game.GameLevel level = handler.matcher(lvl, Game.GameLevel.class).orElse(Game.GameLevel.UNDEFINED);
-
-            if (level == Game.GameLevel.UNDEFINED) {
-                this.game.con.printf("Invalid choice. Please choose Novice, Fair, Good, Expert, or Emeritus\n");
+    private <T extends Enum<T>> String getEnumString(Class<T> e) {
+        int len = e.getEnumConstants().length - 1;
+        String values = "";
+        if (len == 1) {
+            return e.getEnumConstants()[0].toString().toLowerCase();
+        }
+        if (len == 2) {
+            return e.getEnumConstants()[0].toString().toLowerCase() + " or " +
+                    e.getEnumConstants()[1].toString().toLowerCase();
+        }
+        for (int i = 0; i < len; i++) {
+            if (i == len - 1) {
+                values += "or " + e.getEnumConstants()[i].toString().toLowerCase();
             } else {
-                this.game.setSkill(level);
-                return;
+                values += e.getEnumConstants()[i].toString().toLowerCase() + ", ";
             }
         }
+        return values;
     }
 
     /**
@@ -244,16 +264,20 @@ public class Init {
     }
 
     private void initializeKlingons() {
-        int skill = this.game.getSkill().getSkillValue();
-        int initKling = randInt(0, 1 + (skill + 1) * skill * 0.1);
-        int sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
+        Position pos;
+        int skill, initKling, sCmd, cmd, ord;
+
+        // TODO: formula for number of klingons has resulted in negative number indices
+        skill = this.game.getSkill().getSkillValue();
+        initKling = randInt(0.1, 2 + (skill + 1) * skill * 0.1);
+        sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
                 this.game.getSkill() == Game.GameLevel.EXPERT ||
                 this.game.getSkill() == Game.GameLevel.EMERITUS ? 1 : 0);
-        int cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
-        int ord = initKling - cmd - sCmd;
-        Position pos;
-        Klingon klingons[] = new Klingon[ord];
-        KlingonCommander klingonCommanders[] = new KlingonCommander[cmd];
+        cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
+        ord = initKling - cmd - sCmd;
+
+        Klingon[] klingons = new Klingon[ord];
+        KlingonCommander[] klingonCommanders = new KlingonCommander[cmd];
         KlingonSuperCommander klingonSuperCommander = null;
 
         for (int i = 0; i < ord; i++) {
@@ -273,7 +297,6 @@ public class Init {
 
         this.game.setKlingons(klingons);
         this.game.setKlingonCommanders(klingonCommanders);
-        this.game.setKlingonSuperCommander(klingonSuperCommander);
     }
 
     private Position generateNewPosition(int maxElementsInQuadrant, Entity... entities) {
@@ -294,8 +317,7 @@ public class Init {
         int numberOfElements = 0;
         for (int i = 0; i < entities.length; i++) {
             if (entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX()
-                    &&
-                    entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
+                    && entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
                 numberOfElements += 1;
             }
         }

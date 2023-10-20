@@ -1,20 +1,35 @@
 package sst;
 
 import java.util.List;
-import java.util.Optional;
 import Model.Game;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import static Utils.Utils.readCommands;
 
 /**
  * This class contains the main game loop in getAndExecuteCommands(). Also
  * contains functionality for parsing the command line
  */
-@RequiredArgsConstructor
+@AllArgsConstructor // used for testing
 public class CommandHandler {
-    @NonNull
     private Game game;
+    private SrScan srScan;
+    private LrScan lrScan;
+    private Commands commands;
+    private Status status;
+    private Computer computer;
+    private Chart chart;
+    private Freeze freeze;
+
+    public CommandHandler(Game game) {
+        this.game = game;
+        this.srScan = new SrScan(game);
+        this.lrScan = new LrScan(game);
+        this.commands = new Commands(game);
+        this.status = new Status(game);
+        this.computer = new Computer(game);
+        this.chart = new Chart(game);
+        this.freeze = new Freeze(game);
+    }
 
     private enum Command {
         SRSCAN,
@@ -94,27 +109,27 @@ public class CommandHandler {
 
                 switch (c) {
                     case SRSCAN:
-                        new SrScan(this.game).ExecSRSCAN();
+                        srScan.ExecSRSCAN();
                         break;
                     case COMMANDS:
-                        new Commands(this.game).ExecCOMMANDS();
+                        commands.ExecCOMMANDS();
                         break;
                     case STATUS:
-                        new Status(this.game).ExecSTATUS();
+                        status.ExecSTATUS();
                         break;
                     case LRSCAN:
-                        new LrScan(this.game).ExecLRSCAN();
+                        lrScan.ExecLRSCAN();
                         break;
                     case COMPUTER:
-                        new Computer(this.game).ExecCOMPUTER(params);
+                        computer.ExecCOMPUTER(params);
                         break;
                     case CHART:
-                        new Chart(this.game).ExecCHART();
+                        chart.ExecCHART();
                         break;
                     case QUIT:
                         return;
                     case FREEZE:
-                        new Freeze(this.game).ExecFREEZE();
+                        freeze.ExecFREEZE();
                         return;
                     case undefined:
                         this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
@@ -126,39 +141,6 @@ public class CommandHandler {
                 }
             }
         }
-    }
-
-    /**
-     * Match a string to an enum constant. Assumes abbreviation is allowed
-     * but will only match if the abbreviation is unique.
-     * 
-     * @param <T> Enum type
-     * @param str String to match
-     * @param e Enum class
-     * @return Enum constant if match, null otherwise
-     * @author Matthias Schrock
-     */
-    public <T extends Enum<T>> Optional<T> matcher(String str, Class<T> e) {
-        boolean prevMatch = false;
-        T match = null;
-
-        // e.getDeclaringClass().getEnumConstants()
-        for (T t : e.getEnumConstants()) {
-            String tStr = t.toString();
-
-            String abrCheck = tStr.substring(0, 
-                    Math.min(tStr.length(), str.length()));
-
-            if (str.compareTo(abrCheck) == 0) {
-                if (prevMatch) {
-                    return Optional.empty();
-                }
-
-                match = t;
-                prevMatch = true;
-            }
-        }
-        return Optional.ofNullable(match);
     }
 
     private Command matchCommand(String cmdstr) {

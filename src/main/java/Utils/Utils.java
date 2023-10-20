@@ -25,7 +25,8 @@ public class Utils {
      * @return a random double between the specified minimum and maximum
      */
     public static double randDouble(double min, double max) {
-        return Math.random() * (max - min + 1) + min;
+        java.util.Random r = new java.util.Random();
+        return min + (max - min) * r.nextDouble();
     }
 
     /**
@@ -33,7 +34,7 @@ public class Utils {
      * @param obj to be serialized
      * @return json string with current game session data
      */
-    public static String serialize(Object obj) throws JsonProcessingException {
+    public static <T> String serialize(T obj) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(obj);
     }
@@ -46,7 +47,7 @@ public class Utils {
      * @return a java objected of type T with data from json
      * @throws JsonProcessingException
      */
-    public static <T> Object deserialize(String json, Class<T> obj) throws JsonProcessingException {
+    public static <T> T deserialize(String json, Class<T> obj) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, obj);
     }

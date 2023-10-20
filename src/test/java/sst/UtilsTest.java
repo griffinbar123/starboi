@@ -1,11 +1,8 @@
 package sst;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.Console;
@@ -13,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Model.Coordinate;
@@ -28,45 +24,56 @@ import Utils.Utils;
 
 public class UtilsTest {
     private Game game;
-
+    
     @Before
     public void setUp() throws JsonProcessingException {
         game = mock(Game.class);
         game.con = mock(Console.class);
     }
-
+    
     @Test
     public void randIntShouldWorkAsExpected() {
         int randomVal = Utils.randInt(0, 10);
-        assertTrue(randomVal >= 0);
-        assertTrue(randomVal <= 10);
-
-        randomVal = Utils.randInt(0, 100);
-        assertTrue(randomVal >= 0);
-        assertTrue(randomVal <= 100);
+        for (int i = 0; i < 100; i++) {
+            assertTrue(randomVal >= 0);
+            assertTrue(randomVal <= 10);
+            randomVal = Utils.randInt(0, 10);
+        }
     }
 
     @Test
-    public void randDoubleShouldWorkAsExcpeted() {
-        double randomVal = Utils.randDouble(0, 10);
-        assertTrue(randomVal >= 0);
-        assertTrue(randomVal <= 10);
+    public void randDoubleShouldWorkAsExpected() {
+        Double randomVal = Utils.randDouble(0, 10);
+        for (int i = 0; i < 100; i++) {
+            assertTrue(randomVal >= 0);
+            assertTrue(randomVal <= 10);
+            randomVal = Utils.randDouble(0, 10);
+        }
+    }
+    
+    @Test
+    public void serializeShouldWorkAsExpected() throws Exception {
+        ObjectMapper mapper = mock(ObjectMapper.class);
+        String gameJson = "{\"starDate\":0.0,\"map\":null,\"klingons\":null,\"klingonCommanders\":null," +
+                "\"klingonSuperCommander\":null,\"enterprise\":null,\"planets\":null,\"starbases\":null," +
+                "\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null,\"length\":null,\"type" +
+                "\":null,\"scannedQuadrants\":{}}";
 
-        randomVal = Utils.randInt(0, 100);
-        assertTrue(randomVal >= 0);
-        assertTrue(randomVal <= 100);
+        when(mapper.writeValueAsString(any(Game.class))).thenReturn(gameJson);
+
+        assertEquals(gameJson, Utils.serialize(game));
     }
 
     // @Test
-    // public void jsonShouldWorkAsExpected() throws JsonProcessingException {
+    // public void deserializeShouldWordAsExpected() throws JsonProcessingException {
+    //     String gameJson = "{\"starDate\":0.0,\"map\":null,\"klingons\":null,\"klingonCommanders\":null,\"klingonSuperCommander\":null,\"enterprise\":null,\"planets\":null,\"starbases\":null,\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null,\"length\":null,\"type\":null,\"scannedQuadrants\":{}}";
+    //     Game mockGame;
     //     ObjectMapper mapper = mock(ObjectMapper.class);
-    //     when(mapper.writeValueAsString(eq(Game.class))).thenReturn("JSON");
+
     //     when(mapper.readValue(anyString(), eq(Game.class))).thenReturn(game);
-
-    //     String json = Utils.serialize(game);
-    //     assertTrue(json.equals("JSON"));
-
-    //     assertEquals(this.game, Utils.deserialize("\"{\"starDate\":0.0,\"map\":null,\"klingons\":null,\"klingonCommanders\":null,\"klingonSuperCommander\":null,\"enterprise\":null,\"planets\":null,\"starbases\":null,\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null,\"length\":null,\"type\":null,\"scannedQuadrants\":{}}\"", Game.class));
+        
+    //     mockGame = Utils.deserialize(gameJson, Game.class);
+    //     assertEquals(this.game, mockGame);
     // }
 
     @Test
@@ -85,11 +92,6 @@ public class UtilsTest {
         String expected = "1 - 1  1 - 1  1 - 1  1 - 1  ";
         assertEquals(expected, Utils.turnEntityQuadrantsToStrings(entities));
     }
-
-
-
-
-
 
     @Test
     public void readCommandsShouldReturnEmptyOptionalForEmptyString() {
@@ -137,7 +139,7 @@ public class UtilsTest {
 
     @Test
     public void parseIntegersShouldReturnListOfIntegers() {
-        Optional<List<Integer>> result = Utils.parseIntegers("1 2 3");
+        Optional<List<Integer>> result = Utils.parseIntegers("1 2 3 abc");
         assertTrue(result.isPresent());
         List<Integer> expected = List.of(1, 2, 3);
         assertEquals(expected, result.get());
@@ -163,7 +165,7 @@ public class UtilsTest {
 
     @Test
     public void parseDoublesShouldReturnListOfDoubles() {
-        Optional<List<Double>> result = Utils.parseDoubles("1.0 2.5 3.7");
+        Optional<List<Double>> result = Utils.parseDoubles("1.0 2.5 3.7 abc");
         assertTrue(result.isPresent());
         List<Double> expected = List.of(1.0, 2.5, 3.7);
         assertEquals(expected, result.get());
@@ -178,7 +180,7 @@ public class UtilsTest {
 
     @Test
     public void parseIntegersListShouldReturnListOfIntegers() {
-        List<String> params = List.of("1", "2", "3");
+        List<String> params = List.of("1", "2", "3", "abc");
         List<Integer> result = Utils.parseIntegers(params);
         List<Integer> expected = List.of(1, 2, 3);
         assertEquals(expected, result);
@@ -193,7 +195,7 @@ public class UtilsTest {
 
     @Test
     public void parseDoublesListShouldReturnListOfDoubles() {
-        List<String> params = List.of("1.0", "2.5", "3.7");
+        List<String> params = List.of("1.0", "2.5", "3.7", "abc");
         List<Double> result = Utils.parseDoubles(params);
         List<Double> expected = List.of(1.0, 2.5, 3.7);
         assertEquals(expected, result);

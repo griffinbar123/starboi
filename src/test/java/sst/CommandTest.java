@@ -1,12 +1,9 @@
 package sst;
 
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.io.Console;
-
 import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
@@ -24,23 +21,22 @@ public class CommandTest {
     private Commands commands;
     private SrScan srScan;
     private LrScan lrScan;
-    
+
     @Before
     public void setUp() {
-        // Mocking the game
-        game = mock(Game.class);
+        game = new Game();
+
+        // Mocks
         game.con = mock(Console.class);
         enterprise = mock(Enterprise.class);
+        mockObjects();
 
-        // commands
+        // Commands
         chart = new Chart(game);
         status = new Status(game);
         commands = new Commands(game);
         srScan = new SrScan(game);
         lrScan = new LrScan(game);
-
-        // Mocking the game components
-        mockObjects();
     }
 
     @Test
@@ -60,10 +56,11 @@ public class CommandTest {
                 "8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
                 "\nThe Enterprise is currently in Quadrant %d - %d\n";
 
-        verify(game.con).printf(chart, "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
-                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
-                "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
-                "1", "1", "1", "1", "1", "1", 1, 1);
+        verify(game.con).printf(chart, "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", 6, 6);
     }
 
     @Test
@@ -80,7 +77,7 @@ public class CommandTest {
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
 
-        verify(game.con).printf(stat, 123.4, "GREEN", 1, 1, 1, 1, "ACTIVE", 1.0, 100.00, 10,
+        verify(game.con).printf(stat, 123.4, "GREEN", 6, 6, 4, 5, "ACTIVE", 1.0, 100.00, 10,
                 "UP", 100, 1.0, 1, 10.00);
     }
 
@@ -108,7 +105,7 @@ public class CommandTest {
         String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
                 " 1  . . . . . . . . . .  Stardate      123.4\n" +
                 " 2  . . . . . . . . . .  Condition     GREEN\n" +
-                " 3  . . . . . . . . . .  Position      1 - 1, 1 - 1\n" +
+                " 3  . . . . . . . . . .  Position      6 - 6, 4 - 5\n" +
                 " 4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
                 " 5  . . . . . . . . . .  Warp Factor   1.0\n" +
                 " 6  . . . . . . . . . .  Energy        100.00\n" +
@@ -129,7 +126,57 @@ public class CommandTest {
                 "%-5s%-5s%-5s\n" +
                 "%-5s%-5s%-5s\n";
 
-        verify(game.con).printf(scan, 1, 1, "1", "1", "1", "1", "1", "1", "1", "1", "1");
+        verify(game.con).printf(scan, 6, 6, "0", "0", "0", "0", "0", "0", "0", "0", "0");
+    }
+
+    @Test
+    public void lrScanShouldStoreScanForChart() {
+        char map[][][][] = this.game.getMap();
+        map[4][4][0][0] = 'B';
+        map[4][5][0][0] = 'K';
+        map[4][6][0][0] = 'K';
+        map[5][4][0][0] = 'K';
+        map[5][5][0][0] = 'K';
+        map[5][5][0][1] = 'K';
+        map[5][6][0][0] = 'K';
+        map[6][4][0][0] = 'K';
+        map[6][5][0][0] = 'K';
+        map[6][6][0][0] = 'B';
+        map[6][6][0][1] = 'K';
+        game.setMap(map);
+
+        // LrScan hasn't run, so chart should be empty
+        chartCommandShouldWorkAsExpected();
+
+        // Run LrScan to update chart
+        lrScan.ExecLRSCAN();
+        String expected = "\nLong-range scan for Quadrant %d - %d:\n" +
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n" +
+                "%-5s%-5s%-5s\n";
+        verify(game.con).printf(expected, 6, 6, "10", "100", "100", "100", "200", "100", "100", "100", "110");
+
+        // Verify chart
+        chart.ExecCHART();
+        expected = "\nSTAR CHART FOR THE KNOWN GALAXY\n\n" +
+                "     1    2    3    4    5    6    7    8\n" +
+                "   -----------------------------------------\n" +
+                "  - \n" +
+                "1 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "2 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "3 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "4 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "5 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "6 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "7 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "8 - %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  %-3s  -\n" +
+                "\nThe Enterprise is currently in Quadrant %d - %d\n";
+
+        verify(game.con).printf(expected, "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "...", "10", "100", "100", "...",
+                "...", "...", "...", "...", "100", "200", "100", "...", "...", "...", "...", "...", "100", "100", "110",
+                "...", "...", "...", "...", "...", "...", "...", "...", "...", 6, 6);
     }
 
     private void mockObjects() {
@@ -145,13 +192,19 @@ public class CommandTest {
             }
         }
 
-        // Objects
-        when(game.getEnterprise()).thenReturn(enterprise);
-        when(game.getMap()).thenReturn(map);
-        when(game.getStarDate()).thenReturn(123.4);
-        when(enterprise.getCondition()).thenReturn("GREEN");
+        // Game objects
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
-        when(enterprise.getPosition()).thenReturn(position);
+        Klingon klingons[] = new Klingon[] { new Klingon(position) };
+        game.setMap(map);
+        game.setEnterprise(enterprise);
+        game.setStarDate(123.4);
+        game.setKlingons(klingons);
+        game.setTime(10.0);
+
+        // Mock objects
+        when(enterprise.getCondition()).thenReturn("GREEN");
+        position = new Position(new Coordinate(5, 5), new Coordinate(4, 3));
+        when(game.getEnterprise().getPosition()).thenReturn(position);
         when(enterprise.getLifeSupport()).thenReturn((byte) 1);
         when(enterprise.getWarp()).thenReturn(1.0);
         when(enterprise.getEnergy()).thenReturn(100.0);
@@ -159,11 +212,7 @@ public class CommandTest {
         Sheild shields = new Sheild();
         shields.setActive("UP");
         shields.setLevel(100);
-        shields.setUnits((float) 1.0);
+        shields.setUnits(1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
-        Klingon klingons[] = new Klingon[] { new Klingon(position) };
-        when(game.getKlingons()).thenReturn(klingons);
-        when(game.getTime()).thenReturn(10.0);
-        when(game.getCoordinateString(anyInt(), anyInt())).thenReturn("1");
     }
 }

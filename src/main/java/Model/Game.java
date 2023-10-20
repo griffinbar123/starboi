@@ -15,8 +15,8 @@ import static Utils.Utils.randDouble;
 public class Game {
     public enum GameType {
         REGULAR,
-        TOURNAMENT,
-        FROZEN,
+        // TOURNAMENT,
+        // FROZEN,
         UNDEFINED;
     }
 
@@ -61,9 +61,9 @@ public class Game {
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private double time;
-    private GameLevel skill;
-    private GameLength length;
-    private GameType type;
+    private GameLevel skill = GameLevel.UNDEFINED;
+    private GameLength length = GameLength.UNDEFINED;
+    private GameType type = GameType.UNDEFINED;
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
