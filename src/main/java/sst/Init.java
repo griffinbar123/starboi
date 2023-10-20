@@ -41,13 +41,19 @@ public class Init {
         CommandHandler handler = new CommandHandler(this.game);
         int planets, starbases, stars, romulans;
 
-        this.game.setType(getGameParam(Game.GameType.class));
-        this.game.setLength(getGameParam(Game.GameLength.class));
-        this.game.setSkill(getGameParam(Game.GameLevel.class));
+        // TODO: for testing so we don't have to type in the same thing every time
+        // this.game.setType(getGameParam(Game.GameType.class));
+        // this.game.setLength(getGameParam(Game.GameLength.class));
+        // this.game.setSkill(getGameParam(Game.GameLevel.class));
+        this.game.setType(Game.GameType.REGULAR);
+        this.game.setLength(Game.GameLength.SHORT);
+        this.game.setSkill(Game.GameLevel.NOVICE);
 
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
         System.out.println("changeit");
+
+        this.game.setTime(this.game.getLength().getLengthValue() * 7);
 
         // TODO: initialize these numbers based on game type, length, and skill
         planets = 30;
@@ -267,15 +273,15 @@ public class Init {
         Position pos;
         int skill, initKling, sCmd, cmd, ord;
 
-        // TODO: formula for number of klingons has resulted in negative number indices
         skill = this.game.getSkill().getSkillValue();
-        initKling = randInt(0.1, 2 + (skill + 1) * skill * 0.1);
+        initKling = (int) (2 * this.game.getTime() * ((skill + 1 - 2 * randInt(0, 1)) * skill * 0.1 + 0.15)); // 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15)
         sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
                 this.game.getSkill() == Game.GameLevel.EXPERT ||
                 this.game.getSkill() == Game.GameLevel.EMERITUS ? 1 : 0);
         cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
         ord = initKling - cmd - sCmd;
 
+        // TODO: not best practice to initialize arrays like this
         Klingon[] klingons = new Klingon[ord];
         KlingonCommander[] klingonCommanders = new KlingonCommander[cmd];
         KlingonSuperCommander klingonSuperCommander = null;
