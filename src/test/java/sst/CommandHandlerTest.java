@@ -30,6 +30,7 @@ public class CommandHandlerTest {
     private Computer computer;
     private Chart chart;
     private Freeze freeze;
+    private Help help;
 
     @Before
     public void setUp() {
@@ -44,7 +45,8 @@ public class CommandHandlerTest {
         computer = mock(Computer.class);
         chart = mock(Chart.class);
         freeze = mock(Freeze.class);
-        handler = new CommandHandler(game, srScan, lrScan, commands, status, computer, chart, freeze);
+        help = mock(Help.class);
+        handler = new CommandHandler(game, srScan, lrScan, commands, status, computer, chart, freeze, help);
 
         mockObjects();
     }

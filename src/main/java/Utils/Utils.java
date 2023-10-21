@@ -1,5 +1,6 @@
 package Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -61,13 +62,14 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<String>> readCommands(String cmd) {
-        List<String> params = Stream.of(cmd.split("[\\s\\p{Punct}]"))
-                .filter(s -> !s.equals(""))
-                .filter(s -> !s.equals(" "))
-                .filter(s -> !s.equals("\n"))
-                .map(String::trim)
-                .map(String::toUpperCase)
-                .toList();
+        List<String> params = new ArrayList<String>(
+                Stream.of(cmd.split("[\\s\\p{Punct}]"))
+                        .filter(s -> !s.equals(""))
+                        .filter(s -> !s.equals(" "))
+                        .filter(s -> !s.equals("\n"))
+                        .map(String::trim)
+                        .map(String::toUpperCase)
+                        .toList());
         return (params.size() > 0 ? Optional.ofNullable(params) : Optional.empty());
     }
 
@@ -79,10 +81,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Integer>> parseIntegers(String str) {
-        List<Integer> integers = Stream.of(str.split("[\\s\\p{Punct}]"))
-                .filter(s -> s.matches("\\d+"))
-                .map(Integer::valueOf)
-                .toList();
+        List<Integer> integers = new ArrayList<Integer>(
+                Stream.of(str.split("[\\s\\p{Punct}]"))
+                        .filter(s -> s.matches("\\d+"))
+                        .map(Integer::valueOf)
+                        .toList());
         return (integers.size() > 0 ? Optional.ofNullable(integers) : Optional.empty());
     }
 
@@ -94,10 +97,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Double>> parseDoubles(String str) {
-        List<Double> doubles = Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]]"))
-                .filter(s -> s.matches("\\d+\\.?\\d*"))
-                .map(Double::valueOf)
-                .toList();
+        List<Double> doubles = new ArrayList<Double>(
+                Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]]"))
+                        .filter(s -> s.matches("\\d+\\.?\\d*"))
+                        .map(Double::valueOf)
+                        .toList());
         return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
     }
 
@@ -109,10 +113,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static List<Integer> parseIntegers(List<String> params) {
-        return params.stream()
-                .filter(s -> s.matches("\\d+"))
-                .map(Integer::valueOf)
-                .toList();
+        return new ArrayList<Integer>(
+                params.stream()
+                        .filter(s -> s.matches("\\d+"))
+                        .map(Integer::valueOf)
+                        .toList());
     }
 
     /**
@@ -123,10 +128,11 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static List<Double> parseDoubles(List<String> params) {
-        return params.stream()
-                .filter(s -> s.matches("\\d+\\.?\\d*"))
-                .map(Double::valueOf)
-                .toList();
+        return new ArrayList<Double>(
+                params.stream()
+                        .filter(s -> s.matches("\\d+\\.?\\d*"))
+                        .map(Double::valueOf)
+                        .toList());
     }
 
     /**

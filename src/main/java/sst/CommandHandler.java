@@ -1,5 +1,6 @@
 package sst;
 
+import java.util.ArrayList;
 import java.util.List;
 import Model.Game;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class CommandHandler {
     private Computer computer;
     private Chart chart;
     private Freeze freeze;
+    private Help help;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -29,9 +31,10 @@ public class CommandHandler {
         this.computer = new Computer(game);
         this.chart = new Chart(game);
         this.freeze = new Freeze(game);
+        this.help = new Help(game, this);
     }
 
-    private enum Command {
+    public enum Command {
         SRSCAN,
         LRSCAN,
         PHASERS,
@@ -104,7 +107,7 @@ public class CommandHandler {
             params = readCommands(cmdstr).orElse(null);
 
             if (params.size() > 0) {
-                cmd = params.get(0);
+                cmd = params.remove(0);
                 c = matchCommand(cmd);
 
                 switch (c) {
@@ -131,6 +134,9 @@ public class CommandHandler {
                     case FREEZE:
                         freeze.ExecFREEZE();
                         return;
+                    case HELP:
+                        help.ExecHELP(params);
+                        break;
                     case undefined:
                         this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
                         break;
@@ -143,7 +149,7 @@ public class CommandHandler {
         }
     }
 
-    private Command matchCommand(String cmdstr) {
+    public Command matchCommand(String cmdstr) {
         Command c = Command.undefined;
         boolean matched = false;
         int cmdlen = 0;

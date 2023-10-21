@@ -273,15 +273,15 @@ public class Init {
         Position pos;
         int skill, initKling, sCmd, cmd, ord;
 
+        // Original: 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15)
         skill = this.game.getSkill().getSkillValue();
-        initKling = (int) (2 * this.game.getTime() * ((skill + 1 - 2 * randInt(0, 1)) * skill * 0.1 + 0.15)); // 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15)
+        initKling = (int) (2 * this.game.getTime() * ((skill + 1 - 2 * randInt(0, 1)) * skill * 0.1 + 0.15));
         sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
                 this.game.getSkill() == Game.GameLevel.EXPERT ||
                 this.game.getSkill() == Game.GameLevel.EMERITUS ? 1 : 0);
         cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
         ord = initKling - cmd - sCmd;
 
-        // TODO: not best practice to initialize arrays like this
         Klingon[] klingons = new Klingon[ord];
         KlingonCommander[] klingonCommanders = new KlingonCommander[cmd];
         KlingonSuperCommander klingonSuperCommander = null;
