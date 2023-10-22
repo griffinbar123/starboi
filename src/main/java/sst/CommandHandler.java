@@ -106,45 +106,47 @@ public class CommandHandler {
             cmdstr = this.game.con.readLine("COMMAND> ");
             params = readCommands(cmdstr).orElse(null);
 
-            if (params.size() > 0) {
+            if (params != null && params.size() > 0) {
                 cmd = params.remove(0);
                 c = matchCommand(cmd);
+            } else {
+                c = Command.undefined;
+            }
 
-                switch (c) {
-                    case SRSCAN:
-                        srScan.ExecSRSCAN();
-                        break;
-                    case COMMANDS:
-                        commands.ExecCOMMANDS();
-                        break;
-                    case STATUS:
-                        status.ExecSTATUS();
-                        break;
-                    case LRSCAN:
-                        lrScan.ExecLRSCAN();
-                        break;
-                    case COMPUTER:
-                        computer.ExecCOMPUTER(params);
-                        break;
-                    case CHART:
-                        chart.ExecCHART();
-                        break;
-                    case QUIT:
-                        return;
-                    case FREEZE:
-                        freeze.ExecFREEZE();
-                        return;
-                    case HELP:
-                        help.ExecHELP(params);
-                        break;
-                    case undefined:
-                        this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
-                        break;
-                    default:
-                        this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
-                                c.toString());
-                        break;
-                }
+            switch (c) {
+                case SRSCAN:
+                    srScan.ExecSRSCAN();
+                    break;
+                case COMMANDS:
+                    commands.ExecCOMMANDS();
+                    break;
+                case STATUS:
+                    status.ExecSTATUS();
+                    break;
+                case LRSCAN:
+                    lrScan.ExecLRSCAN();
+                    break;
+                case COMPUTER:
+                    computer.ExecCOMPUTER(params);
+                    break;
+                case CHART:
+                    chart.ExecCHART();
+                    break;
+                case QUIT:
+                    return;
+                case FREEZE:
+                    freeze.ExecFREEZE();
+                    return;
+                case HELP:
+                    help.ExecHELP(params);
+                    break;
+                case undefined:
+                    this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                    break;
+                default:
+                    this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
+                            c.toString());
+                    break;
             }
         }
     }
