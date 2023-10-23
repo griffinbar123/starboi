@@ -119,7 +119,7 @@ public class Help {
 
     /**
      * prints a list of valid commands to the console
-     * @see 
+     * @see CommandHandler.Command
      * @author Matthias Schrock
      */
     public void printValidCommands() {

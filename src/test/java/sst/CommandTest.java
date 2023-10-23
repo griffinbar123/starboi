@@ -45,6 +45,7 @@ public class CommandTest {
         status = new Status(game);
         srScan = new SrScan(game);
         lrScan = new LrScan(game);
+        //TODO: add computer tests
         help = new Help(game, handler);
     }
 

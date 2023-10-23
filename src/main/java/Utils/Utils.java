@@ -63,7 +63,7 @@ public class Utils {
      */
     public static Optional<List<String>> readCommands(String cmd) {
         List<String> params = new ArrayList<String>(
-                Stream.of(cmd.split("[\\s\\p{Punct}]"))
+                Stream.of(cmd.split("[\\s\\p{Punct}&&[^\\.]]"))
                         .filter(s -> !s.equals(""))
                         .filter(s -> !s.equals(" "))
                         .filter(s -> !s.equals("\n"))
