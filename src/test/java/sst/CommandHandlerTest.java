@@ -25,12 +25,12 @@ public class CommandHandlerTest {
     private CommandHandler handler;
     private SrScan srScan;
     private LrScan lrScan;
-    private Commands commands;
     private Status status;
     private Computer computer;
     private Chart chart;
     private Freeze freeze;
     private Help help;
+    private Damages damages;
 
     @Before
     public void setUp() {
@@ -40,13 +40,13 @@ public class CommandHandlerTest {
 
         srScan = mock(SrScan.class);
         lrScan = mock(LrScan.class);
-        commands = mock(Commands.class);
         status = mock(Status.class);
         computer = mock(Computer.class);
         chart = mock(Chart.class);
         freeze = mock(Freeze.class);
         help = mock(Help.class);
-        handler = new CommandHandler(game, srScan, lrScan, commands, status, computer, chart, freeze, help);
+        damages = mock(Damages.class);
+        handler = new CommandHandler(game, srScan, lrScan, status, computer, chart, freeze, help, damages);
 
         mockObjects();
     }
@@ -59,7 +59,6 @@ public class CommandHandlerTest {
 
         verify(srScan, times(1)).ExecSRSCAN();
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
@@ -74,7 +73,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
@@ -89,7 +87,6 @@ public class CommandHandlerTest {
 
         verify(srScan, times(1)).ExecSRSCAN();
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
@@ -104,22 +101,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verify(lrScan, times(1)).ExecLRSCAN();
-        verifyNoInteractions(commands);
-        verifyNoInteractions(status);
-        verifyNoInteractions(computer);
-        verifyNoInteractions(chart);
-        verifyNoInteractions(freeze);
-    }
-
-    @Test
-    public void getAndExecuteCommandsShouldExecuteCommandsWhenPrompted() {
-        when(game.con.readLine(anyString())).thenReturn("COMMANDS").thenReturn("QUIT");
-
-        handler.getAndExecuteCommands();
-
-        verifyNoInteractions(srScan);
-        verifyNoInteractions(lrScan);
-        verify(commands, times(1)).ExecCOMMANDS();
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
@@ -134,7 +115,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verify(status, times(1)).ExecSTATUS();
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
@@ -149,7 +129,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verify(computer, times(1)).ExecCOMPUTER(any());
         verifyNoInteractions(chart);
@@ -164,7 +143,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verify(chart, times(1)).ExecCHART();
@@ -179,7 +157,6 @@ public class CommandHandlerTest {
 
         verifyNoInteractions(srScan);
         verifyNoInteractions(lrScan);
-        verifyNoInteractions(commands);
         verifyNoInteractions(status);
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);

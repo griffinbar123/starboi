@@ -20,6 +20,7 @@ public class Freeze {
 
     /**
      * Save the current state of the game before quitting to session.txt
+     * @author Matthias Schrock
      */
     public void ExecFREEZE() {
         boolean write = true;

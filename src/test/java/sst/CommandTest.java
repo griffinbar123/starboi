@@ -26,7 +26,6 @@ public class CommandTest {
     private Enterprise enterprise;
     private Chart chart;
     private Status status;
-    private Commands commands;
     private SrScan srScan;
     private LrScan lrScan;
     private Help help;
@@ -44,7 +43,6 @@ public class CommandTest {
         // Commands
         chart = new Chart(game);
         status = new Status(game);
-        commands = new Commands(game);
         srScan = new SrScan(game);
         lrScan = new LrScan(game);
         help = new Help(game, handler);
@@ -94,19 +92,20 @@ public class CommandTest {
 
     @Test
     public void commandsCommandShouldWorkAsExpected() {
-        commands.ExecCOMMANDS();
+        help.printValidCommands();
 
-        String out = "   SRSCAN    MOVE      PHASERS   CALL\n" +
-                "   STATUS    IMPULSE   PHOTONS   ABANDON\n" +
-                "   LRSCAN    WARP      SHIELDS   DESTRUCT\n" +
-                "   CHART     REST      DOCK      QUIT\n" +
-                "   DAMAGES   REPORT    SENSORS   ORBIT\n" +
-                "   TRANSPORT MIHE      CRYSTALS  SHUTTLE\n" +
-                "   PLANETS   REQUEST   DEATHRAY  FREEZE\n" +
-                "   COMPUTER  EMEXIT    PROBE     COMMANDS\n" +
-                "   SCORE     CLOAK     CAPTURE   HELP\n\n";
+        String out = "\nValid commands:\n" +
+                "SRSCAN     WARP       SENSORS    FREEZE     \n" +
+                "MOVE       SHIELDS    ORBIT      COMPUTER   \n" +
+                "PHASERS    DESTRUCT   TRANSPORT  EMEXIT     \n" +
+                "CALL       CHART      MINE       PROBE      \n" +
+                "STATUS     REST       CRYSTALS   COMMANDS   \n" +
+                "IMPULSE    DOCK       SHUTTLE    SCORE      \n" +
+                "PHOTONS    QUIT       PLANETS    CLOAK      \n" +
+                "ABANDON    DAMAGES    REQUEST    CAPTURE    \n" +
+                "LRSCAN     REPORT     DEATHRAY   HELP       \n\n";
 
-        verify(game.con).printf("%s", out);
+        verify(game.con).printf(out);
     }
 
     @Test
@@ -251,15 +250,15 @@ public class CommandTest {
         help.ExecHELP(params);
 
         String expected = "\nValid commands:\n" +
-                "SRSCAN     IMPULSE    SHUTTLE    CAPTURE    \n" +
-                "LRSCAN     REST       PLANETS    SCORE      \n" +
-                "PHASERS    WARP       REQUEST    ABANDON    \n" +
-                "PHOTONS    STATUS     REPORT     DESTRUCT   \n" +
-                "MOVE       SENSORS    COMPUTER   FREEZE     \n" +
-                "SHIELDS    ORBIT      COMMANDS   DEATHRAY   \n" +
-                "DOCK       TRANSPORT  EMEXIT     DEBUG      \n" +
-                "DAMAGES    MINE       PROBE      CALL       \n" +
-                "CHART      CRYSTALS   CLOAK      QUIT       \n\n";
+                "SRSCAN     WARP       SENSORS    FREEZE     \n" +
+                "MOVE       SHIELDS    ORBIT      COMPUTER   \n" +
+                "PHASERS    DESTRUCT   TRANSPORT  EMEXIT     \n" +
+                "CALL       CHART      MINE       PROBE      \n" +
+                "STATUS     REST       CRYSTALS   COMMANDS   \n" +
+                "IMPULSE    DOCK       SHUTTLE    SCORE      \n" +
+                "PHOTONS    QUIT       PLANETS    CLOAK      \n" +
+                "ABANDON    DAMAGES    REQUEST    CAPTURE    \n" +
+                "LRSCAN     REPORT     DEATHRAY   HELP       \n\n";
 
         verify(game.con).printf(expected);
     }

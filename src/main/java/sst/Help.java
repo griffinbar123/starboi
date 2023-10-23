@@ -64,10 +64,8 @@ public class Help {
                 game.con.readLine("\n[PRESS ENTER TO CONTINUE]\n");
             }
 
-            game.con.printf("%s\n", help[i]);
+            game.con.printf("%s\n\n", help[i]);
         }
-
-        game.con.printf("%s\n", helpText.get(c));
     }
 
     /**
@@ -110,7 +108,7 @@ public class Help {
             cmdStr = params.get(0);
 
             c = handler.matchCommand(cmdStr);
-            if (c == Command.undefined || c == Command.HELP) {
+            if (c == Command.undefined) {
                 printValidCommands();
                 params.clear();
             } else {
@@ -121,13 +119,13 @@ public class Help {
 
     /**
      * prints a list of valid commands to the console
+     * @see 
      * @author Matthias Schrock
      */
-    private void printValidCommands() {
+    public void printValidCommands() {
         int columns = 4;
         List<String> commands = Stream.of(Command.values())
                 .filter(c -> c != Command.undefined)
-                .filter(c -> c != Command.HELP)
                 .map(c -> c.toString())
                 .toList();
         StringBuilder sb = new StringBuilder();
