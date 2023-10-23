@@ -82,7 +82,7 @@ public class Move {
      * Establish destination coordinates for cacluations
      * @param params list of parameters from command line (may be empty)
      * @return Optional containing destination coordinates or empty Optional if no coordinates were found
-     * @author Matthias Schrock
+     * @author Griffin Barnard
      */
     private Optional<Position> readMoveInputs(List<String> params) {
         Coordinate sect = null;

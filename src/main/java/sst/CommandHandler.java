@@ -1,22 +1,42 @@
 package sst;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import Model.Game;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import static Utils.Utils.readCommands;
 
 /**
  * This class contains the main game loop in getAndExecuteCommands(). Also
  * contains functionality for parsing the command line
  */
-@RequiredArgsConstructor
+@AllArgsConstructor // used for testing
 public class CommandHandler {
-    @NonNull
     private Game game;
+    private SrScan srScan;
+    private LrScan lrScan;
+    private Commands commands;
+    private Status status;
+    private Computer computer;
+    private Chart chart;
+    private Freeze freeze;
+    private Help help;
+    private Damages damages;
 
-    private enum Command {
+    public CommandHandler(Game game) {
+        this.game = game;
+        this.srScan = new SrScan(game);
+        this.lrScan = new LrScan(game);
+        this.commands = new Commands(game);
+        this.status = new Status(game);
+        this.computer = new Computer(game);
+        this.chart = new Chart(game);
+        this.freeze = new Freeze(game);
+        this.help = new Help(game, this);
+        this.damages = new Damages(game);
+    }
+
+    public enum Command {
         SRSCAN,
         LRSCAN,
         PHASERS,
@@ -88,10 +108,14 @@ public class CommandHandler {
             cmdstr = this.game.con.readLine("COMMAND> ");
             params = readCommands(cmdstr).orElse(null);
 
-            if (params.size() > 0) {
-                cmd = params.get(0);
+            if (params != null && params.size() > 0) {
+                cmd = params.remove(0);
                 c = matchCommand(cmd);
+            } else {
+                c = Command.undefined;
+            }
 
+<<<<<<< HEAD
                 switch (c) {
                     case SRSCAN:
                         new SrScan(this.game).ExecSRSCAN();
@@ -127,44 +151,52 @@ public class CommandHandler {
                                 c.toString());
                         break;
                 }
+=======
+            switch (c) {
+                case SRSCAN:
+                    srScan.ExecSRSCAN();
+                    break;
+                case COMMANDS:
+                    commands.ExecCOMMANDS();
+                    break;
+                case STATUS:
+                    status.ExecSTATUS();
+                    break;
+                case LRSCAN:
+                    lrScan.ExecLRSCAN();
+                    break;
+                case COMPUTER:
+                    computer.ExecCOMPUTER(params);
+                    break;
+                case CHART:
+                    chart.ExecCHART();
+                    break;
+                case QUIT:
+                    return;
+                case FREEZE:
+                    freeze.ExecFREEZE();
+                    return;
+                case HELP:
+                    help.ExecHELP(params);
+                    break;
+                case DAMAGES:
+                    damages.ExecDAMAGES();
+                    break;
+                case undefined:
+                    this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                    break;
+
+                default:
+                    this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
+                            c.toString());
+
+                    break;
+>>>>>>> 19c0ebdbb522ea301dc02c8c4b5a65151523f024
             }
         }
     }
 
-    /**
-     * Match a string to an enum constant. Assumes abbreviation is allowed
-     * but will only match if the abbreviation is unique.
-     * 
-     * @param <T> Enum type
-     * @param str String to match
-     * @param e Enum class
-     * @return Enum constant if match, null otherwise
-     * @author Matthias Schrock
-     */
-    public <T extends Enum<T>> Optional<T> matcher(String str, Class<T> e) {
-        boolean prevMatch = false;
-        T match = null;
-
-        // e.getDeclaringClass().getEnumConstants()
-        for (T t : e.getEnumConstants()) {
-            String tStr = t.toString();
-
-            String abrCheck = tStr.substring(0, 
-                    Math.min(tStr.length(), str.length()));
-
-            if (str.compareTo(abrCheck) == 0) {
-                if (prevMatch) {
-                    return Optional.empty();
-                }
-
-                match = t;
-                prevMatch = true;
-            }
-        }
-        return Optional.ofNullable(match);
-    }
-
-    private Command matchCommand(String cmdstr) {
+    public Command matchCommand(String cmdstr) {
         Command c = Command.undefined;
         boolean matched = false;
         int cmdlen = 0;

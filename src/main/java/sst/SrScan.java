@@ -76,7 +76,7 @@ public class SrScan {
                                 enterprise.getSheilds().getUnits());
                         break;
                     case 9:
-                        out += String.format("Klingons Left %d", game.getKlingons().length);
+                        out += String.format("Klingons Left %d", game.getKlingonCount());
                         break;
                     case 10:
                         out += String.format("Time Left     %.2f", game.getTime());

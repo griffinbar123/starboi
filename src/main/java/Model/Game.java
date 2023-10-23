@@ -15,16 +15,26 @@ import static Utils.Utils.randDouble;
 public class Game {
     public enum GameType {
         REGULAR,
-        TOURNAMENT,
-        FROZEN,
+        // TOURNAMENT,
+        // FROZEN,
         UNDEFINED;
     }
 
     public enum GameLength {
-        SHORT,
-        MEDIUM,
-        LONG,
-        UNDEFINED;
+        SHORT(1),
+        MEDIUM(2),
+        LONG(3),
+        UNDEFINED(0);
+
+        private final int lengthVal;
+
+        private GameLength(int lengthVal) {
+            this.lengthVal = lengthVal;
+        }
+
+        public int getLengthValue() {
+            return lengthVal;
+        }
     }
 
     public enum GameLevel {
@@ -46,6 +56,10 @@ public class Game {
         }
     }
 
+    public int getKlingonCount() {
+        return klingons.length + klingonCommanders.length + (klingonSuperCommander != null ? 1 : 0);
+    }
+
     @JsonIgnore
     public Console con = System.console();
 
@@ -53,7 +67,7 @@ public class Game {
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
-    private KlingonSuperCommander klingonSuperCommander;
+    private KlingonSuperCommander klingonSuperCommander = null;
     private Enterprise enterprise;
     private Planet[] planets;
     private Starbase[] starbases;
@@ -61,9 +75,9 @@ public class Game {
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private double time;
-    private GameLevel skill;
-    private GameLength length;
-    private GameType type;
+    private GameLevel skill = GameLevel.UNDEFINED;
+    private GameLength length = GameLength.UNDEFINED;
+    private GameType type = GameType.UNDEFINED;
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
