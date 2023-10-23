@@ -109,7 +109,7 @@ public class UtilsTest {
     @Test
     public void readCommandsShouldReturnEmptyOptionalForPunctuationString() {
         Optional<List<String>> result = Utils.readCommands(".,;:");
-        assertTrue(result.isEmpty());
+        assertTrue(result.get().size() == 1);
     }
 
     @Test

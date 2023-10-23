@@ -1,5 +1,6 @@
 package sst;
 
+import java.util.ArrayList;
 import java.util.List;
 import Model.Game;
 import lombok.AllArgsConstructor;
@@ -103,11 +104,10 @@ public class CommandHandler {
         this.game.con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
 
         while (true) {
-            this.game.con.printf("\n");
-            cmdstr = this.game.con.readLine("COMMAND> ");
-            params = readCommands(cmdstr).orElse(null);
+            cmdstr = this.game.con.readLine("\nCOMMAND> ");
+            params = readCommands(cmdstr).orElse(new ArrayList<>());
 
-            if (params != null && params.size() > 0) {
+            if (params.size() > 0) {
                 cmd = params.remove(0);
                 c = matchCommand(cmd);
             } else {
