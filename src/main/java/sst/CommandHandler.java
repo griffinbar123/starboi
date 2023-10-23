@@ -20,6 +20,7 @@ public class CommandHandler {
     private Freeze freeze;
     private Help help;
     private Damages damages;
+    private Move move;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -31,6 +32,7 @@ public class CommandHandler {
         this.freeze = new Freeze(game);
         this.help = new Help(game, this);
         this.damages = new Damages(game);
+        this.move = new Move(game);
     }
 
     public enum Command {
@@ -112,43 +114,6 @@ public class CommandHandler {
                 c = Command.undefined;
             }
 
-<<<<<<< HEAD
-                switch (c) {
-                    case SRSCAN:
-                        new SrScan(this.game).ExecSRSCAN();
-                        break;
-                    case COMMANDS:
-                        new Commands(this.game).ExecCOMMANDS();
-                        break;
-                    case STATUS:
-                        new Status(this.game).ExecSTATUS();
-                        break;
-                    case LRSCAN:
-                        new LrScan(this.game).ExecLRSCAN();
-                        break;
-                    case COMPUTER:
-                        new Computer(this.game).ExecCOMPUTER(params);
-                        break;
-                    case CHART:
-                        new Chart(this.game).ExecCHART();
-                        break;
-                    case MOVE:
-                        new Move(this.game).ExecMOVE(params);
-                        break;
-                    case QUIT:
-                        return;
-                    case FREEZE:
-                        new Freeze(this.game).ExecFREEZE();
-                        return;
-                    case undefined:
-                        this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
-                        break;
-                    default:
-                        this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
-                                c.toString());
-                        break;
-                }
-=======
             switch (c) {
                 case SRSCAN:
                     srScan.ExecSRSCAN();
@@ -180,6 +145,9 @@ public class CommandHandler {
                 case DAMAGES:
                     damages.ExecDAMAGES();
                     break;
+                case MOVE:
+                    move.ExecMOVE(params);
+                    break;
                 case undefined:
                     help.printValidCommands();
                     break;
@@ -187,7 +155,6 @@ public class CommandHandler {
                     this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
                             c.toString());
                     break;
->>>>>>> 19c0ebdbb522ea301dc02c8c4b5a65151523f024
             }
         }
     }

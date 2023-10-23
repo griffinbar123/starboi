@@ -41,13 +41,6 @@ public class Init {
         CommandHandler handler = new CommandHandler(this.game);
         int planets, starbases, stars, romulans;
 
-<<<<<<< HEAD
-        this.game.con.printf("\n -SUPER- STAR TREK (in Java)\n\nLatest update- Prolly Today\n\n");
-
-        setGameType();
-        setGameLength();
-        setGameLevel();
-=======
         // TODO: for testing so we don't have to type in the same thing every time
         // this.game.setType(getGameParam(Game.GameType.class));
         // this.game.setLength(getGameParam(Game.GameLength.class));
@@ -55,7 +48,6 @@ public class Init {
         this.game.setType(Game.GameType.REGULAR);
         this.game.setLength(Game.GameLength.SHORT);
         this.game.setSkill(Game.GameLevel.NOVICE);
->>>>>>> 19c0ebdbb522ea301dc02c8c4b5a65151523f024
 
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
