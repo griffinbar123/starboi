@@ -54,10 +54,11 @@ public class UtilsTest {
     @Test
     public void serializeShouldWorkAsExpected() throws Exception {
         ObjectMapper mapper = mock(ObjectMapper.class);
-        String gameJson = "{\"starDate\":0.0,\"map\":null,\"klingons\":null,\"klingonCommanders\":null," +
-                "\"klingonSuperCommander\":null,\"enterprise\":null,\"planets\":null,\"starbases\":null," +
-                "\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null,\"length\":null,\"type" +
-                "\":null,\"scannedQuadrants\":{}}";
+        String gameJson = "{\"starDate\":0.0,\"map\":null,\"klingons\":null," +
+                "\"klingonCommanders\":null,\"klingonSuperCommander\":null," +
+                "\"enterprise\":null,\"planets\":null,\"starbases\":null," +
+                "\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null," +
+                "\"length\":null,\"type\":null,\"klingonCount\":0,\"scannedQuadrants\":{}}";
 
         when(mapper.writeValueAsString(any(Game.class))).thenReturn(gameJson);
 
