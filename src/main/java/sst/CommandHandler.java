@@ -21,6 +21,7 @@ public class CommandHandler {
     private Chart chart;
     private Freeze freeze;
     private Help help;
+    private Damages damages;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -32,6 +33,7 @@ public class CommandHandler {
         this.chart = new Chart(game);
         this.freeze = new Freeze(game);
         this.help = new Help(game, this);
+        this.damages = new Damages(game);
     }
 
     public enum Command {
@@ -140,12 +142,17 @@ public class CommandHandler {
                 case HELP:
                     help.ExecHELP(params);
                     break;
+                case DAMAGES:
+                    damages.ExecDAMAGES();
+                    break;
                 case undefined:
                     this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
                     break;
+
                 default:
                     this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
                             c.toString());
+
                     break;
             }
         }
