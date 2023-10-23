@@ -2,16 +2,15 @@ package sst;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Stream;
-
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import sst.CommandHandler.Command;
 import static Utils.Utils.readCommands;
 
@@ -26,6 +25,8 @@ public class Help {
     @NonNull
     private CommandHandler handler;
     private static Map<Command, String> helpText;
+    @Setter
+    private File doc = new File("sst.doc");
 
     /**
      * HELP command implementation
@@ -41,26 +42,29 @@ public class Help {
             try {
                 compileHelpData();
             } catch (FileNotFoundException e) {
-                game.con.printf("Spock-  \"Captain, that information is missing from the\n");
-                game.con.printf("   computer. You need to find SST.DOC and put it in the\n");
-                game.con.printf("   current directory.\"\n");
+                String error = "Spock-  \"Captain, I'm sorry, but I can't find SST.DOC.\"\n" +
+                        "   computer. You need to find SST.DOC and put it in the\n" +
+                        "   current directory.\"\n";
+                game.con.printf("%s", error);
                 return;
             }
+        }
+
+        if (!helpText.containsKey(c)) {
+            return;
         }
 
         game.con.printf("\nSpock- \"Captain, I've found the following information:\"\n\n");
 
         String[] help = helpText.get(c).split("\n\n");
         int len = help.length;
-        int i = 0;
 
-        while(i < len) {
-            if (i % 4 == 0) {
-                // TODO: wait until spacebar is pressed
-                while (game.con.readLine("\n[SPACEBAR TO CONTINUE]\n").charAt(0) != ' '){};
+        for (int i = 0; i < len; i++) {
+            if ((i + 1) % 5 == 0) {
+                game.con.readLine("\n[PRESS ENTER TO CONTINUE]\n");
             }
+
             game.con.printf("%s\n", help[i]);
-            i++;
         }
 
         game.con.printf("%s\n", helpText.get(c));
@@ -74,7 +78,6 @@ public class Help {
     private void compileHelpData() throws FileNotFoundException{
         helpText = new HashMap<Command, String>();
         StringBuilder sb = new StringBuilder();
-        File doc = new File("sst.doc");
         Scanner scanner = new Scanner(doc);
         
         while (scanner.hasNextLine()) {
@@ -122,16 +125,24 @@ public class Help {
      */
     private void printValidCommands() {
         int columns = 4;
-        game.con.printf("\nValid commands:\n");
-        for (int i = 0; i < (int) Command.values().length / columns; i++) {
+        List<String> commands = Stream.of(Command.values())
+                .filter(c -> c != Command.undefined)
+                .filter(c -> c != Command.HELP)
+                .map(c -> c.toString())
+                .toList();
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nValid commands:\n");
+        for (int i = 0; i < (int) commands.size() / columns; i++) {
             for (int j = 0; j < columns; j++) {
-                int index = i + j * (int) Command.values().length / columns;
-                if (index < Command.values().length - 2) {
-                    game.con.printf("%-11s", Command.values()[index].toString());
+                int index = i + j * (int) commands.size() / columns;
+                if (index < commands.size()) {
+                    sb.append(String.format("%-11s", commands.get(index)));
                 }
             }
-            game.con.printf("\n");
+            sb.append("\n");
         }
-        game.con.printf("\n");
+        sb.append("\n");
+        game.con.printf(sb.toString());
     }
 }
