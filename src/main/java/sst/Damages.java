@@ -5,11 +5,19 @@ import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * implements the damages command and functionality
+ * @author Fabrice Mpozenzi
+ */
 @RequiredArgsConstructor
 public class Damages {
     @NonNull
     private Game game;
 
+    /**
+     * DAMAGES command implementation
+     * @author Fabrice Mpozenzi
+     */
     public void ExecDAMAGES() {
         Enterprise enterprise = this.game.getEnterprise();
         game.con.printf("Device       -REPAIR TIMES-\n");

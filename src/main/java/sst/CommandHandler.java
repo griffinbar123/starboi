@@ -1,6 +1,5 @@
 package sst;
 
-import java.util.ArrayList;
 import java.util.List;
 import Model.Game;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ public class CommandHandler {
     private Game game;
     private SrScan srScan;
     private LrScan lrScan;
-    private Commands commands;
     private Status status;
     private Computer computer;
     private Chart chart;
@@ -27,7 +25,6 @@ public class CommandHandler {
         this.game = game;
         this.srScan = new SrScan(game);
         this.lrScan = new LrScan(game);
-        this.commands = new Commands(game);
         this.status = new Status(game);
         this.computer = new Computer(game);
         this.chart = new Chart(game);
@@ -38,18 +35,23 @@ public class CommandHandler {
 
     public enum Command {
         SRSCAN,
-        LRSCAN,
-        PHASERS,
-        PHOTONS,
         MOVE,
-        SHIELDS,
-        DOCK,
-        DAMAGES,
-        CHART,
-        IMPULSE,
-        REST,
-        WARP,
+        PHASERS,
+        CALL(false),
         STATUS,
+        IMPULSE,
+        PHOTONS,
+        ABANDON(false),
+        LRSCAN,
+        WARP,
+        SHIELDS,
+        DESTRUCT(false),
+        CHART,
+        REST,
+        DOCK,
+        QUIT(false),
+        DAMAGES,
+        REPORT,
         SENSORS,
         ORBIT,
         TRANSPORT,
@@ -58,26 +60,21 @@ public class CommandHandler {
         SHUTTLE,
         PLANETS,
         REQUEST,
-        REPORT,
+        DEATHRAY(false),
+        FREEZE(false),
         COMPUTER,
-        COMMANDS,
         EMEXIT,
         PROBE,
+        COMMANDS,
+        SCORE,
         CLOAK,
         CAPTURE,
-        SCORE,
-        ABANDON(false),
-        DESTRUCT(false),
-        FREEZE(false),
-        DEATHRAY(false),
-        DEBUG(false),
-        CALL(false),
-        QUIT(false),
         HELP(false),
+        // DEBUG(false),
         undefined;
-
+        
         private boolean canAbbrev;
-
+        
         Command() {
             canAbbrev = true;
         }
@@ -157,7 +154,8 @@ public class CommandHandler {
                     srScan.ExecSRSCAN();
                     break;
                 case COMMANDS:
-                    commands.ExecCOMMANDS();
+                    // COMMANDS functionality now handled in Help.java
+                    help.printValidCommands();
                     break;
                 case STATUS:
                     status.ExecSTATUS();
@@ -183,13 +181,11 @@ public class CommandHandler {
                     damages.ExecDAMAGES();
                     break;
                 case undefined:
-                    this.game.con.printf("'%s' is not a valid command.\n\n", cmdstr);
+                    help.printValidCommands();
                     break;
-
                 default:
                     this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
                             c.toString());
-
                     break;
 >>>>>>> 19c0ebdbb522ea301dc02c8c4b5a65151523f024
             }

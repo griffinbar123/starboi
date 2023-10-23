@@ -28,6 +28,8 @@ public class Computer {
 
     /**
      * COMPUTER command implementation
+     * @author Matthias Schrock
+     * @author Griffin Barnard
      */
     public void ExecCOMPUTER(List<String> params) {
         Position dest = new Position(null, null);
