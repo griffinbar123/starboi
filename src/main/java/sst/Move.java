@@ -82,8 +82,11 @@ public class Move {
         }
 
         List<Integer> offsets = parseIntegers(params);
-        // System.out.println(Arrays.toString(offsets.toArray()));
-        if(offsets.size() != 2 && offsets.size() != 4) {
+        
+        if((offsets.size() != 2 && offsets.size() != 4) || 
+        (offsets.size() == 2 && ((offsets.get(0) > 10) || offsets.get(0) < 1 || offsets.get(1) > 10 || offsets.get(1) < 1)) ||
+        (offsets.size() == 4 && ((offsets.get(0) > 8) || offsets.get(0) < 1 || offsets.get(1) > 8 || offsets.get(1) < 1 || offsets.get(2) > 10 || offsets.get(2) < 1 || offsets.get(3) > 10 || offsets.get(3) < 1))
+        ) {
             this.game.con.printf("\nBeg your pardon, Captain?\n");
             return;
         }
@@ -99,6 +102,7 @@ public class Move {
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
     }
+
 
     private void manualMove(List<String> params){
         if(parseDoubles(params.get(0)).isEmpty()){
