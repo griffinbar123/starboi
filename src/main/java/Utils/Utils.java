@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Model.Entity;
+import Model.Position;
 
 public class Utils {
     /**
@@ -63,7 +64,7 @@ public class Utils {
      */
     public static Optional<List<String>> readCommands(String cmd) {
         List<String> params = new ArrayList<String>(
-                Stream.of(cmd.split("[\\s\\p{Punct}&&[^\\.]]"))
+                Stream.of(cmd.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> !s.equals(""))
                         .filter(s -> !s.equals(" "))
                         .filter(s -> !s.equals("\n"))
@@ -98,8 +99,8 @@ public class Utils {
      */
     public static Optional<List<Double>> parseDoubles(String str) {
         List<Double> doubles = new ArrayList<Double>(
-                Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]]"))
-                        .filter(s -> s.matches("\\d+\\.?\\d*"))
+                Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
+                        .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .toList());
         return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
@@ -130,7 +131,7 @@ public class Utils {
     public static List<Double> parseDoubles(List<String> params) {
         return new ArrayList<Double>(
                 params.stream()
-                        .filter(s -> s.matches("\\d+\\.?\\d*"))
+                        .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .toList());
     }
@@ -143,9 +144,53 @@ public class Utils {
     public static String turnEntityQuadrantsToStrings(Entity[] entities) {
         String locs = "";
         for (Entity entity : entities) {
-            locs += (entity.getPosition().getQuadrant().getX() + 1) + " - "
-                    + (entity.getPosition().getQuadrant().getY() + 1) + "  ";
+            locs += (entity.getPosition().getQuadrant().getY() + 1) + " - "
+                    + (entity.getPosition().getQuadrant().getX() + 1) + "  ";
         }
         return locs;
+    }
+
+    /**
+     * 
+     * @param pos1 first position to be compared
+     * @param pos2 second position to be compared
+     * @return a boolean inticating wether two positions are equal
+     */
+    public static boolean positionsAreEqual(Position pos1, Position pos2) {
+        return pos1.getQuadrant().getX() == pos2.getQuadrant().getX() && pos1.getQuadrant().getY() == pos2.getQuadrant().getY()
+        && pos1.getSector().getX() == pos2.getSector().getX() && pos1.getSector().getY() == pos2.getSector().getY();
+    }
+
+    /**
+     * 
+     * @param pos1 position to be compared
+     * @param entity entity to be compared
+     * @return a boolean inticating wether a pos on a map contains the symbol of an entity
+     */
+    public static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
+        // checks if entity is in a position
+        return entity != null && entity.getPosition().getQuadrant().getX() == position.getQuadrant().getX()
+                && entity.getPosition().getQuadrant().getY() == position.getQuadrant().getY() &&
+                entity.getPosition().getSector().getX() == position.getSector().getX()
+                && entity.getPosition().getSector().getY() == position.getSector().getY();
+    }
+
+    /**
+     * 
+     * @param pos1 position to be compared
+     * @param entities entities to be compared
+     * @return a boolean inticating wether a pos on a map contains the symbol of an entity
+     */
+    public static Boolean checkEntityListAgainstPosition(Position position, Entity[] entities) {
+        // checks if any entity in the list provided is is in the provided position
+        if (entities == null)
+            return false;
+
+        for (int i = 0; i < entities.length; i++) {
+            if (checkEntityAgainstPosition(position, entities[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

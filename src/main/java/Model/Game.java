@@ -6,6 +6,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import static Utils.Utils.randDouble;
+import static Utils.Utils.checkEntityAgainstPosition;
+import static Utils.Utils.checkEntityListAgainstPosition;
 
 /**
  * Game entity container. In the future, this should help
@@ -63,6 +65,9 @@ public class Game {
     @JsonIgnore
     public Console con = System.console();
 
+    @JsonIgnore
+    public static final char NOTHING = '\u00B7';
+
     private double starDate = randDouble(21, 39) * 100;
     private char[][][][] map = new char[8][8][10][10];
     private Klingon[] klingons;
@@ -78,6 +83,7 @@ public class Game {
     private GameLevel skill = GameLevel.UNDEFINED;
     private GameLength length = GameLength.UNDEFINED;
     private GameType type = GameType.UNDEFINED;
+
 
     @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
@@ -107,4 +113,51 @@ public class Game {
     private Boolean coordinatesAreEqual(Coordinate x, Coordinate y) {
         return x.getX() == y.getX() && x.getY() == y.getY();
     }
+
+    @JsonIgnore
+    public void updateMap() {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                for (int k = 0; k < map[i][j].length; k++) {
+                    for (int l = 0; l < map[i][j][k].length; l++) {
+                        Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
+                        // check if positions is a
+                        // if (checkEntityListAgainstPosition(position, klingons)) {
+                        //     map[j][i][l][k] = klingons[0].getSymbol();
+                        // } else if (checkEntityListAgainstPosition(position, planets)) {
+                        //     map[j][i][l][k] = planets[0].getSymbol();
+                        // } else if (checkEntityAgainstPosition(position, enterprise)) {
+                        //     map[j][i][l][k] = enterprise.getSymbol();
+                        // } else if (checkEntityListAgainstPosition(position, starbases)) {
+                        //     map[j][i][l][k] = starbases[0].getSymbol();
+                        // } else if (checkEntityListAgainstPosition(position, stars)) {
+                        //     map[j][i][l][k] = stars[0].getSymbol();
+                        // } else if (checkEntityListAgainstPosition(position, romulans)) {
+                        //     map[j][i][l][k] = romulans[0].getSymbol();
+                        // } else {
+                        //     map[j][i][l][k] = NOTHING;
+                        // }
+
+
+                        if (checkEntityListAgainstPosition(position, klingons)) {
+                            map[i][j][k][l] = klingons[0].getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, planets)) {
+                            map[i][j][k][l] = planets[0].getSymbol();
+                        } else if (checkEntityAgainstPosition(position, enterprise)) {
+                            map[i][j][k][l] = enterprise.getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, starbases)) {
+                            map[i][j][k][l] = starbases[0].getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, stars)) {
+                            map[i][j][k][l] = stars[0].getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, romulans)) {
+                            map[i][j][k][l] = romulans[0].getSymbol();
+                        } else {
+                            map[i][j][k][l] = NOTHING;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
