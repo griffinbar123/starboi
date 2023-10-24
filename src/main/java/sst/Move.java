@@ -99,6 +99,7 @@ public class Move {
         Position newPosition = new Position(quad, sect);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
+        adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
     }
@@ -128,9 +129,23 @@ public class Move {
         Position newPosition = getDesiredPosition(xOffset, yOffset);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
+
+
+
+        adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
 
+    }
+
+    private void adjustStats(Position dest){
+        Computer computer = new Computer(this.game);
+
+        double powerNeeded = computer.calcPower(this.game.getEnterprise().getPosition(), dest);
+        double timeNeeded = computer.calcTime(this.game.getEnterprise().getPosition(), dest);
+        this.game.setStarDate(this.game.getStarDate()-timeNeeded);
+        this.game.setTime(this.game.getTime() - timeNeeded);
+        this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
     }
     
     private Position moveToPosition(Position curPos, Position destPos) {
@@ -138,6 +153,12 @@ public class Move {
 
         Coordinate nq = nextPos.getQuadrant();
         Coordinate ns = nextPos.getSector();
+
+        if(nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getY() < 0) {
+            this.game.con.printf("\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
+
+            return curPos;
+        }
 
         if(this.game.getMap()[nq.getY()][nq.getX()][ns.getY()][ns.getX()] != Game.NOTHING){
             this.game.con.printf("\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n", ns.getY(), ns.getX());
