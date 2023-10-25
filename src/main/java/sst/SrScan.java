@@ -19,8 +19,8 @@ public class SrScan {
      */
     public void ExecSRSCAN() {
         Enterprise enterprise = game.getEnterprise();
-        int row = enterprise.getPosition().getQuadrant().getX();
-        int column = enterprise.getPosition().getQuadrant().getY();
+        int row = enterprise.getPosition().getQuadrant().getY();
+        int column = enterprise.getPosition().getQuadrant().getX();
         int r, c;
         String out = "\n"; //Short-range scan:\n
         boolean leftside = true;
@@ -52,10 +52,10 @@ public class SrScan {
                         break;
                     case 3:
                         out += String.format("Position      %d - %d, %d - %d",
-                                (enterprise.getPosition().getQuadrant().getX() + 1),
                                 (enterprise.getPosition().getQuadrant().getY() + 1),
-                                (enterprise.getPosition().getSector().getX() + 1),
-                                (enterprise.getPosition().getSector().getY() + 1));
+                                (enterprise.getPosition().getQuadrant().getX() + 1),
+                                (enterprise.getPosition().getSector().getY() + 1),
+                                (enterprise.getPosition().getSector().getX() + 1));
                         break;
                     case 4:
                         out += String.format("Life Support  %s", "DAMAGED, Reserves = 2.30");

@@ -37,6 +37,8 @@ public class Computer {
         Double wf;
         Double warp;
         Double twarp = null;
+        Position pos = this.game.getEnterprise().getPosition();
+        Position curPosition = new Position(new Coordinate(pos.getQuadrant().getY()+1, pos.getQuadrant().getX()+1), new Coordinate(pos.getSector().getY()+1, pos.getSector().getX()+1));
 
         dest = readCoordinates(params).orElse(null);
         if (dest == null) {
@@ -49,7 +51,7 @@ public class Computer {
             tm = readTime().orElse(null);
             if (tm != null) {
                 wf = null;
-                twarp = calcWarpDrive(this.game.getEnterprise().getPosition(), dest, tm);
+                twarp = calcWarpDrive(curPosition, dest, tm);
                 if(twarp > 10){
                     this.game.con.printf("We'll never make it, sir.\n");
                     continue;
@@ -74,10 +76,10 @@ public class Computer {
         while(true){
             if(warp == null) break;
             this.game.getEnterprise().setWarp(warp);
-            this.game.con.printf("Remaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(this.game.getEnterprise().getPosition(), dest));
+            this.game.con.printf("Remaining energy will be %f", this.game.getEnterprise().getEnergy() - calcPower(curPosition, dest));
             if(twarp != null)
                 this.game.con.printf("\nMinimum warp needed is %f", twarp);
-            this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(this.game.getEnterprise().getPosition(), dest));
+            this.game.con.printf("\nAnd we will arrive at stardate %f", this.game.getTime() + calcTime(curPosition, dest));
     
             if(twarp != null)
                 this.game.getEnterprise().setWarp(warp2);
@@ -148,22 +150,12 @@ public class Computer {
      * @author Griffin Barnard
      */
     public double calcDistance(Position pos, Position dest) {
-        double destQuadX = dest.getQuadrant().getX();
-        double destQuadY = dest.getQuadrant().getY();
-        double destSectX = dest.getSector().getX();
-        double destSectY = dest.getSector().getY();
+        int x1 = pos.getXAsInt();
+        int y1 = pos.getYAsInt();
 
-        double posQuadX = pos.getQuadrant().getX() + 1;
-        double posQuadY = pos.getQuadrant().getY() + 1;
-        double posSectX = pos.getSector().getX() + 1;
-        double posSectY = pos.getSector().getY() + 1;
-
-        double x1 = (posQuadX * 10) + posSectX;
-        double y1 = (posQuadY * 10) + posSectY;
-
-        double x2 = (destQuadX * 10) + destSectX;
-        double y2 = (destQuadY * 10) + destSectY;
-
+        int x2 = dest.getXAsInt();
+        int y2 = dest.getYAsInt();
+        
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         
     }

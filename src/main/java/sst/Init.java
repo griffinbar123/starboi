@@ -20,6 +20,8 @@ import static Utils.Utils.randInt;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.turnEntityQuadrantsToStrings;
 import static Utils.Utils.readCommands;
+import static Utils.Utils.checkEntityAgainstPosition;
+import static Utils.Utils.checkEntityListAgainstPosition;
 
 /**
  * Initializes a game. In future versions, this class will be able
@@ -67,7 +69,7 @@ public class Init {
         initializeStarbases(starbases);
         initializeStars(stars);
         initializeRomulans(romulans);
-        updateMap();
+        this.game.updateMap();
 
         printStartupMessage();
 
@@ -89,10 +91,10 @@ public class Init {
                 "Sector %d - %d\n\nGood Luck!\n\n",
                 this.game.getStarDate(), this.game.getKlingons().length, -1, -1,
                 turnEntityQuadrantsToStrings(this.game.getStarbases()),
-                (this.game.getEnterprise().getPosition().getQuadrant().getX() + 1),
                 (this.game.getEnterprise().getPosition().getQuadrant().getY() + 1),
-                (this.game.getEnterprise().getPosition().getSector().getX() + 1),
-                (this.game.getEnterprise().getPosition().getSector().getY() + 1));
+                (this.game.getEnterprise().getPosition().getQuadrant().getX() + 1),
+                (this.game.getEnterprise().getPosition().getSector().getY() + 1),
+                (this.game.getEnterprise().getPosition().getSector().getX() + 1));
         this.game.con.printf("%s", initMessage);
     }
 
@@ -189,38 +191,7 @@ public class Init {
         return values;
     }
 
-    /**
-     * Updates the map
-     * 
-     * @author Griffin Barnard
-     */
-    public void updateMap() {
-        for (int i = 0; i < this.game.getMap().length; i++) {
-            for (int j = 0; j < this.game.getMap()[i].length; j++) {
-                for (int k = 0; k < this.game.getMap()[i][j].length; k++) {
-                    for (int l = 0; l < this.game.getMap()[i][j][k].length; l++) {
-                        Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
-                        // check if positions is a
-                        if (checkEntityListAgainstPosition(position, this.game.getKlingons())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getKlingons()[0].getSymbol();
-                        } else if (checkEntityListAgainstPosition(position, this.game.getPlanets())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getPlanets()[0].getSymbol();
-                        } else if (checkEntityAgainstPosition(position, this.game.getEnterprise())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getEnterprise().getSymbol();
-                        } else if (checkEntityListAgainstPosition(position, this.game.getStarbases())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getStarbases()[0].getSymbol();
-                        } else if (checkEntityListAgainstPosition(position, this.game.getStars())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getStars()[0].getSymbol();
-                        } else if (checkEntityListAgainstPosition(position, this.game.getRomulans())) {
-                            this.game.getMap()[j][i][l][k] = this.game.getRomulans()[0].getSymbol();
-                        } else {
-                            this.game.getMap()[j][i][l][k] = NOTHING;
-                        }
-                    }
-                }
-            }
-        }
-    }
+
 
     private void initializeEnterprise() {
         Position pos = generateNewPosition(9, (Entity) null);
@@ -336,26 +307,5 @@ public class Init {
         return !(checkEntityAgainstPosition(position, this.game.getEnterprise())
                 || checkEntityListAgainstPosition(position, this.game.getKlingons())
                 || checkEntityListAgainstPosition(position, this.game.getPlanets()));
-    }
-
-    private Boolean checkEntityListAgainstPosition(Position position, Entity[] entities) {
-        // checks if any entity in the list provided is is in the provided position
-        if (entities == null)
-            return false;
-
-        for (int i = 0; i < entities.length; i++) {
-            if (checkEntityAgainstPosition(position, entities[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Boolean checkEntityAgainstPosition(Position position, Entity entity) {
-        // checks if entity is in a position
-        return entity != null && entity.getPosition().getQuadrant().getX() == position.getQuadrant().getX()
-                && entity.getPosition().getQuadrant().getY() == position.getQuadrant().getY() &&
-                entity.getPosition().getSector().getX() == position.getSector().getX()
-                && entity.getPosition().getSector().getY() == position.getSector().getY();
     }
 }
