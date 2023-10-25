@@ -46,8 +46,12 @@ public class Enterprise extends Entity {
         public double getDamage() {
             return damage;
         }
+
+        public double setDamage(double damage) {
+            return damage;
+        }
     }
-    private Devices devices;
+    private Devices[] devices = Devices.values();
 
     private String condition;
 
