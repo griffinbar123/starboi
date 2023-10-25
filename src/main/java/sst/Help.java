@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import sst.CommandHandler.Command;
 import static Utils.Utils.readCommands;
 
@@ -24,9 +23,9 @@ public class Help {
     private Game game;
     @NonNull
     private CommandHandler handler;
-    private static Map<Command, String> helpText;
-    @Setter
-    private File doc = new File("sst.doc");
+    private Map<Command, String> helpText;
+    @NonNull
+    private final String FILENAME;
 
     /**
      * HELP command implementation
@@ -76,6 +75,7 @@ public class Help {
     private void compileHelpData() throws FileNotFoundException{
         helpText = new HashMap<Command, String>();
         StringBuilder sb = new StringBuilder();
+        File doc = new File(FILENAME);
         Scanner scanner = new Scanner(doc);
         
         while (scanner.hasNextLine()) {

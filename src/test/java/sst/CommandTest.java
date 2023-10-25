@@ -1,13 +1,16 @@
 package sst;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.Console;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
@@ -24,6 +27,7 @@ public class CommandTest {
     private Game game;
     private CommandHandler handler;
     private Enterprise enterprise;
+    private Computer computer;
     private Chart chart;
     private Status status;
     private SrScan srScan;
@@ -35,18 +39,200 @@ public class CommandTest {
         game = new Game();
 
         // Mocks
-        game.con = mock(Console.class);
-        enterprise = mock(Enterprise.class);
-        handler = mock(CommandHandler.class);
+        this.game.con = mock(Console.class);
+        this.enterprise = mock(Enterprise.class);
+        this.handler = mock(CommandHandler.class);
         mockObjects();
 
         // Commands
-        chart = new Chart(game);
-        status = new Status(game);
-        srScan = new SrScan(game);
-        lrScan = new LrScan(game);
-        //TODO: add computer tests
-        help = new Help(game, handler);
+        this.computer = new Computer(game);
+        this.chart = new Chart(game);
+        this.status = new Status(game);
+        this.srScan = new SrScan(game);
+        this.lrScan = new LrScan(game);
+        this.help = new Help(game, handler, "invalid");
+    }
+
+    @Test
+    public void computerReadCoordinatesShouldWorkAsExpected() {
+        List<String> params = new ArrayList<String>();
+        params.add("1");
+        params.add("2");
+        params.add("3");
+        params.add("4");
+
+        Optional<Position> position = computer.readCoordinates(params);
+        assertNotNull(position);
+        assert(position.get().getQuadrant().getX() == 1);
+        assert(position.get().getQuadrant().getY() == 2);
+        assert(position.get().getSector().getX() == 3);
+        assert(position.get().getSector().getY() == 4);
+    }
+
+    @Test
+    public void computerReadCoordinatesShouldHandleInvalidInputs() {
+        List<String> params = new ArrayList<String>();
+        params.add("1");
+        params.add("2");
+        params.add("3");
+
+        Optional<Position> position = computer.readCoordinates(params);
+        assertEquals(Optional.empty(), position);
+
+        params = new ArrayList<String>();
+        params.add("1");
+        params.add("2");
+        params.add("3");
+        params.add("4");
+        params.add("5");
+
+        position = computer.readCoordinates(params);
+        assertEquals(Optional.empty(), position);
+
+        params = new ArrayList<String>();
+        params.add("1");
+        params.add("hello");
+
+        position = computer.readCoordinates(params);
+        assertEquals(Optional.empty(), position);
+    }
+
+    @Test
+    public void computerReadCoordinatesShouldPromptForInputIfNoParams() {
+        List<String> params = new ArrayList<String>();
+
+        when(game.con.readLine(eq("Destination quadrant and/or sector? "))).thenReturn("1 2 3 4");
+
+        Optional<Position> position = computer.readCoordinates(params);
+        assertNotNull(position);
+        assert(position.get().getQuadrant().getX() == 1);
+        assert(position.get().getQuadrant().getY() == 2);
+        assert(position.get().getSector().getX() == 3);
+        assert(position.get().getSector().getY() == 4);
+    }
+
+    @Test
+    public void computerCalcDistanceShouldWorkAsExpected() {
+        Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
+        double distance = computer.calcDistance(position, position2);
+        assertEquals(0.0, distance, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
+        distance = computer.calcDistance(position, position2);
+        assertEquals(1.0, distance, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
+        distance = computer.calcDistance(position, position2);
+        assertEquals(1.0, distance, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
+        distance = computer.calcDistance(position, position2);
+        assertEquals(1.4142135623730951, distance, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
+        distance = computer.calcDistance(position, position2);
+        assertEquals(108.89444430272832, distance, 0.0);
+    }
+
+    @Test
+    public void computerCalcTimeShouldWorkAsExpected() {
+        // at warp 1, time is distance
+        when(enterprise.getWarp()).thenReturn(1.0);
+        Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
+        double time = computer.calcTime(position, position2);
+        assertEquals(0.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
+        time = computer.calcTime(position, position2);
+        assertEquals(1.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
+        time = computer.calcTime(position, position2);
+        assertEquals(1.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
+        time = computer.calcTime(position, position2);
+        assertEquals(1.4142135623730951, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
+        time = computer.calcTime(position, position2);
+        assertEquals(108.89444430272832, time, 0.0);
+
+        // at higher warp factors, time will decrease (at warp 5 time will be 1/25 of distance)
+        when(enterprise.getWarp()).thenReturn(5.0);
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
+        time = computer.calcTime(position, position2);
+        assertEquals(0.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
+        time = computer.calcTime(position, position2);
+        assertEquals(0.04, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
+        time = computer.calcTime(position, position2);
+        assertEquals(0.04, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
+        time = computer.calcTime(position, position2);
+        assertEquals(0.0565685424949238, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
+        time = computer.calcTime(position, position2);
+        assertEquals(4.355777772109133, time, 0.0);
+    }
+
+    @Test
+    public void computerCalcPowerShouldWorkAsExpected() {
+        // TODO finish when sheild power drain implemented
+    }
+
+    @Test
+    public void computerCalcWarpDriveShouldWorkAsExpected() {
+        // at time = 1, calculated warp is distance
+        Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
+        Double time = computer.calcWarpDrive(position, position2, 1.0);
+        assertEquals(0.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
+        time = computer.calcWarpDrive(position, position2, 1.0);
+        assertEquals(1.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
+        time = computer.calcWarpDrive(position, position2, 1.0);
+        assertEquals(1.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(2, 2), new Coordinate(2, 2));
+        time = computer.calcWarpDrive(position, position2, 7.0);
+        assertEquals(1.0, time, 0.0);
+
+        position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
+        position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
+        time = computer.calcWarpDrive(position, position2, 7.0);
+        assertEquals(3.0, time, 0.0);
+    }
+
+    @Test
+    public void computerCommandShouldWorkAsExpected() {
+        // TODO
     }
 
     @Test
@@ -190,56 +376,6 @@ public class CommandTest {
                 "...", "...", "...", "...", "...", "...", "...", "...", "...", 6, 6);
     }
 
-    // @Test
-    // public void helpOnSrScanShouldPrintCorrectText() {
-    //     when(handler.matchCommand(any())).thenReturn(Command.SRSCAN);
-    //     when(game.con.readLine(eq("\n[PRESS ENTER TO CONTINUE]\n"))).thenReturn("\n");
-
-    //     help.ExecHELP(List.of("srscan"));
-
-    //     String expected =  "  Mnemonic:  SRSCAN" +
-    //             "  Shortest abbreviation:  S" +
-    //             "  Full commands:  SRSCAN" +
-    //             "                  SRSCAN NO" +
-    //             "                  SRSCAN CHART\n" +
-    //             "The short-range scan gives you a considerable amount of information" +
-    //             "about the quadrant your starship is in.  A short-range scan is best" +
-    //             "described by an example.\n" +
-    //             "         1 2 3 4 5 6 7 8 9 10" +
-    //             "      1  * . . . . R . . . .  Stardate      2516.3" +
-    //             "      2  . . . E . . . . . .  Condition     RED  " +
-    //             "      3  . . . . . * . B . .  Position      5 - 1, 2 - 4" +
-    //             "      4  . . . S . . . . . .  Life Support  DAMAGED, Reserves=2.30" +
-    //             "      5  . . . . . . . K . .  Warp Factor   5.0" +
-    //             "      6  . K .   . . . . * .  Energy        2176.24" +
-    //             "      7  . . . . . P . . . .  Torpedoes     3" +
-    //             "      8  . . . . * . . . . .  Shields       UP, 42% 1050.0 units" +
-    //             "      9  . * . . * . . . C .  Klingons Left 12" +
-    //             "     10  . . . . . . . . . .  Time Left     3.72\n\n" +
-    //             "The left part is a picture of the quadrant.  The E at sector 2 - 4" +
-    //             "represents the Enterprise; the B at sector 3 - 8 is a starbase." +
-    //             "There are ordinary Klingons (K) at sectors 5 - 8 and 6 - 2, and a" +
-    //             "Klingon Commander (C) at 9 - 9.  The (GULP) \"Super-commander\" (S) is" +
-    //             "occupies sector 4 - 4, and a Romulan (R) is at 1 - 6.  A planet (P)" +
-    //             "is at sector 7 - 6.  There are also a large number of stars (*). The" +
-    //             "periods (.) are just empty space--they are printed to help you get" +
-    //             "your bearings.  Sector 6 - 4 contains a black hole ( ).\n" +
-    //             "The information on the right is assorted status information. You can" +
-    //             "get this alone with the STATUS command.  The status information will" +
-    //             "be absent if you type \"N\" after SRSCAN.  Otherwise status information" +
-    //             "will be presented.\n" +
-    //             "If you type \"C\" after SRSCAN, you will be given a short-range scan" +
-    //             "and a Star Chart.\n" +
-    //             "Short-range scans are free.  That is, they use up no energy and no" +
-    //             "time.  If you are in battle, doing a short-range scan does not give" +
-    //             "the enemies another chance to hit you.  You can safely do a" +
-    //             "short-range scan anytime you like.\n" +
-    //             "If your short-range sensors are damaged, this command will only show" +
-    //             "the contents of adjacent sectors.";
-
-    //     verify(game.con).printf(expected);
-    // }
-
     @Test
     public void helpShouldPrintAvailableCommandsWithInvalidInput() {
         List<String> params = new ArrayList<String>();
@@ -266,7 +402,6 @@ public class CommandTest {
 
     @Test
     public void helpShouldPrintAlertIfDocNotFound() {
-        help.setDoc(new File("invalid"));
         help.ExecHELP(List.of("srscan"));
 
         String expected = "Spock-  \"Captain, I'm sorry, but I can't find SST.DOC.\"\n" +

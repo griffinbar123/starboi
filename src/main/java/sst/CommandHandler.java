@@ -31,7 +31,7 @@ public class CommandHandler {
         this.computer = new Computer(game);
         this.chart = new Chart(game);
         this.freeze = new Freeze(game);
-        this.help = new Help(game, this);
+        this.help = new Help(game, this, "sst.doc");
         this.damages = new Damages(game);
         this.move = new Move(game);
     }
@@ -159,11 +159,17 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Matches a string to a Command enum
+     * @param cmdstr
+     * @return the command indicated from the cmdstr
+     */
     public Command matchCommand(String cmdstr) {
         Command c = Command.undefined;
         boolean matched = false;
         int cmdlen = 0;
         int tstlen = 0;
+        cmdstr = cmdstr.trim();
 
         for (Command cx : Command.values()) {
 

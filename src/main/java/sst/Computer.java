@@ -38,7 +38,7 @@ public class Computer {
         Double warp;
         Double twarp = null;
 
-        dest = readCorodinates(params).orElse(null);
+        dest = readCoordinates(params).orElse(null);
         if (dest == null) {
             this.game.con.printf("\n\nBeg your pardon, Captain?\n\n");
             return;
@@ -135,7 +135,7 @@ public class Computer {
     public double calcTime(Position pos, Position dest) {
         double distance = calcDistance(pos, dest);
         double warpSpeed = game.getEnterprise().getWarp();
-        double travelTime = (distance) / (warpSpeed * warpSpeed);
+        double travelTime = (distance) / (Math.pow(warpSpeed, 2));
         return travelTime;
     }
 
@@ -158,7 +158,7 @@ public class Computer {
         double posSectX = pos.getSector().getX() + 1;
         double posSectY = pos.getSector().getY() + 1;
 
-        double x1 = (posQuadX * 10) +  posSectX;
+        double x1 = (posQuadX * 10) + posSectX;
         double y1 = (posQuadY * 10) + posSectY;
 
         double x2 = (destQuadX * 10) + destSectX;
@@ -215,7 +215,7 @@ public class Computer {
      * @return Optional containing destination coordinates or empty Optional if no coordinates were found
      * @author Matthias Schrock
      */
-    public Optional<Position> readCorodinates(List<String> params) {
+    public Optional<Position> readCoordinates(List<String> params) {
         Coordinate sect;
         Coordinate quad;
         List<String> cmd;
