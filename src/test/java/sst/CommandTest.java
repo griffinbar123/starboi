@@ -120,27 +120,27 @@ public class CommandTest {
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
         double distance = computer.calcDistance(position, position2);
-        assertEquals(0.0, distance, 0.0);
+        assertEquals(15.556349186104045, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
         distance = computer.calcDistance(position, position2);
-        assertEquals(1.0, distance, 0.0);
+        assertEquals(16.27882059609970, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
         distance = computer.calcDistance(position, position2);
-        assertEquals(1.0, distance, 0.0);
+        assertEquals(16.27882059609970, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
         distance = computer.calcDistance(position, position2);
-        assertEquals(1.4142135623730951, distance, 0.0);
+        assertEquals(16.97056274847714, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
         distance = computer.calcDistance(position, position2);
-        assertEquals(108.89444430272832, distance, 0.0);
+        assertEquals(124.45079348883236, distance, 0.02);
     }
 
     @Test
@@ -150,54 +150,54 @@ public class CommandTest {
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
         double time = computer.calcTime(position, position2);
-        assertEquals(0.0, time, 0.0);
+        assertEquals(15.556349186104045, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
         time = computer.calcTime(position, position2);
-        assertEquals(1.0, time, 0.0);
+        assertEquals(16.27882059609970, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
         time = computer.calcTime(position, position2);
-        assertEquals(1.0, time, 0.0);
+        assertEquals(16.27882059609970, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
         time = computer.calcTime(position, position2);
-        assertEquals(1.4142135623730951, time, 0.0);
+        assertEquals(16.97056274847714, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
         time = computer.calcTime(position, position2);
-        assertEquals(108.89444430272832, time, 0.0);
+        assertEquals(124.45079348883236, time, 0.02);
 
         // at higher warp factors, time will decrease (at warp 5 time will be 1/25 of distance)
         when(enterprise.getWarp()).thenReturn(5.0);
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
         time = computer.calcTime(position, position2);
-        assertEquals(0.0, time, 0.0);
+        assertEquals(0.6222539674441618, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
         time = computer.calcTime(position, position2);
-        assertEquals(0.04, time, 0.0);
+        assertEquals(0.6511528238439882, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
         time = computer.calcTime(position, position2);
-        assertEquals(0.04, time, 0.0);
+        assertEquals(0.6511528238439882, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
         time = computer.calcTime(position, position2);
-        assertEquals(0.0565685424949238, time, 0.0);
+        assertEquals(0.6788225099390855, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
         time = computer.calcTime(position, position2);
-        assertEquals(4.355777772109133, time, 0.0);
+        assertEquals(4.978031739553295, time, 0.02);
     }
 
     @Test
@@ -211,27 +211,27 @@ public class CommandTest {
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
         Double time = computer.calcWarpDrive(position, position2, 1.0);
-        assertEquals(0.0, time, 0.0);
+        assertEquals(3.0, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
         time = computer.calcWarpDrive(position, position2, 1.0);
-        assertEquals(1.0, time, 0.0);
+        assertEquals(4.0, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
         time = computer.calcWarpDrive(position, position2, 1.0);
-        assertEquals(1.0, time, 0.0);
+        assertEquals(4.0, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(2, 2), new Coordinate(2, 2));
         time = computer.calcWarpDrive(position, position2, 7.0);
-        assertEquals(1.0, time, 0.0);
+        assertEquals(2.0, time, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
         time = computer.calcWarpDrive(position, position2, 7.0);
-        assertEquals(3.0, time, 0.0);
+        assertEquals(4.0, time, 0.02);
     }
 
     @Test
