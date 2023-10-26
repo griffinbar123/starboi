@@ -58,7 +58,7 @@ public class UtilsTest {
                 "\"klingonCommanders\":null,\"klingonSuperCommander\":null," +
                 "\"enterprise\":null,\"planets\":null,\"starbases\":null," +
                 "\"stars\":null,\"romulans\":null,\"time\":0.0,\"skill\":null," +
-                "\"length\":null,\"type\":null,\"klingonCount\":0,\"scannedQuadrants\":{}}";
+                "\"length\":null,\"type\":null,\"scannedQuadrants\":{},\"klingonCount\":0}";
 
         when(mapper.writeValueAsString(any(Game.class))).thenReturn(gameJson);
 
