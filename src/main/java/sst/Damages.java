@@ -3,8 +3,9 @@ package sst;
 import java.util.HashMap;
 import java.util.Map;
 
+import Model.Enterprise;
 import Model.Game;
-import Model.Enterprise.Devices;
+import Model.Enterprise.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -26,18 +27,27 @@ public class Damages {
      * @author Fabrice Mpozenzi
      */
     public void ExecDAMAGES() {
-        Map<Devices, Double> repairTimes = calcDamages();
+        Map<Device, Double> repairTimes = calcDamages();
+        StringBuilder sb = new StringBuilder();
 
         if (repairTimes.size() == 0) {
             game.con.printf("All devices functional.\n");
             return;
         }
 
-        game.con.printf("Device       -REPAIR TIMES-\n");
-        game.con.printf("             IN FLIGHT  DOCKED\n");
-        for (Devices device : Devices.values()) {
-            game.con.printf("  %16s %.2f    %.2f\n", device.getDeviceName(), repairTimes.get(device), repairTimes.get(device) * docFac);
+        sb.append("Device       -REPAIR TIMES-\n");
+        sb.append("             IN FLIGHT  DOCKED\n");
+        for (Device device : Device.values()) {
+            if (!repairTimes.containsKey(device)) {
+                continue;
+            }
+
+            sb.append(String.format("  %16s %.2f    %.2f\n",
+                    device.getDeviceName(),
+                    repairTimes.get(device),
+                    repairTimes.get(device) * docFac));
         }
+        game.con.printf("%s", sb.toString());
     }
 
     /**
@@ -46,18 +56,22 @@ public class Damages {
      * @author Matthias Schrock
      * @author Fabrice Mpozenzi
      */
-    private Map<Devices, Double> calcDamages() {
-        Map<Devices, Double> repairTimes = new HashMap<>();
+    private Map<Device, Double> calcDamages() {
+        Map<Device, Double> repairTimes = new HashMap<>();
+        Enterprise enterprise = game.getEnterprise();
 
-        for (Devices device : game.getEnterprise().getDevices()) {
-            if (device.getDamage() > 0.0) {
-                if (device == Devices.DEATHRAY) {
-                    repairTimes.put(device, device.getDamage() + 0.005);
+        for (Device device : Device.values()) {
+            if (enterprise.getDeviceDamage().get(device) > 0.0) {
+                if (device == Device.DEATHRAY) {
+                    repairTimes.put(device,
+                            enterprise.getDeviceDamage().get(device) + 0.005);
                 } else {
-                    repairTimes.put(device, device.getDamage() + 0.05);
+                    repairTimes.put(device,
+                            enterprise.getDeviceDamage().get(device) + 0.05);
                 }
             }
         }
+
         return repairTimes;
     }
 
@@ -67,11 +81,11 @@ public class Damages {
      */
     public void assessDamages() {
         // update devices with damage incurred
-        Devices[] devices = game.getEnterprise().getDevices();
-        for (Devices device : devices) {
+        for (Device device : Device.values()) {
             // if should be damaged ... else ... (no damage)
-            if (device.getDamage() > 0.0) {
-                device.setDamage(device.getDamage() + 0.05);
+            if (game.getEnterprise().getDeviceDamage().get(device) > 0.0) {
+                game.getEnterprise().getDeviceDamage().put(device,
+                        game.getEnterprise().getDeviceDamage().get(device) + 0.05);
             }
         }
 

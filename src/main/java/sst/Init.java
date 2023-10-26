@@ -1,6 +1,8 @@
 package sst;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import Model.Coordinate;
@@ -15,6 +17,7 @@ import Model.Position;
 import Model.Romulan;
 import Model.Star;
 import Model.Starbase;
+import Model.Enterprise.Device;
 import Utils.Utils;
 import static Utils.Utils.randInt;
 import static Utils.Utils.randDouble;
@@ -195,8 +198,15 @@ public class Init {
 
     private void initializeEnterprise() {
         Position pos = generateNewPosition(9, (Entity) null);
+        Enterprise enterprise = new Enterprise(pos);
+        Map<Device, Double> devices = new HashMap<>();
 
-        this.game.setEnterprise(new Enterprise(pos));
+        for (Enterprise.Device d : Enterprise.Device.values()) {
+            devices.put(d, 0.0);
+        }
+        enterprise.setDeviceDamage(devices);
+
+        this.game.setEnterprise(enterprise);
     }
 
     private void initializeRomulans(int numberOfRomulans) {

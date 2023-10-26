@@ -8,9 +8,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
 import Model.Coordinate;
@@ -21,6 +22,7 @@ import Model.KlingonCommander;
 import Model.KlingonSuperCommander;
 import Model.Position;
 import Model.Sheild;
+import Model.Enterprise.Device;
 import sst.CommandHandler.Command;
 
 public class CommandTest {
@@ -33,6 +35,7 @@ public class CommandTest {
     private SrScan srScan;
     private LrScan lrScan;
     private Help help;
+    private Damages damages;
 
     @Before
     public void setUp() {
@@ -51,6 +54,7 @@ public class CommandTest {
         this.srScan = new SrScan(game);
         this.lrScan = new LrScan(game);
         this.help = new Help(game, handler, "invalid");
+        this.damages = new Damages(game);
     }
 
     @Test
@@ -273,7 +277,7 @@ public class CommandTest {
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
 
-        verify(game.con).printf(stat, 123.4, "GREEN", 6, 6, 4, 5, "ACTIVE", 1.0, 100.00, 10,
+        verify(game.con).printf(stat, 123.4, "GREEN", 6, 6, 5, 4, "ACTIVE", 1.0, 100.00, 10,
                 "UP", 100, 1.0, 3, 10.00);
     }
 
@@ -302,7 +306,7 @@ public class CommandTest {
         String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
                 " 1  . . . . . . . . . .  Stardate      123.4\n" +
                 " 2  . . . . . . . . . .  Condition     GREEN\n" +
-                " 3  . . . . . . . . . .  Position      6 - 6, 4 - 5\n" +
+                " 3  . . . . . . . . . .  Position      6 - 6, 5 - 4\n" +
                 " 4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
                 " 5  . . . . . . . . . .  Warp Factor   1.0\n" +
                 " 6  . . . . . . . . . .  Energy        100.00\n" +
@@ -411,6 +415,55 @@ public class CommandTest {
         verify(game.con).printf("%s", expected);
     }
 
+    @Test
+    public void damagesShouldPrintOKifNoDamage() {
+        damages.ExecDAMAGES();
+
+        String expected = "All devices functional.\n";
+
+        verify(game.con).printf(expected);
+    }
+
+    @Test
+    public void assessDamagesShouldPrintOKifNoDamage() {
+        damages.assessDamages();
+
+        String expected = "All devices functional.\n";
+
+        verify(game.con).printf(expected);
+    }
+
+    @Test
+    public void damagedDevicesShouldDisplayRepairTimes() {
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        for (Device d : Enterprise.Device.values()) {
+            dmg.put(d, 1.0);
+        }
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
+        damages.ExecDAMAGES();
+
+        String expected = "Device       -REPAIR TIMES-\n" +
+                "             IN FLIGHT  DOCKED\n" +
+                "     S. R. Sensors 1.05    0.26\n" +
+                "     L. R. Sensors 1.05    0.26\n" +
+                "           Phasers 1.05    0.26\n" +
+                "       ProtonTubes 1.05    0.26\n" +
+                "      Life Support 1.05    0.26\n" +
+                "      Warp Engines 1.05    0.26\n" +
+                "   Impulse Engines 1.05    0.26\n" +
+                "           Shields 1.05    0.26\n" +
+                "    Subspace Radio 1.05    0.26\n" +
+                "     Shuttle Craft 1.05    0.26\n" +
+                "          Computer 1.05    0.26\n" +
+                "       Transporter 1.05    0.26\n" +
+                "    Shield Control 1.05    0.26\n" +
+                "         Death Ray 1.01    0.25\n" +
+                "       D. S. Probe 1.05    0.26\n" +
+                "   Cloaking Device 1.05    0.26\n";
+
+        verify(game.con).printf("%s", expected);
+    }
+
     private void mockObjects() {
         // Empty map
         char map[][][][] = new char[8][8][10][10];
@@ -424,6 +477,11 @@ public class CommandTest {
             }
         }
 
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        for (Device d : Enterprise.Device.values()) {
+            dmg.put(d, 0.0);
+        }
+        
         // Game objects
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
@@ -436,7 +494,7 @@ public class CommandTest {
         game.setKlingonCommanders(klingonCommanders);
         game.setKlingonSuperCommander(klingonSuperCommander);
         game.setTime(10.0);
-
+        
         // Mock objects
         when(enterprise.getCondition()).thenReturn("GREEN");
         position = new Position(new Coordinate(5, 5), new Coordinate(4, 3));
@@ -450,5 +508,6 @@ public class CommandTest {
         shields.setLevel(100);
         shields.setUnits(1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
     }
 }
