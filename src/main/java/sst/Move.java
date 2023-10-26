@@ -111,7 +111,7 @@ public class Move {
 
         this.game.con.printf("\nHelmsman Sulu- \"Aye, Sir.\"\n");
 
-        Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(yOffset * -1, xOffset);
+        Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
         adjustStats(movedPos);

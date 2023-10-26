@@ -30,7 +30,7 @@ public class Position {
         );
     }
 
-    public Position getPositionFromOffset(int yOffset, int xOffset) {
+    public Position getPositionFromOffset(int xOffset, int yOffset) { //
         return Position.turnIntToPosition(getYAsInt() + yOffset, getXAsInt() + xOffset);
     }
 
