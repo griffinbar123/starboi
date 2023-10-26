@@ -91,8 +91,8 @@ public class Init {
                 "Sector %d - %d\n\nGood Luck!\n\n",
                 this.game.getStarDate(), this.game.getKlingons().length, -1, -1,
                 turnEntityQuadrantsToStrings(this.game.getStarbases()),
-                (this.game.getEnterprise().getPosition().getQuadrant().getY() + 1),
                 (this.game.getEnterprise().getPosition().getQuadrant().getX() + 1),
+                (this.game.getEnterprise().getPosition().getQuadrant().getY() + 1),
                 (this.game.getEnterprise().getPosition().getSector().getY() + 1),
                 (this.game.getEnterprise().getPosition().getSector().getX() + 1));
         this.game.con.printf("%s", initMessage);

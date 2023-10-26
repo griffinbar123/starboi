@@ -52,8 +52,8 @@ public class SrScan {
                         break;
                     case 3:
                         out += String.format("Position      %d - %d, %d - %d",
-                                (enterprise.getPosition().getQuadrant().getY() + 1),
                                 (enterprise.getPosition().getQuadrant().getX() + 1),
+                                (enterprise.getPosition().getQuadrant().getY() + 1),
                                 (enterprise.getPosition().getSector().getY() + 1),
                                 (enterprise.getPosition().getSector().getX() + 1));
                         break;

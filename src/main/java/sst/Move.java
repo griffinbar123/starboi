@@ -1,7 +1,5 @@
 package sst;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import Model.Coordinate;
@@ -135,12 +133,12 @@ public class Move {
     }
     
     private Position moveToPosition(Position curPos, Position destPos) {
-        Position nextPos = getClosestAdjecentPositionToDestination(curPos, destPos);
+        Position nextPos = curPos.getClosestAdjecentPositionToDestination(destPos, new Computer(this.game));
 
         Coordinate nq = nextPos.getQuadrant();
         Coordinate ns = nextPos.getSector();
 
-        if(nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getY() < 0) {
+        if(nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0) {
             this.game.con.printf("\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
 
             return curPos;
@@ -155,53 +153,6 @@ public class Move {
             return nextPos;
         }
         return moveToPosition(nextPos, destPos);
-    }
-
-    private Position getClosestAdjecentPositionToDestination(Position curPos, Position destPos){
-        Computer computer = new Computer(this.game);
-
-        int x = curPos.getXAsInt();
-        int y = curPos.getYAsInt();
-
-        Position topLeft = Position.turnIntToPosition(y-1, x-1);
-        Position topMiddle = Position.turnIntToPosition(y-1, x);
-        Position topRight = Position.turnIntToPosition(y-1, x+1);
-        Position midLeft = Position.turnIntToPosition(y, x-1);
-        Position midRight = Position.turnIntToPosition(y, x+1);
-        Position botLeft = Position.turnIntToPosition(y+1, x-1);
-        Position botMiddle = Position.turnIntToPosition(y+1, x);
-        Position botRight = Position.turnIntToPosition(y+1, x+1);
-        Double topLeftScore = computer.calcDistance(destPos, topLeft);
-        Double topMiddleScore = computer.calcDistance(destPos, topMiddle);
-        Double topRightScore = computer.calcDistance(destPos, topRight);
-        Double midLeftScore = computer.calcDistance(destPos, midLeft);
-        Double midRightScore = computer.calcDistance(destPos, midRight);
-        Double botLeftScore = computer.calcDistance(destPos, botLeft);
-        Double botMiddleScore = computer.calcDistance(destPos, botMiddle);
-        Double botRightScore = computer.calcDistance(destPos, botRight);
-
-
-
-        Double[] scores = {topLeftScore, topMiddleScore, topRightScore, botLeftScore, botMiddleScore, botRightScore, midLeftScore, midRightScore};
-
-        if(topLeftScore == Collections.min(Arrays.asList(scores))) {
-            return topLeft;
-        } else if(topMiddleScore == Collections.min(Arrays.asList(scores))) {
-            return topMiddle;
-        } else if(topRightScore == Collections.min(Arrays.asList(scores))) {
-            return topRight;
-        } else if(botLeftScore == Collections.min(Arrays.asList(scores))) {
-            return botLeft;
-        } else if(botMiddleScore == Collections.min(Arrays.asList(scores))) {
-            return botMiddle;
-        } else if(botRightScore == Collections.min(Arrays.asList(scores))) {
-            return botRight;
-        } else if(midLeftScore == Collections.min(Arrays.asList(scores))) {
-            return midLeft;
-        } else if(midRightScore == Collections.min(Arrays.asList(scores))) {
-            return midRight;
-        }
-        return curPos;
     }
 
     private Position getDesiredPosition(int xOffset, int yOffset) {

@@ -1,7 +1,13 @@
 package Model;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import sst.Computer;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +28,48 @@ public class Position {
             new Coordinate((int) (y/10), (int) (x/10)),
             new Coordinate(y%10, x%10)
         );
+    }
+
+    // functions to get adjecent sectors
+    public Position getTopLeftPosition() {
+        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt()-1);
+    }
+    public Position getTopMiddlePosition() {
+        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt());
+    }
+    public Position getTopRightPosition() {
+        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt()+1);
+    }
+    public Position getMiddleLeftPosition() {
+        return Position.turnIntToPosition(this.getYAsInt(), this.getXAsInt()-1);
+    }
+    public Position getMiddleRightPosition() {
+        return Position.turnIntToPosition(this.getYAsInt(), this.getXAsInt()+1);
+    }
+    public Position getBotLeftPosition() {
+        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt()-1);
+    }
+    public Position getBotMiddlePosition() {
+        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt());
+    }
+    public Position getBotRightPosition() {
+        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt()+1);
+    }
+
+    public Position getClosestAdjecentPositionToDestination(Position destPos, Computer computer){
+
+        Map<Position, Double> scores = Map.of(
+            getTopLeftPosition(), computer.calcDistance(destPos, getTopLeftPosition()),
+            getTopMiddlePosition(), computer.calcDistance(destPos, getTopMiddlePosition()),
+            getTopRightPosition(), computer.calcDistance(destPos, getTopRightPosition()),
+            getMiddleLeftPosition(), computer.calcDistance(destPos, getMiddleLeftPosition()),
+            getMiddleRightPosition(), computer.calcDistance(destPos, getMiddleRightPosition()),
+            getBotLeftPosition(), computer.calcDistance(destPos, getBotLeftPosition()),
+            getBotMiddlePosition(), computer.calcDistance(destPos, getBotMiddlePosition()),
+            getBotRightPosition(), computer.calcDistance(destPos, getBotRightPosition())
+        );
+
+        Entry<Position, Double> minEntry = Collections.min(scores.entrySet(), Comparator.comparing(Entry::getValue));
+        return minEntry.getKey(); 
     }
 }
