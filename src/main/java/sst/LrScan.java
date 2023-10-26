@@ -2,9 +2,7 @@ package sst;
 
 import Model.Coordinate;
 import Model.Enterprise;
-import Model.Entity;
 import Model.Game;
-import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -76,21 +74,6 @@ public class LrScan {
                 if (this.game.getMap()[row][column][i][j] == entity) {
                     numberOfElements += 1;
                 }
-            }
-        }
-        return numberOfElements;
-    }
-
-    private int getNumberOfEntiesBeforeMapUpdate(Entity[] entities, Position position) {
-        // function to get number of entities in a qudrant before a map update, used in
-        // iniitialzation to make
-        // sure a quadrant doesn't get too many of an entity type
-        int numberOfElements = 0;
-        for (int i = 0; i < entities.length; i++) {
-            if (entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX()
-                    &&
-                    entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
-                numberOfElements += 1;
             }
         }
         return numberOfElements;

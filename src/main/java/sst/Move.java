@@ -1,23 +1,14 @@
 package sst;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import Model.Coordinate;
-import Model.Enterprise;
 import Model.Game;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import sst.Chart;
-import sst.Computer;
-import sst.Freeze;
-import sst.LrScan;
-import sst.SrScan;
-import sst.Status;
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
@@ -43,13 +34,11 @@ public class Move {
      * Moves player in the map
      */
     public void ExecMOVE(List<String> params) {
-        Enterprise enterprise = game.getEnterprise();
-        Computer computer = new Computer(this.game);
         MoveType moveType = MoveType.undefined;
         String cmdstr;
 
         if(params.size() == 0) {
-            //promp for movement type
+            //prompt for movement type
             cmdstr = this.game.con.readLine("Manual or automatic- ");
             params = readCommands(cmdstr).orElse(null);
         }
@@ -128,9 +117,6 @@ public class Move {
 
         Position newPosition = getDesiredPosition(xOffset, yOffset);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
-
-
-
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
