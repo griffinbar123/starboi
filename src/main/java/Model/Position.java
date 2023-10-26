@@ -30,30 +30,34 @@ public class Position {
         );
     }
 
+    public Position getPositionFromOffset(int yOffset, int xOffset) {
+        return Position.turnIntToPosition(getYAsInt() + yOffset, getXAsInt() + xOffset);
+    }
+
     // functions to get adjecent sectors
     public Position getTopLeftPosition() {
-        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt()-1);
+        return getPositionFromOffset(-1, -1);
     }
     public Position getTopMiddlePosition() {
-        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt());
+        return getPositionFromOffset(-1, 0);
     }
     public Position getTopRightPosition() {
-        return Position.turnIntToPosition(this.getYAsInt()-1, this.getXAsInt()+1);
+        return getPositionFromOffset(-1, 1);
     }
     public Position getMiddleLeftPosition() {
-        return Position.turnIntToPosition(this.getYAsInt(), this.getXAsInt()-1);
+        return getPositionFromOffset(0, -1);
     }
     public Position getMiddleRightPosition() {
-        return Position.turnIntToPosition(this.getYAsInt(), this.getXAsInt()+1);
+        return getPositionFromOffset(0, 1);
     }
     public Position getBotLeftPosition() {
-        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt()-1);
+        return getPositionFromOffset(1, -1);
     }
     public Position getBotMiddlePosition() {
-        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt());
+        return getPositionFromOffset(1, 0);
     }
     public Position getBotRightPosition() {
-        return Position.turnIntToPosition(this.getYAsInt()+1, this.getXAsInt()+1);
+        return getPositionFromOffset(1, 1);
     }
 
     public Position getClosestAdjecentPositionToDestination(Position destPos, Computer computer){
@@ -68,7 +72,6 @@ public class Position {
             getBotMiddlePosition(), computer.calcDistance(destPos, getBotMiddlePosition()),
             getBotRightPosition(), computer.calcDistance(destPos, getBotRightPosition())
         );
-
         Entry<Position, Double> minEntry = Collections.min(scores.entrySet(), Comparator.comparing(Entry::getValue));
         return minEntry.getKey(); 
     }

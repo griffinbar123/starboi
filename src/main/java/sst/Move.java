@@ -93,10 +93,8 @@ public class Move {
 
 
     private void manualMove(List<String> params){
-        if(parseDoubles(params.get(0)).isEmpty()){
-            params.remove(0);
-        }
-
+        if(parseDoubles(params.get(0)).isEmpty()) params.remove(0);
+        
         while(params == null || params.size() == 0) {
             String displacements = this.game.con.readLine("X and Y displacements- ");
             params = readCommands(displacements).orElse(null);
@@ -108,12 +106,12 @@ public class Move {
             return;
         }
 
-        int xOffset = (int) ((double)offsets.get(0) * 10);
         int yOffset =  offsets.size() == 1 ? 0 : (int) ((double)offsets.get(1) * 10);
+        int xOffset = (int) ((double)offsets.get(0) * 10);
 
         this.game.con.printf("\nHelmsman Sulu- \"Aye, Sir.\"\n");
 
-        Position newPosition = getDesiredPosition(xOffset, yOffset);
+        Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(yOffset * -1, xOffset);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
         adjustStats(movedPos);
@@ -153,14 +151,6 @@ public class Move {
             return nextPos;
         }
         return moveToPosition(nextPos, destPos);
-    }
-
-    private Position getDesiredPosition(int xOffset, int yOffset) {
-        Position enterPos = this.game.getEnterprise().getPosition();
-        int newX = enterPos.getXAsInt() + xOffset;
-        int newY = enterPos.getYAsInt() - yOffset;
-
-        return Position.turnIntToPosition(newY, newX);
     }
 
     private MoveType matchMoveType(String cmdstr) {
