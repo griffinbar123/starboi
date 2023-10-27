@@ -1,6 +1,5 @@
 package Model;
 
-import java.util.HashMap;
 import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,7 +42,7 @@ public class Enterprise extends Entity {
             return deviceName;
         }
     }
-    private Map<Device, Double> deviceDamage = new HashMap<Device, Double>();
+    private Map<Device, Double> deviceDamage;
 
     private String condition;
 

@@ -3,6 +3,7 @@ package sst;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Game;
+import Model.Enterprise.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,13 @@ public class LrScan {
         int row = enterprise.getPosition().getQuadrant().getX();
         int column = enterprise.getPosition().getQuadrant().getY();
         String out = "";
+
+        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.LR_SENSORS, 1.0); // TODO: testing damaged sensors
+
+        if (game.getEnterprise().getDeviceDamage().get(Device.LR_SENSORS) > 0) {
+            this.game.con.printf("LONG-RANGE SENSORS DAMAGED.\n\n");
+            return;
+        }
 
         game.addCoordinateString(new Coordinate(row - 1, column - 1), getQuadrantNumber(row - 1, column - 1));
         game.addCoordinateString(new Coordinate(row, column - 1), getQuadrantNumber(row, column - 1));

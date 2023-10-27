@@ -35,8 +35,8 @@ public class Move {
         MoveType moveType = MoveType.undefined;
         String cmdstr;
 
-        if(params.size() == 0) {
-            //prompt for movement type
+        if (params.size() == 0) {
+            // prompt for movement type
             cmdstr = this.game.con.readLine("Manual or automatic- ");
             params = readCommands(cmdstr).orElse(null);
         }
@@ -63,23 +63,28 @@ public class Move {
     private void automaticMove(List<String> params) {
         params.remove(0);
 
-        while(params == null || params.size() == 0) {
+        while (params == null || params.size() == 0) {
             String displacements = this.game.con.readLine("Destination sector or quadrant&sector- ");
             params = readCommands(displacements).orElse(null);
         }
 
         List<Integer> offsets = parseIntegers(params);
-        
-        if((offsets.size() != 2 && offsets.size() != 4) || 
-        (offsets.size() == 2 && ((offsets.get(0) > 10) || offsets.get(0) < 1 || offsets.get(1) > 10 || offsets.get(1) < 1)) ||
-        (offsets.size() == 4 && ((offsets.get(0) > 8) || offsets.get(0) < 1 || offsets.get(1) > 8 || offsets.get(1) < 1 || offsets.get(2) > 10 || offsets.get(2) < 1 || offsets.get(3) > 10 || offsets.get(3) < 1))
-        ) {
+
+        if ((offsets.size() != 2 && offsets.size() != 4) ||
+                (offsets.size() == 2
+                        && ((offsets.get(0) > 10) || offsets.get(0) < 1 || offsets.get(1) > 10 || offsets.get(1) < 1))
+                ||
+                (offsets.size() == 4 && ((offsets.get(0) > 8) || offsets.get(0) < 1 || offsets.get(1) > 8
+                        || offsets.get(1) < 1 || offsets.get(2) > 10 || offsets.get(2) < 1 || offsets.get(3) > 10
+                        || offsets.get(3) < 1))) {
             this.game.con.printf("\nBeg your pardon, Captain?\n");
             return;
         }
 
-        Coordinate quad = offsets.size() == 2 ? this.game.getEnterprise().getPosition().getQuadrant() : new Coordinate(offsets.get(0)-1, offsets.get(1)-1);
-        Coordinate sect = offsets.size() == 2 ? new Coordinate(offsets.get(0)-1, offsets.get(1)-1) : new Coordinate(offsets.get(2)-1, offsets.get(3)-1);
+        Coordinate quad = offsets.size() == 2 ? this.game.getEnterprise().getPosition().getQuadrant()
+                : new Coordinate(offsets.get(0) - 1, offsets.get(1) - 1);
+        Coordinate sect = offsets.size() == 2 ? new Coordinate(offsets.get(0) - 1, offsets.get(1) - 1)
+                : new Coordinate(offsets.get(2) - 1, offsets.get(3) - 1);
 
         this.game.con.printf("\nEnsign Chekov- \"Course laid in, Captain.\"\n");
 
@@ -91,23 +96,23 @@ public class Move {
         this.game.updateMap();
     }
 
+    private void manualMove(List<String> params) {
+        if (parseDoubles(params.get(0)).isEmpty())
+            params.remove(0);
 
-    private void manualMove(List<String> params){
-        if(parseDoubles(params.get(0)).isEmpty()) params.remove(0);
-        
-        while(params == null || params.size() == 0) {
+        while (params == null || params.size() == 0) {
             String displacements = this.game.con.readLine("X and Y displacements- ");
             params = readCommands(displacements).orElse(null);
         }
 
         List<Double> offsets = parseDoubles(params);
-        if(offsets.size() == 0) {
+        if (offsets.size() == 0) {
             this.game.con.printf("\nBeg your pardon, Captain?\n");
             return;
         }
 
-        int yOffset =  offsets.size() == 1 ? 0 : (int) ((double)offsets.get(1) * 10);
-        int xOffset = (int) ((double)offsets.get(0) * 10);
+        int yOffset = offsets.size() == 1 ? 0 : (int) ((double) offsets.get(1) * 10);
+        int xOffset = (int) ((double) offsets.get(0) * 10);
 
         this.game.con.printf("\nHelmsman Sulu- \"Aye, Sir.\"\n");
 
@@ -120,34 +125,37 @@ public class Move {
 
     }
 
-    private void adjustStats(Position dest){
+    private void adjustStats(Position dest) {
         Computer computer = new Computer(this.game);
 
         double powerNeeded = computer.calcPower(this.game.getEnterprise().getPosition(), dest);
         double timeNeeded = computer.calcTime(this.game.getEnterprise().getPosition(), dest);
-        this.game.setStarDate(this.game.getStarDate()-timeNeeded);
+        this.game.setStarDate(this.game.getStarDate() - timeNeeded);
         this.game.setTime(this.game.getTime() - timeNeeded);
         this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
     }
-    
+
     private Position moveToPosition(Position curPos, Position destPos) {
         Position nextPos = curPos.getClosestAdjecentPositionToDestination(destPos, new Computer(this.game));
 
         Coordinate nq = nextPos.getQuadrant();
         Coordinate ns = nextPos.getSector();
 
-        if(nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0) {
-            this.game.con.printf("\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
+        if (nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0) {
+            this.game.con.printf(
+                    "\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
 
             return curPos;
         }
 
-        if(this.game.getMap()[nq.getY()][nq.getX()][ns.getY()][ns.getX()] != Game.NOTHING){
-            this.game.con.printf("\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n", ns.getY(), ns.getX());
-            this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy()-125.00);
+        if (this.game.getMap()[nq.getY()][nq.getX()][ns.getY()][ns.getX()] != Game.NOTHING) {
+            this.game.con.printf(
+                    "\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n",
+                    ns.getY(), ns.getX());
+            this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - 125.00);
             return curPos;
         }
-        if(positionsAreEqual(destPos, nextPos)) {
+        if (positionsAreEqual(destPos, nextPos)) {
             return nextPos;
         }
         return moveToPosition(nextPos, destPos);
@@ -176,7 +184,7 @@ public class Move {
                 break;
             }
         }
-        if(mt.equals(MoveType.undefined) && !parseDoubles(cmdstr).isEmpty()) {
+        if (mt.equals(MoveType.undefined) && !parseDoubles(cmdstr).isEmpty()) {
             return MoveType.MANUAL;
         }
         return mt;

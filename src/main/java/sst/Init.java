@@ -194,8 +194,6 @@ public class Init {
         return values;
     }
 
-
-
     private void initializeEnterprise() {
         Position pos = generateNewPosition(9, (Entity) null);
         Enterprise enterprise = new Enterprise(pos);

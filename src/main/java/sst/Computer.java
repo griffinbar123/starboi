@@ -3,8 +3,10 @@ package sst;
 import java.util.List;
 import java.util.Optional;
 import Model.Coordinate;
+import Model.Enterprise;
 import Model.Game;
 import Model.Position;
+import Model.Enterprise.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static Utils.Utils.readCommands;
@@ -38,7 +40,15 @@ public class Computer {
         Double warp;
         Double twarp = null;
         Position pos = this.game.getEnterprise().getPosition();
-        Position curPosition = new Position(new Coordinate(pos.getQuadrant().getY()+1, pos.getQuadrant().getX()+1), new Coordinate(pos.getSector().getY()+1, pos.getSector().getX()+1));
+        Position curPosition = new Position(new Coordinate(pos.getQuadrant().getY()+1, pos.getQuadrant().getX()+1),
+                new Coordinate(pos.getSector().getY()+1, pos.getSector().getX()+1));
+
+        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.COMPUTER, 1.0); // TODO: testing damaged computer
+
+        if (game.getEnterprise().getDeviceDamage().get(Device.COMPUTER) > 0) {
+            this.game.con.printf("COMPUTER DAMAGED, USE A POCKET CALCULATOR.\n\n");
+            return;
+        }
 
         dest = readCoordinates(params).orElse(null);
         if (dest == null) {
