@@ -148,9 +148,9 @@ public class UtilsTest {
 
     @Test
     public void parseIntegersShouldHandleNegatives() {
-        Optional<List<Integer>> result = Utils.parseIntegers("1 -2 3 abc");
+        Optional<List<Integer>> result = Utils.parseIntegers("1 1.0 -2 3 abc");
         assertTrue(result.isPresent());
-        List<Integer> expected = List.of(1, -2, 3);
+        List<Integer> expected = List.of(1, 1, -2, 3);
         assertEquals(expected, result.get());
     }
 
@@ -174,7 +174,7 @@ public class UtilsTest {
 
     @Test
     public void parseDoublesShouldReturnListOfDoubles() {
-        Optional<List<Double>> result = Utils.parseDoubles("1.0 2.5 3.7 abc");
+        Optional<List<Double>> result = Utils.parseDoubles("1 2.5 3.7 abc");
         assertTrue(result.isPresent());
         List<Double> expected = List.of(1.0, 2.5, 3.7);
         assertEquals(expected, result.get());
@@ -182,9 +182,9 @@ public class UtilsTest {
 
     @Test
     public void parseDoublesShouldHandleNegatives() {
-        Optional<List<Double>> result = Utils.parseDoubles("1.0 -2.5 3.7 abc");
+        Optional<List<Double>> result = Utils.parseDoubles("1.0 -2.5 -3 3.7 abc");
         assertTrue(result.isPresent());
-        List<Double> expected = List.of(1.0, -2.5, 3.7);
+        List<Double> expected = List.of(1.0, -2.5, -3.0, 3.7);
         assertEquals(expected, result.get());
     }
 
@@ -228,9 +228,9 @@ public class UtilsTest {
 
     @Test
     public void parseDoublesListShouldHandleNegatives() {
-        List<String> params = List.of("1.0", "-2.5", "3.7", "abc");
+        List<String> params = List.of("1.0", "-2.5", "-3", "3.7", "abc");
         List<Double> result = Utils.parseDoubles(params);
-        List<Double> expected = List.of(1.0, -2.5, 3.7);
+        List<Double> expected = List.of(1.0, -2.5, -3.0, 3.7);
         assertEquals(expected, result);
     }
 }
