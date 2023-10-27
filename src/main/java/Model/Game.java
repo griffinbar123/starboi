@@ -121,24 +121,6 @@ public class Game {
                 for (int k = 0; k < map[i][j].length; k++) {
                     for (int l = 0; l < map[i][j][k].length; l++) {
                         Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
-                        // check if positions is a
-                        // if (checkEntityListAgainstPosition(position, klingons)) {
-                        //     map[j][i][l][k] = klingons[0].getSymbol();
-                        // } else if (checkEntityListAgainstPosition(position, planets)) {
-                        //     map[j][i][l][k] = planets[0].getSymbol();
-                        // } else if (checkEntityAgainstPosition(position, enterprise)) {
-                        //     map[j][i][l][k] = enterprise.getSymbol();
-                        // } else if (checkEntityListAgainstPosition(position, starbases)) {
-                        //     map[j][i][l][k] = starbases[0].getSymbol();
-                        // } else if (checkEntityListAgainstPosition(position, stars)) {
-                        //     map[j][i][l][k] = stars[0].getSymbol();
-                        // } else if (checkEntityListAgainstPosition(position, romulans)) {
-                        //     map[j][i][l][k] = romulans[0].getSymbol();
-                        // } else {
-                        //     map[j][i][l][k] = NOTHING;
-                        // }
-
-
                         if (checkEntityListAgainstPosition(position, klingons)) {
                             map[i][j][k][l] = klingons[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, planets)) {

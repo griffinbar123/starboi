@@ -147,6 +147,14 @@ public class UtilsTest {
     }
 
     @Test
+    public void parseIntegersShouldHandleNegatives() {
+        Optional<List<Integer>> result = Utils.parseIntegers("1 -2 3 abc");
+        assertTrue(result.isPresent());
+        List<Integer> expected = List.of(1, -2, 3);
+        assertEquals(expected, result.get());
+    }
+
+    @Test
     public void parseDoublesShouldReturnEmptyOptionalForEmptyString() {
         Optional<List<Double>> result = Utils.parseDoubles("");
         assertTrue(result.isEmpty());
@@ -192,6 +200,14 @@ public class UtilsTest {
         List<String> params = List.of("1", "2", "3", "abc");
         List<Integer> result = Utils.parseIntegers(params);
         List<Integer> expected = List.of(1, 2, 3);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void parseIntegersListShouldHandleNegatives() {
+        List<String> params = List.of("1", "-2", "3", "abc");
+        List<Integer> result = Utils.parseIntegers(params);
+        List<Integer> expected = List.of(1, -2, 3);
         assertEquals(expected, result);
     }
 
