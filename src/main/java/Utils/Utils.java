@@ -83,10 +83,10 @@ public class Utils {
      */
     public static Optional<List<Integer>> parseIntegers(String str) {
         List<Integer> integers = new ArrayList<Integer>(
-            // regex split at whitespace and punctuation except for hyphen
-                Stream.of(str.split("[\\s\\p{Punct}&&[^\\-]]"))
-                        .filter(s -> s.matches("[\\-]?\\d+"))
-                        .map(Integer::valueOf)
+                Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
+                        .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
+                        .map(Double::valueOf)
+                        .map(Double::intValue)
                         .toList());
         return (integers.size() > 0 ? Optional.ofNullable(integers) : Optional.empty());
     }
@@ -117,8 +117,9 @@ public class Utils {
     public static List<Integer> parseIntegers(List<String> params) {
         return new ArrayList<Integer>(
                 params.stream()
-                        .filter(s -> s.matches("[\\-]?\\d+"))
-                        .map(Integer::valueOf)
+                        .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
+                        .map(Double::valueOf)
+                        .map(Double::intValue)
                         .toList());
     }
 

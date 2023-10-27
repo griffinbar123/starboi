@@ -1,5 +1,6 @@
 // package Model;
 
+// import java.util.HashMap;
 // import java.util.Map;
 // import com.fasterxml.jackson.annotation.JsonIgnore;
 // import lombok.Data;
@@ -11,6 +12,8 @@
 // @Data
 // public class GameMap {
 //     private char[][][][] map = new char[8][8][10][10];
+//     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
+
 
 //     @JsonIgnore
 //     public void addCoordinateString(Coordinate coord, String s){
