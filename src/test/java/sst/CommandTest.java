@@ -308,7 +308,7 @@ public class CommandTest {
                 " 2  . . . . . . . . . .  Condition     GREEN\n" +
                 " 3  . . . . . . . . . .  Position      6 - 6, 5 - 4\n" +
                 " 4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
-                " 5  . . . . . . . . . .  Warp Factor   1.0\n" +
+                " 5  . . . E . . . . . .  Warp Factor   1.0\n" +
                 " 6  . . . . . . . . . .  Energy        100.00\n" +
                 " 7  . . . . . . . . . .  Torpedoes     10\n" +
                 " 8  . . . . . . . . . .  Shields       UP, 100% 1.0 units\n" +
@@ -464,6 +464,53 @@ public class CommandTest {
         verify(game.con).printf("%s", expected);
     }
 
+    @Test
+    public void damagedSrSensorsShouldLimitRange() {
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        dmg.put(Device.SR_SENSORS, 1.0);
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
+
+        srScan.ExecSRSCAN();
+
+        String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
+                " 1  - - - - - - - - - -  Stardate      123.4\n" +
+                " 2  - - - - - - - - - -  Condition     GREEN\n" +
+                " 3  - - - - - - - - - -  Position      6 - 6, 5 - 4\n" +
+                " 4  - - . . . - - - - -  Life Support  DAMAGED, Reserves = 2.30\n" +
+                " 5  - - . E . - - - - -  Warp Factor   1.0\n" +
+                " 6  - - . . . - - - - -  Energy        100.00\n" +
+                " 7  - - - - - - - - - -  Torpedoes     10\n" +
+                " 8  - - - - - - - - - -  Shields       UP, 100% 1.0 units\n" +
+                " 9  - - - - - - - - - -  Klingons Left 3\n" +
+                "10  - - - - - - - - - -  Time Left     10.00\n";
+
+        verify(game.con).printf("%s", scan);
+    }
+
+    @Test
+    public void damagedLrSensorsShouldPreventDeviceFunctioning() {
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        dmg.put(Device.LR_SENSORS, 1.0);
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
+        lrScan.ExecLRSCAN();
+
+        String error = "LONG-RANGE SENSORS DAMAGED.\n\n";
+
+        verify(game.con).printf(error);
+    }
+
+    @Test
+    public void damagedComputerShouldPreventDeviceFunctioning() {
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        dmg.put(Device.COMPUTER, 1.0);
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
+        computer.ExecCOMPUTER(null);
+
+        String error = "COMPUTER DAMAGED, USE A POCKET CALCULATOR.\n\n";
+
+        verify(game.con).printf(error);
+    }
+
     private void mockObjects() {
         // Empty map
         char map[][][][] = new char[8][8][10][10];
@@ -476,6 +523,7 @@ public class CommandTest {
                 }
             }
         }
+        map[5][5][4][3] = 'E';
 
         Map<Device, Double> dmg = new HashMap<Device, Double>();
         for (Device d : Enterprise.Device.values()) {
