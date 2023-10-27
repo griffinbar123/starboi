@@ -69,7 +69,14 @@ public class Game {
     public static final char NOTHING = '\u00B7';
 
     private double starDate = randDouble(21, 39) * 100;
+
+
+
     private char[][][][] map = new char[8][8][10][10];
+    // private GameMap map2 = new GameMap();
+
+
+
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
     private KlingonSuperCommander klingonSuperCommander = null;
