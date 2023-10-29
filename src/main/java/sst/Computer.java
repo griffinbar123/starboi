@@ -3,7 +3,6 @@ package sst;
 import java.util.List;
 import java.util.Optional;
 import Model.Coordinate;
-import Model.Enterprise;
 import Model.Game;
 import Model.Position;
 import Model.Enterprise.Device;
@@ -115,7 +114,7 @@ public class Computer {
      * @author Griffin Barnard
      */
     public double calcWarpDrive(Position pos, Position dest, Double time) {
-        double distance = calcDistance(pos, dest);
+        double distance = pos.calcDistance(dest);
         double calculatedWarp = Math.floor(Math.sqrt(distance/time));
         return calculatedWarp;
     }
@@ -129,7 +128,7 @@ public class Computer {
      * @author Griffin Barnard
      */
     public double calcPower(Position pos, Position dest) {
-        double distance = calcDistance(pos, dest);
+        double distance = pos.calcDistance(dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double powerNeeded = (distance/10.0)*warpSpeed*warpSpeed*warpSpeed*(0+1); //TODO: implement draining power based off shields * (shldup+1)
         return powerNeeded;
@@ -145,29 +144,10 @@ public class Computer {
      * @author Griffin Barnard
      */
     public double calcTime(Position pos, Position dest) {
-        double distance = calcDistance(pos, dest);
+        double distance = pos.calcDistance(dest);
         double warpSpeed = game.getEnterprise().getWarp();
         double travelTime = (distance) / (Math.pow(warpSpeed, 2));
         return travelTime;
-    }
-
-    /**
-     * calculate the distance bteween two positions
-     * 
-     * @param pos starting position
-     * @param dest position to travel to
-     * @return the distance between two points on the map
-     * @author Griffin Barnard
-     */
-    public double calcDistance(Position pos, Position dest) {
-        int x1 = pos.getXAsInt();
-        int y1 = pos.getYAsInt();
-
-        int x2 = dest.getXAsInt();
-        int y2 = dest.getYAsInt();
-        
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-        
     }
 
     /**

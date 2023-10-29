@@ -6,8 +6,7 @@ import lombok.NonNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Romulan extends Entity {
-    private double health;
+public class Romulan extends Klingon {
     private final char symbol = 'R';
 
     public Romulan(@NonNull Position position) {

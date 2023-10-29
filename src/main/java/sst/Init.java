@@ -213,6 +213,7 @@ public class Init {
         for (int i = 0; i < numberOfRomulans; i++) {
             pos = generateNewPosition(9, rom);
             rom[i] = new Romulan(pos);
+            rom[i].setPower(randDouble(0, 1)*400.0 + 450.0 + 50.0*this.game.getSkill().getSkillValue());
         }
         this.game.setRomulans(rom);
     }
@@ -268,16 +269,20 @@ public class Init {
         for (int i = 0; i < ord; i++) {
             pos = generateNewPosition(9, klingons);
             klingons[i] = new Klingon(pos);
+            klingons[i].setPower(randDouble(0, 1)*150.0 +300.0 +25.0*skill);
         }
 
         for (int i = 0; i < cmd; i++) {
             pos = generateNewPosition(9, klingonCommanders);
             klingonCommanders[i] = new KlingonCommander(pos);
+            klingonCommanders[i].setPower(950.0+400.0*randDouble(0, 1)+50.0*skill);
         }
 
         if (sCmd == 1) {
             pos = generateNewPosition(9, klingonSuperCommander);
-            this.game.setKlingonSuperCommander(new KlingonSuperCommander(pos));
+            klingonSuperCommander = new KlingonSuperCommander(pos);
+            klingonSuperCommander.setPower(1175.0 + 400.0*randDouble(0, 1) + 125.0*skill);
+            this.game.setKlingonSuperCommander(klingonSuperCommander);
         }
 
         this.game.setKlingons(klingons);

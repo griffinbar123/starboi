@@ -116,30 +116,30 @@ public class CommandTest {
     }
 
     @Test
-    public void computerCalcDistanceShouldWorkAsExpected() {
+    public void positionCalcDistanceShouldWorkAsExpected() {
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Position position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 1));
-        double distance = computer.calcDistance(position, position2);
+        double distance = position.calcDistance(position2);
         assertEquals(15.556349186104045, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 1));
-        distance = computer.calcDistance(position, position2);
+        distance = position.calcDistance(position2);
         assertEquals(16.27882059609970, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(1, 2));
-        distance = computer.calcDistance(position, position2);
+        distance = position.calcDistance(position2);
         assertEquals(16.27882059609970, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(1, 1), new Coordinate(2, 2));
-        distance = computer.calcDistance(position, position2);
+        distance = position.calcDistance(position2);
         assertEquals(16.97056274847714, distance, 0.02);
 
         position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         position2 = new Position(new Coordinate(8, 8), new Coordinate(8, 8));
-        distance = computer.calcDistance(position, position2);
+        distance = position.calcDistance(position2);
         assertEquals(124.45079348883236, distance, 0.02);
     }
 

@@ -5,12 +5,14 @@ import java.util.List;
 
 import Model.Coordinate;
 import Model.Game;
+import Model.Klingon;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
+import static Utils.Utils.buildPosFromQuad;
 /**
  * Handles the move command
  * 
@@ -125,7 +127,9 @@ public class Photon {
                 this.game.con.printf("\n");
             this.game.con.printf("%.1f - %.1f   ", x, y);
 
-            char symbol = this.game.getPositionChar(new Position(this.game.getEnterprise().getPosition().getQuadrant(), new Coordinate(iy, ix)));
+            Coordinate quad = this.game.getEnterprise().getPosition().getQuadrant();
+
+            char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
             switch(symbol){
                 case 'E': //hits our ship
                 case 'F': //hits Faire Queene
@@ -138,6 +142,16 @@ public class Photon {
 				}
                 case 'R': //hit a romulan
                 case 'K': //hit a klingon
+                    Klingon k = this.game.getEnemyAtPosition(buildPosFromQuad(quad, iy, ix));
+                    Double power = Math.abs(k.getPower());
+                    //not sure whath1 stands for rn
+                    h1 = Math.abs(700.0 + 100.0*Math.random() - 1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*Math.abs(Math.sin(bullseye-angle)));
+                    if (power < h1) 
+                        h1 = power;
+                    k.setPower(k.getPower() < 0 ? -h1: h1);
+                    if(k.getPower() == 0) {
+                        
+                    }
                 case 'B': // Hit a base
                 case 'P': // Hit a planet
                 case '*': // Hit a star 

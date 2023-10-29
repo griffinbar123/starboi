@@ -9,6 +9,7 @@ import lombok.NonNull;
 public class Klingon extends Entity {
     private double health;
     private double warp;
+    private double power;
 
     private final char symbol = 'K';
 

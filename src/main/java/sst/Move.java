@@ -86,7 +86,8 @@ public class Move {
         Coordinate sect = offsets.size() == 2 ? new Coordinate(offsets.get(0) - 1, offsets.get(1) - 1)
                 : new Coordinate(offsets.get(2) - 1, offsets.get(3) - 1);
 
-        this.game.con.printf("\nEnsign Chekov- \"Course laid in, Captain.\"\n");
+        if(offsets.size() == 4)
+            this.game.con.printf("\nEnsign Chekov- \"Course laid in, Captain.\"\n");
 
         Position newPosition = new Position(quad, sect);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
@@ -136,7 +137,7 @@ public class Move {
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {
-        Position nextPos = curPos.getClosestAdjecentPositionToDestination(destPos, new Computer(this.game));
+        Position nextPos = curPos.getClosestAdjecentPositionToDestination(destPos);
 
         Coordinate nq = nextPos.getQuadrant();
         Coordinate ns = nextPos.getSector();

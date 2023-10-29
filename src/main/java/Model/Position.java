@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import sst.Computer;
 
 @Data
 @AllArgsConstructor
@@ -60,17 +59,34 @@ public class Position {
         return getPositionFromOffset(1, 1);
     }
 
-    public Position getClosestAdjecentPositionToDestination(Position destPos, Computer computer){
+    /**
+     * calculate the distance bteween two positions
+     * 
+     * @param dest position to travel to
+     * @return the distance between two points on the map
+     * @author Griffin Barnard
+     */
+    public double calcDistance(Position dest) {
+        int x1 = getXAsInt();
+        int y1 = getYAsInt();
+
+        int x2 = dest.getXAsInt();
+        int y2 = dest.getYAsInt();
+        
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    public Position getClosestAdjecentPositionToDestination(Position destPos) {
 
         Map<Position, Double> scores = Map.of(
-            getTopLeftPosition(), computer.calcDistance(destPos, getTopLeftPosition()),
-            getTopMiddlePosition(), computer.calcDistance(destPos, getTopMiddlePosition()),
-            getTopRightPosition(), computer.calcDistance(destPos, getTopRightPosition()),
-            getMiddleLeftPosition(), computer.calcDistance(destPos, getMiddleLeftPosition()),
-            getMiddleRightPosition(), computer.calcDistance(destPos, getMiddleRightPosition()),
-            getBotLeftPosition(), computer.calcDistance(destPos, getBotLeftPosition()),
-            getBotMiddlePosition(), computer.calcDistance(destPos, getBotMiddlePosition()),
-            getBotRightPosition(), computer.calcDistance(destPos, getBotRightPosition())
+            getTopLeftPosition(), destPos.calcDistance(getTopLeftPosition()),
+            getTopMiddlePosition(), destPos.calcDistance(getTopMiddlePosition()),
+            getTopRightPosition(), destPos.calcDistance(getTopRightPosition()),
+            getMiddleLeftPosition(), destPos.calcDistance(getMiddleLeftPosition()),
+            getMiddleRightPosition(), destPos.calcDistance(getMiddleRightPosition()),
+            getBotLeftPosition(), destPos.calcDistance(getBotLeftPosition()),
+            getBotMiddlePosition(), destPos.calcDistance(getBotMiddlePosition()),
+            getBotRightPosition(), destPos.calcDistance(getBotRightPosition())
         );
         Entry<Position, Double> minEntry = Collections.min(scores.entrySet(), Comparator.comparing(Entry::getValue));
         return minEntry.getKey(); 

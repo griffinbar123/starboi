@@ -1,5 +1,6 @@
 package Model;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import lombok.Data;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
+import static Utils.Utils.checkEntityAgainstQuadrant;
 
 /**
  * Game entity container. In the future, this should help
@@ -188,5 +190,47 @@ public class Game {
             default:
                 return "Unknown??";
         }
+    }
+
+    @JsonIgnore
+    public List<Entity> getEnemiesInAQuadrant(Coordinate quad) {
+        List<Entity> enemeies = new ArrayList<Entity>();
+
+        for(Klingon k: klingons)
+            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), k))
+                enemeies.add(k);
+
+        for(Romulan r: romulans)
+            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), r))
+                enemeies.add(r);
+
+        for(KlingonCommander c: klingonCommanders)
+            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), c))
+                enemeies.add(c);
+
+        if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), klingonSuperCommander))
+            enemeies.add(klingonSuperCommander);
+            
+        return enemeies;
+    }
+
+    @JsonIgnore
+    public Klingon getEnemyAtPosition(Position pos) {
+        for(Klingon k: klingons)
+            if(checkEntityAgainstPosition(enterprise.getPosition(), k))
+                return k;
+
+        for(Romulan r: romulans)
+            if(checkEntityAgainstPosition(enterprise.getPosition(), r))
+                return r;
+
+        for(KlingonCommander c: klingonCommanders)
+            if(checkEntityAgainstPosition(enterprise.getPosition(), c))
+                return c;
+
+        if(checkEntityAgainstPosition(enterprise.getPosition(), klingonSuperCommander))
+            return klingonSuperCommander;
+            
+        return null;
     }
 }

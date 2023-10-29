@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Model.Coordinate;
 import Model.Entity;
 import Model.Position;
 
@@ -173,14 +175,25 @@ public class Utils {
 
     /**
      * 
+     * @param quad quadrant to be compared
+     * @param entity entity to be compared
+     * @return a boolean inticating wether a quad on a map contains the symbol of an entity
+     */
+    public static Boolean checkEntityAgainstQuadrant(Coordinate quad, Entity entity) {
+        // checks if entity is in a position, used mainly if map may not be updated
+        return entity != null && entity.getPosition().getQuadrant().getX() == quad.getX()
+                && entity.getPosition().getQuadrant().getY() == quad.getY();
+    }
+
+    /**
+     * 
      * @param pos1 position to be compared
      * @param entity entity to be compared
      * @return a boolean inticating wether a pos on a map contains the symbol of an entity
      */
     public static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
         // checks if entity is in a position, used mainly if map may not be updated
-        return entity != null && entity.getPosition().getQuadrant().getX() == position.getQuadrant().getX()
-                && entity.getPosition().getQuadrant().getY() == position.getQuadrant().getY() &&
+        return checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
                 entity.getPosition().getSector().getX() == position.getSector().getX()
                 && entity.getPosition().getSector().getY() == position.getSector().getY();
     }
@@ -204,5 +217,15 @@ public class Utils {
         return false;
     }
 
+        /**
+     * 
+     * @param quad quadrant
+     * @param y y coordinate
+     * @param x x coordinate
+     * @return a position
+     */
+    public static Position buildPosFromQuad(Coordinate quad, int y, int x) {
+        return new Position(quad, new Coordinate(y, x));
+    }
 
 }
