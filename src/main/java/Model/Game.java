@@ -93,6 +93,11 @@ public class Game {
 
 
     @JsonIgnore
+    public void begPardon(){
+        con.printf("\nBeg your pardon, Captain?\n");
+    }
+
+    @JsonIgnore
     public void addCoordinateString(Coordinate coord, String s){
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
@@ -149,4 +154,39 @@ public class Game {
         }
     }
 
+    @JsonIgnore
+    public Boolean checkPositionForEntity(Position position, char entity) {
+        return getPositionChar(position) == entity;
+    }
+
+    @JsonIgnore
+    public char getPositionChar(Position position) {
+        return map[position.getQuadrant().getY()][position.getQuadrant().getX()][position.getSector().getY()][position.getSector().getX()];
+    }
+
+    @JsonIgnore
+    public String getEntityStringFromChar(char c) {
+        switch (c) {
+            case 'E':
+                return "Enterprise";
+            case 'P':
+                return "Planet";
+            case 'F':
+                return "Faerie Queen";
+            case 'C':
+                return "Commander";
+            case '*':
+                return "Star";
+            case 'B':
+                return "Starbase";
+            case ' ':
+                return "Black hole";
+            case 'T':
+                return "Tholian";
+            case '#':
+                return "Tholian web";
+            default:
+                return "Unknown??";
+        }
+    }
 }

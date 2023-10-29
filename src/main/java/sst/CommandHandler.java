@@ -22,6 +22,7 @@ public class CommandHandler {
     private Help help;
     private Damages damages;
     private Move move;
+    private Photon photon;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -34,6 +35,7 @@ public class CommandHandler {
         this.help = new Help(game, this, "sst.doc");
         this.damages = new Damages(game);
         this.move = new Move(game);
+        this.photon = new Photon(game);
     }
 
     public enum Command {
@@ -147,6 +149,9 @@ public class CommandHandler {
                     break;
                 case MOVE:
                     move.ExecMOVE(params);
+                    break;
+                case PHOTONS:
+                    photon.ExecPHOTON(params);
                     break;
                 case undefined:
                     help.printValidCommands();

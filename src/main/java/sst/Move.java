@@ -53,7 +53,7 @@ public class Move {
                     automaticMove(params);
                     break;
                 default:
-                    this.game.con.printf("\nBeg your pardon, Captain?\n");
+                    this.game.begPardon();
                     break;
             }
         }
@@ -77,7 +77,7 @@ public class Move {
                 (offsets.size() == 4 && ((offsets.get(0) > 8) || offsets.get(0) < 1 || offsets.get(1) > 8
                         || offsets.get(1) < 1 || offsets.get(2) > 10 || offsets.get(2) < 1 || offsets.get(3) > 10
                         || offsets.get(3) < 1))) {
-            this.game.con.printf("\nBeg your pardon, Captain?\n");
+            this.game.begPardon();
             return;
         }
 
@@ -107,7 +107,7 @@ public class Move {
 
         List<Double> offsets = parseDoubles(params);
         if (offsets.size() == 0) {
-            this.game.con.printf("\nBeg your pardon, Captain?\n");
+            this.game.begPardon();
             return;
         }
 

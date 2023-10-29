@@ -82,6 +82,8 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Integer>> parseIntegers(String str) {
+        if(str == null)
+            return Optional.empty();
         List<Integer> integers = new ArrayList<Integer>(
                 Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
@@ -99,6 +101,8 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static Optional<List<Double>> parseDoubles(String str) {
+        if(str == null)
+            return Optional.empty();
         List<Double> doubles = new ArrayList<Double>(
                 Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
@@ -115,6 +119,8 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static List<Integer> parseIntegers(List<String> params) {
+        if(params == null)
+            return new ArrayList<Integer>();
         return new ArrayList<Integer>(
                 params.stream()
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
@@ -131,6 +137,8 @@ public class Utils {
      * @author Matthias Schrock
      */
     public static List<Double> parseDoubles(List<String> params) {
+        if(params == null)
+            return new ArrayList<Double>();
         return new ArrayList<Double>(
                 params.stream()
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
@@ -170,7 +178,7 @@ public class Utils {
      * @return a boolean inticating wether a pos on a map contains the symbol of an entity
      */
     public static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
-        // checks if entity is in a position
+        // checks if entity is in a position, used mainly if map may not be updated
         return entity != null && entity.getPosition().getQuadrant().getX() == position.getQuadrant().getX()
                 && entity.getPosition().getQuadrant().getY() == position.getQuadrant().getY() &&
                 entity.getPosition().getSector().getX() == position.getSector().getX()
@@ -195,4 +203,6 @@ public class Utils {
         }
         return false;
     }
+
+
 }

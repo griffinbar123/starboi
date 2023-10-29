@@ -74,7 +74,7 @@ public class Computer {
                 break;
             };
 
-            this.game.con.printf("\nBeg your pardon, Captain?\n");
+            this.game.begPardon();
         }
 
         warp = wf;

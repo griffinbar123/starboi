@@ -44,14 +44,16 @@ public class Enterprise extends Entity {
     }
     private Map<Device, Double> deviceDamage;
 
-    private String condition;
+    private String condition = "GREEN";
 
     private byte lifeSupport;
+
+    private Boolean cloak = false;
 
     private double warp = 5.0f;
     private double energy = 5000.0f;
 
-    private int torpedoes;
+    private int torpedoes = 10;
 
     private Sheild sheilds = new Sheild();
 
