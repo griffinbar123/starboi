@@ -4,7 +4,13 @@ import lombok.Data;
 
 @Data
 public class Sheild {
-    private String active = "DOWN";
+    public enum Status {
+        UP,
+        DOWN,
+        RESERVES;
+    }
+
+    private Status status = Status.UP;
     private int level;
     private double units;
 }

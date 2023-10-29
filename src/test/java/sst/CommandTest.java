@@ -544,7 +544,7 @@ public class CommandTest {
         game.setTime(10.0);
         
         // Mock objects
-        when(enterprise.getCondition()).thenReturn("GREEN");
+        when(enterprise.getCondition()).thenReturn(Enterprise.Condition.GREEN);
         position = new Position(new Coordinate(5, 5), new Coordinate(4, 3));
         when(game.getEnterprise().getPosition()).thenReturn(position);
         when(enterprise.getLifeSupport()).thenReturn((byte) 1);
@@ -552,7 +552,7 @@ public class CommandTest {
         when(enterprise.getEnergy()).thenReturn(100.0);
         when(enterprise.getTorpedoes()).thenReturn(10);
         Sheild shields = new Sheild();
-        shields.setActive("UP");
+        shields.setStatus(Sheild.Status.UP);
         shields.setLevel(100);
         shields.setUnits(1.0);
         when(enterprise.getSheilds()).thenReturn(shields);

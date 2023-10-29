@@ -72,12 +72,7 @@ public class Game {
 
     private double starDate = randDouble(21, 39) * 100;
 
-
-
     private char[][][][] map = new char[8][8][10][10];
-    // private GameMap map2 = new GameMap();
-
-
 
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
