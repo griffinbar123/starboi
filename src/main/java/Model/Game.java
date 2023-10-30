@@ -124,7 +124,8 @@ public class Game {
 
     @JsonIgnore
     public char getPositionChar(Position position) {
-        return map[position.getQuadrant().getY()][position.getQuadrant().getX()][position.getSector().getY()][position.getSector().getX()];
+        // con.printf("\n%s\n",map[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()]);
+        return map[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()];
     }
 
     @JsonIgnore
@@ -191,12 +192,9 @@ public class Game {
     public void destroyPlanet(Position pos) {
         con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, 'P'));
 
-        Planet[] newPlanets = new Planet[planets.length-1];
-        int j = 0;
         for(int i=0; i < planets.length; i++)
-            if(!positionsAreEqual(planets[i].getPosition(), pos))
-                newPlanets[j++] = planets[i];
-        planets = newPlanets;
+            if(positionsAreEqual(planets[i].getPosition(), pos))
+                planets[i] = null;
 
         updateMap();
 

@@ -117,10 +117,6 @@ public class Move {
 
         this.game.con.printf("\nHelmsman Sulu- \"Aye, Sir.\"\n");
 
-        this.game.con.printf("\nyoffset: %d, xoffset: %d\n", yOffset, xOffset);
-
-        this.game.con.printf("\nyasint: %d, xasint: %d\n", this.game.getEnterprise().getPosition().getYAsInt()+(yOffset*-1), this.game.getEnterprise().getPosition().getXAsInt()+(xOffset));
-        
 
         Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);

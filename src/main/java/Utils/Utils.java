@@ -195,7 +195,7 @@ public class Utils {
      */
     public static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
         // checks if entity is in a position, used mainly if map may not be updated
-        return checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
+        return entity != null && checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
                 entity.getPosition().getSector().getX() == position.getSector().getX()
                 && entity.getPosition().getSector().getY() == position.getSector().getY();
     }
@@ -246,6 +246,10 @@ public class Utils {
         switch (c) {
             case 'E':
                 return "Enterprise";
+            case 'K':
+                return "Klingon";
+            case 'R':
+                return "Romulan";
             case 'P':
                 return "Planet";
             case 'F':
