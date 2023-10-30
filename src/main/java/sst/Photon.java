@@ -71,7 +71,7 @@ public class Photon {
                 if(numOfTorpedoesToFire > 1) 
                     this.game.con.printf("\n***TORPEDO NUMBER %d MISFIRES.", i);
                 else 
-                    this.game.con.printf("\n***TORPEDO MISFIRES.");
+                    this.game.con.printf("\n***TORPEDO MISFIRES.\n");
                 
                 if(i < numOfTorpedoesToFire)
                     this.game.con.printf("\n  Remainder of burst aborted.");
@@ -163,7 +163,7 @@ public class Photon {
                         return;
                     }
                     this.game.con.printf("%s", outputEntity(iy+1, ix+1, symbol));
-                    /* If enemy damaged but not destroyed, try to displace */
+                    // move enemy
                     ang = angle + 2.5*(Math.random()-0.5);
                     temp = Math.abs(Math.sin(ang));
                     if (Math.abs(Math.cos(ang)) > temp) 
@@ -200,7 +200,7 @@ public class Photon {
                 case '*': // Hit a star 
                     if (Math.random() > 0.10) {
                         // TODO: create supernova
-                        this.game.con.printf("SUPER NOVA not yet implemented\n");
+                        this.game.con.printf("NOVA not yet implemented\n");
                         return;
                     }
                     this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, symbol));

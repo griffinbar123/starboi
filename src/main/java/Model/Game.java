@@ -1,6 +1,5 @@
 package Model;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.io.Console;
 import java.util.HashMap;
@@ -51,6 +50,8 @@ public class Game {
     private Integer destroyedBases = 0;
     private Integer romulansKilled = 0;
     private Integer superCommandersKilled = 0;
+    private Integer klingonsKilled = 0;
+    private Integer commandersKilled = 0;
 
     private Score score = new Score();
 
@@ -174,7 +175,7 @@ public class Game {
     public void destroyStarbase(Position pos) {
         con.printf("***STARBASE DESTROYED..\n");
         for(int i=0; i < starbases.length; i++)
-            if(positionsAreEqual(starbases[i].getPosition(), pos))
+            if(starbases[i] != null && positionsAreEqual(starbases[i].getPosition(), pos))
                 starbases[i] = null;
         updateMap();
 
@@ -187,7 +188,7 @@ public class Game {
     public void destroyPlanet(Position pos) {
         con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, 'P'));
         for(int i=0; i < planets.length; i++)
-            if(positionsAreEqual(planets[i].getPosition(), pos))
+            if(planets[i] != null && positionsAreEqual(planets[i].getPosition(), pos))
                 planets[i] = null;
         updateMap();
 
@@ -205,26 +206,32 @@ public class Game {
         switch (symbol) {
             case 'K':
                 for(int i=0; i < klingons.length; i++)
-                    if(positionsAreEqual(klingons[i].getPosition(), pos))
+                    if(klingons[i] != null && positionsAreEqual(klingons[i].getPosition(), pos)) {
                         klingons[i] = null;
+                        klingonsKilled += 1;
+                    }
                 break;
             case 'C':
                 for(int i=0; i < klingonCommanders.length; i++)
-                    if(positionsAreEqual(klingonCommanders[i].getPosition(), pos))
+                    if(klingonCommanders[i] != null && positionsAreEqual(klingonCommanders[i].getPosition(), pos)){
                         klingonCommanders[i] = null;
+                        commandersKilled += 1;
+                    }
                 break;
             case 'R':
                 for(int i=0; i < romulans.length; i++)
-                    if(positionsAreEqual(romulans[i].getPosition(), pos))
+                    if(romulans[i] != null && positionsAreEqual(romulans[i].getPosition(), pos)) {
                         romulans[i] = null;
+                        romulansKilled += 1;
+                    }
                 break;
             case 'S':
                 klingonSuperCommander = null;
+                superCommandersKilled += 1; 
                 break;
         }
         updateMap();
 
         // TODO: adjust game score and states dependent on entity
-        destroyedPlanets += 1;
     }
 }
