@@ -23,6 +23,7 @@ public class CommandHandler {
     private Damages damages;
     private Move move;
     private Photon photon;
+    private Score score;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -36,6 +37,7 @@ public class CommandHandler {
         this.damages = new Damages(game);
         this.move = new Move(game);
         this.photon = new Photon(game);
+        this.score = new Score(game);
     }
 
     public enum Command {
@@ -152,6 +154,9 @@ public class CommandHandler {
                     break;
                 case PHOTONS:
                     photon.ExecPHOTON(params);
+                    break;
+                case SCORE:
+                    score.ExecSCORE(false);
                     break;
                 case undefined:
                     help.printValidCommands();

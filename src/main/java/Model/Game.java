@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import static Utils.Utils.randDouble;
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
@@ -30,7 +29,7 @@ public class Game {
     @JsonIgnore
     public static final char NOTHING = '\u00B7';
 
-    private double starDate = randDouble(21, 39) * 100;
+    private double starDate;
 
     private char[][][][] map = new char[8][8][10][10];
 
@@ -52,6 +51,8 @@ public class Game {
     private Integer destroyedBases = 0;
     private Integer romulansKilled = 0;
     private Integer superCommandersKilled = 0;
+
+    private Score score = new Score();
 
 
     @JsonIgnore
