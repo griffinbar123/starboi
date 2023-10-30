@@ -7,7 +7,6 @@ import lombok.NonNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Klingon extends Entity {
-    private double health;
     private double warp;
     private double power;
 
