@@ -1,5 +1,6 @@
 package Model;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.Console;
 import java.util.HashMap;
@@ -10,6 +11,9 @@ import static Utils.Utils.randDouble;
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
+import static Utils.Utils.positionsAreEqual;
+import static Utils.Utils.outputDestroy;
+
 
 /**
  * Game entity container. In the future, this should help
@@ -87,6 +91,11 @@ public class Game {
     private GameLevel skill = GameLevel.UNDEFINED;
     private GameLength length = GameLength.UNDEFINED;
     private GameType type = GameType.UNDEFINED;
+    
+    private Integer destroyedPlanets = 0;
+    private Integer destroyedBases = 0;
+    private Integer romulansKilled = 0;
+    private Integer superCommandersKilled = 0;
 
 
     @JsonIgnore
@@ -162,32 +171,6 @@ public class Game {
     }
 
     @JsonIgnore
-    public String getEntityStringFromChar(char c) {
-        switch (c) {
-            case 'E':
-                return "Enterprise";
-            case 'P':
-                return "Planet";
-            case 'F':
-                return "Faerie Queen";
-            case 'C':
-                return "Commander";
-            case '*':
-                return "Star";
-            case 'B':
-                return "Starbase";
-            case ' ':
-                return "Black hole";
-            case 'T':
-                return "Tholian";
-            case '#':
-                return "Tholian web";
-            default:
-                return "Unknown??";
-        }
-    }
-
-    @JsonIgnore
     public List<Entity> getEnemiesInAQuadrant(Coordinate quad) {
         List<Entity> enemeies = new ArrayList<Entity>();
 
@@ -227,5 +210,27 @@ public class Game {
             return klingonSuperCommander;
             
         return null;
+    }
+
+     @JsonIgnore
+    public void destroyStarbase(Position pos) {
+        con.printf("***STARBASE DESTROYED..\n");
+        starbases = (Starbase[]) Arrays.stream(starbases).filter(starbase -> !positionsAreEqual(starbase.getPosition(), pos)).toArray();
+        updateMap();
+
+        // TODO: adjust game score and states
+        destroyedBases += 1;
+        // TODO: Adjust condition
+    }
+
+    @JsonIgnore
+    public void destroyPlanet(Position pos) {
+        con.printf("%s\n", outputDestroy(pos.getSector().getY(), pos.getSector().getY(), 'P'));
+        planets = (Planet[]) Arrays.stream(planets).filter(planet -> !positionsAreEqual(planet.getPosition(), pos)).toArray();
+        updateMap();
+
+        // TODO: adjust game score and states
+        destroyedPlanets += 1;
+        // TODO: check if enterprise was landed. if so, end game
     }
 }

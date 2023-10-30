@@ -15,6 +15,7 @@ import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
 import static Utils.Utils.buildPosFromQuad;
+import static Utils.Utils.outputDestroy;
 /**
  * Handles the move command
  * 
@@ -102,12 +103,12 @@ public class Photon {
     private void fireTorpedo(Double course, Double r, Double initialY, Double initialX){
         // this.game.con.printf("\n\ncourse: %f, r: %f, y: %f, x: %f\n", course, r, initialY, initialX);
 
-        int iquad, ix, iy,  jx, jy, shoved=0, ll;
+        int ix, iy,  jx, jy, shoved=0;
         Double ac=course + 0.25*r;
         Double angle = (15.0-ac)*0.5235988;
         Double bullseye = (15.0 - course)*0.5235988;
         Double deltax=-Math.sin(angle), deltay=Math.cos(angle), x=initialX, y=initialY, bigger;
-        Double ang, temp, xx, yy, kp, h1;
+        Double ang, temp, xx, yy, h1;
 
         bigger = Math.abs(deltax);
         if (Math.abs(deltay) > bigger) 
@@ -132,6 +133,7 @@ public class Photon {
             Coordinate quad = this.game.getEnterprise().getPosition().getQuadrant();
 
             char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
+            Position pos = buildPosFromQuad(quad, iy, ix);
             switch(symbol){
                 case 'E': //hits our ship
                 case 'F': //hits Faire Queene
@@ -139,12 +141,12 @@ public class Photon {
                 case 'C': //hit a commander
                 case 'S': //hit a super commander
                 if (Math.random() <= 0.05) {
-                    this.game.con.printf("***%s at %d - %d\nuses anti-photon device;\n   torpedo neutralized.", this.game.getEntityStringFromChar(symbol), iy, ix);
+                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputDestroy(iy, ix, symbol));
 					return;
 				}
                 case 'R': //hit a romulan
                 case 'K': //hit a klingon
-                    Klingon k = this.game.getEnemyAtPosition(buildPosFromQuad(quad, iy, ix));
+                    Klingon k = this.game.getEnemyAtPosition(pos);
                     Double power = Math.abs(k.getPower());
                     //not sure whath1 stands for rn
                     h1 = Math.abs(700.0 + 100.0*Math.random() - 1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*Math.abs(Math.sin(bullseye-angle)));
@@ -152,10 +154,42 @@ public class Photon {
                         h1 = power;
                     k.setPower(k.getPower() < 0 ? -h1: h1);
                     if(k.getPower() == 0) {
-
+                        // kill klingon?
+                        return;
                     }
+                    this.game.con.printf("%s\n", outputDestroy(iy, ix, symbol));
+                    /* If enemy damaged but not destroyed, try to displace */
+                    ang = angle + 2.5*(Math.random()-0.5);
+                    temp = Math.abs(Math.sin(ang));
+                    if (Math.abs(Math.cos(ang)) > temp) temp = Math.abs(Math.cos(ang));
+                    xx = -Math.sin(ang)/temp;
+                    yy = Math.cos(ang)/temp;
+                    jx= (int) (ix+xx+0.5);
+                    jy= (int) (iy+yy+0.5);
+                    Position klingonPos = buildPosFromQuad(quad, jy, jx);
+                    if (jx<1 || jx>10 || jy<1 ||jy > 10) {
+                        this.game.con.printf(" damaged but not destroyed.\n");
+                        return;
+                    }
+                    if (this.game.getPositionChar(klingonPos)==' ') {
+                        this.game.con.printf(" buffeted into black hole\n");
+                        // kill klingon?
+                        return;
+                    }
+                    if (this.game.getPositionChar(klingonPos) != Game.NOTHING) {
+                        /* can't move into object */
+                        this.game.con.printf(" damaged but not destroyed.\n");
+                        return;
+                    }
+                    this.game.con.printf(" damaged--\n");
+                    k.setPosition(klingonPos);
+                    shoved = 1;
+                    break;
                 case 'B': // Hit a base
+                    this.game.destroyStarbase(pos);
+                    return;
                 case 'P': // Hit a planet
+                    this.game.con.printf("%s\n", outputDestroy(iy, ix, symbol));
                 case '*': // Hit a star 
                 case '?': // Hit a thingy 
                 case ' ': // Black hole 

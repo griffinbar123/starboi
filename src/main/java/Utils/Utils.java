@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -217,6 +219,18 @@ public class Utils {
         return false;
     }
 
+    /**
+     * 
+     * @param pos1 pos1 to be compared
+     * @param pos2 pos2 to be compared
+     * @return a boolean inticating wether 2 positions are in the same Quadrant
+     */
+    public static Boolean checkIfPositionsHaveSameQuadrant(Position position, Position position2) {
+        // checks if any entity in the list provided is is in the provided position
+        return position.getQuadrant().getX() == position2.getQuadrant().getX()
+                && position.getQuadrant().getY() == position2.getQuadrant().getY();
+    }
+
         /**
      * 
      * @param quad quadrant
@@ -226,6 +240,35 @@ public class Utils {
      */
     public static Position buildPosFromQuad(Coordinate quad, int y, int x) {
         return new Position(quad, new Coordinate(y, x));
+    }
+
+    public static String getEntityStringFromChar(char c) {
+        switch (c) {
+            case 'E':
+                return "Enterprise";
+            case 'P':
+                return "Planet";
+            case 'F':
+                return "Faerie Queen";
+            case 'C':
+                return "Commander";
+            case '*':
+                return "Star";
+            case 'B':
+                return "Starbase";
+            case ' ':
+                return "Black hole";
+            case 'T':
+                return "Tholian";
+            case '#':
+                return "Tholian web";
+            default:
+                return "Unknown??";
+        }
+    }
+
+    public static String outputDestroy(Integer iy, Integer ix, char symbol) {
+        return "***"+getEntityStringFromChar(symbol)+" at " + iy + " - " + ix;
     }
 
 }
