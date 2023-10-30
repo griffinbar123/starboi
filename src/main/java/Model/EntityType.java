@@ -4,13 +4,15 @@ public enum EntityType {
     ENTERPRISE('E', "Enterprise"),
     PLANET('P', "Planet"),
     FAERIE_QUEEN('F', "Faerie Queen"),
+    KLINGON('K', "Klingon"),
     COMMANDER('C', "Commander"),
+    ROMULAN('R', "Romulan"),
     STAR('*', "Star"),
     STARBASE('B', "Starbase"),
     BLACK_HOLE(' ', "Black Hole"),
     THOLIAN('T', "Tholian"),
     THOLIAN_WEB('#', "Tholian Web"),
-    UNKNOWN('?', "Unknown");
+    undefined('?', "Undefined");
 
     private final char symbol;
     private final String name;
