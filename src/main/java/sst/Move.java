@@ -150,10 +150,10 @@ public class Move {
             return curPos;
         }
 
-        if (this.game.getMap()[nq.getY()][nq.getX()][ns.getY()][ns.getX()] != Game.NOTHING) {
+        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != Game.NOTHING) {
             this.game.con.printf(
                     "\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n",
-                    ns.getY(), ns.getX());
+                    ns.getY()+1, ns.getX()+1);
             this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - 125.00);
             return curPos;
         }

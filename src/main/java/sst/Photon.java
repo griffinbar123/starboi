@@ -173,7 +173,7 @@ public class Photon {
                     jx= (int) (ix+xx+0.5);
                     jy= (int) (iy+yy+0.5);
                     Position klingonPos = buildPosFromQuad(quad, jy, jx);
-                    if (jx<1 || jx>10 || jy<1 ||jy > 10) {
+                    if (jx<0 || jx>9 || jy<0 ||jy > 9) {
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
                     }
