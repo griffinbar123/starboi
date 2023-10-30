@@ -7,8 +7,8 @@ import Model.Coordinate;
 import Model.Game;
 import Model.Klingon;
 import Model.Position;
-import Model.Sheild;
-import Model.Enterprise;
+import Model.Condition;
+import Model.ShieldStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static Utils.Utils.readCommands;
@@ -86,7 +86,7 @@ public class Photon {
 
             if(this.game.getEnterprise().getCloak())
                 r *= 1.2;
-            if(this.game.getEnterprise().getSheilds().getStatus() == Sheild.Status.DOWN || this.game.getEnterprise().getCondition() == Enterprise.Condition.DOCKED) 
+            if(this.game.getEnterprise().getSheilds().getStatus() == ShieldStatus.DOWN || this.game.getEnterprise().getCondition() == Condition.DOCKED) 
                 r *= 1.0 + 0.0001*this.game.getEnterprise().getSheilds().getUnits(); 
 
             if(numOfTorpedoesToFire > 1) 

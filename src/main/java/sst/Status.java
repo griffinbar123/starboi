@@ -33,7 +33,7 @@ public class Status {
                 "Time Left     %.2f\n";
         this.game.con.printf(stat,
                 this.game.getStarDate(),
-                enterprise.getCondition(),
+                enterprise.getCondition().toString(),
                 enterprise.getPosition().getQuadrant().getX() + 1,
                 enterprise.getPosition().getQuadrant().getY() + 1,
                 enterprise.getPosition().getSector().getY() + 1,
