@@ -22,8 +22,8 @@ public class LrScan {
      */
     public void ExecLRSCAN() {
         Enterprise enterprise = game.getEnterprise();
-        int row = enterprise.getPosition().getQuadrant().getX();
-        int column = enterprise.getPosition().getQuadrant().getY();
+        int row = enterprise.getPosition().getQuadrant().getY();
+        int column = enterprise.getPosition().getQuadrant().getX();
         String out = "";
 
         // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.LR_SENSORS, 1.0); // TODO: testing damaged sensors
@@ -77,9 +77,9 @@ public class LrScan {
 
     private int getNumberOfEntiesInMapQuadrant(int row, int column, char entity) {
         int numberOfElements = 0;
-        for (int i = 0; i < this.game.getMap()[row][column].length; i++) {
-            for (int j = 0; j < this.game.getMap()[row][column][i].length; j++) {
-                if (this.game.getMap()[row][column][i][j] == entity) {
+        for (int i = 0; i < this.game.getMap()[column][row].length; i++) {
+            for (int j = 0; j < this.game.getMap()[column][row][i].length; j++) {
+                if (this.game.getMap()[column][row][j][i] == entity) {
                     numberOfElements += 1;
                 }
             }

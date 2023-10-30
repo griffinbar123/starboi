@@ -12,7 +12,7 @@ import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
 import static Utils.Utils.positionsAreEqual;
-import static Utils.Utils.outputDestroy;
+import static Utils.Utils.outputEntity;
 
 
 /**
@@ -96,19 +96,19 @@ public class Game {
                     for (int l = 0; l < map[i][j][k].length; l++) {
                         Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
                         if (checkEntityListAgainstPosition(position, klingons)) {
-                            map[i][j][k][l] = klingons[0].getSymbol();
+                            map[j][i][k][l] = klingons[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, planets)) {
-                            map[i][j][k][l] = planets[0].getSymbol();
+                            map[j][i][k][l] = planets[0].getSymbol();
                         } else if (checkEntityAgainstPosition(position, enterprise)) {
-                            map[i][j][k][l] = enterprise.getSymbol();
+                            map[j][i][k][l] = enterprise.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, starbases)) {
-                            map[i][j][k][l] = starbases[0].getSymbol();
+                            map[j][i][k][l] = starbases[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, stars)) {
-                            map[i][j][k][l] = stars[0].getSymbol();
+                            map[j][i][k][l] = stars[0].getSymbol();
                         } else if (checkEntityListAgainstPosition(position, romulans)) {
-                            map[i][j][k][l] = romulans[0].getSymbol();
+                            map[j][i][k][l] = romulans[0].getSymbol();
                         } else {
-                            map[i][j][k][l] = NOTHING;
+                            map[j][i][k][l] = NOTHING;
                         }
                     }
                 }
@@ -151,18 +151,18 @@ public class Game {
     @JsonIgnore
     public Klingon getEnemyAtPosition(Position pos) {
         for(Klingon k: klingons)
-            if(checkEntityAgainstPosition(enterprise.getPosition(), k))
+            if(checkEntityAgainstPosition(pos, k))
                 return k;
 
         for(Romulan r: romulans)
-            if(checkEntityAgainstPosition(enterprise.getPosition(), r))
+            if(checkEntityAgainstPosition(pos, r))
                 return r;
 
         for(KlingonCommander c: klingonCommanders)
-            if(checkEntityAgainstPosition(enterprise.getPosition(), c))
+            if(checkEntityAgainstPosition(pos, c))
                 return c;
 
-        if(checkEntityAgainstPosition(enterprise.getPosition(), klingonSuperCommander))
+        if(checkEntityAgainstPosition(pos, klingonSuperCommander))
             return klingonSuperCommander;
             
         return null;
@@ -171,7 +171,14 @@ public class Game {
      @JsonIgnore
     public void destroyStarbase(Position pos) {
         con.printf("***STARBASE DESTROYED..\n");
-        starbases = (Starbase[]) Arrays.stream(starbases).filter(starbase -> !positionsAreEqual(starbase.getPosition(), pos)).toArray();
+
+        Starbase[] newStarbases = new Starbase[starbases.length-1];
+        int j = 0;
+        for(int i=0; i < starbases.length; i++)
+            if(!positionsAreEqual(starbases[i].getPosition(), pos))
+                newStarbases[j++] = starbases[i];
+        starbases = newStarbases;
+
         updateMap();
 
         // TODO: adjust game score and states
@@ -181,8 +188,15 @@ public class Game {
 
     @JsonIgnore
     public void destroyPlanet(Position pos) {
-        con.printf("%s\n", outputDestroy(pos.getSector().getY(), pos.getSector().getY(), 'P'));
-        planets = (Planet[]) Arrays.stream(planets).filter(planet -> !positionsAreEqual(planet.getPosition(), pos)).toArray();
+        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, 'P'));
+
+        Planet[] newPlanets = new Planet[planets.length-1];
+        int j = 0;
+        for(int i=0; i < planets.length; i++)
+            if(!positionsAreEqual(planets[i].getPosition(), pos))
+                newPlanets[j++] = planets[i];
+        planets = newPlanets;
+
         updateMap();
 
         // TODO: adjust game score and states

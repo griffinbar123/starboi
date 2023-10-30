@@ -15,7 +15,7 @@ import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
 import static Utils.Utils.buildPosFromQuad;
-import static Utils.Utils.outputDestroy;
+import static Utils.Utils.outputEntity;
 /**
  * Handles the move command
  * 
@@ -96,18 +96,17 @@ public class Photon {
                 this.game.con.printf("\nTorpedo track- ");
             
 
-            fireTorpedo(courses.get(i-1), r, (Double) (double)this.game.getEnterprise().getPosition().getSector().getY()+1, (Double) (double)this.game.getEnterprise().getPosition().getSector().getX()+1);
+            fireTorpedo(courses.get(i-1), r, (Double) (double)this.game.getEnterprise().getPosition().getSector().getY(), (Double) (double)this.game.getEnterprise().getPosition().getSector().getX());
         }
     }
 
     private void fireTorpedo(Double course, Double r, Double initialY, Double initialX){
-        // this.game.con.printf("\n\ncourse: %f, r: %f, y: %f, x: %f\n", course, r, initialY, initialX);
 
-        int ix, iy,  jx, jy, shoved=0;
+        int ix, iy,  jx = -1, jy = -1, shoved=0;
         Double ac=course + 0.25*r;
         Double angle = (15.0-ac)*0.5235988;
         Double bullseye = (15.0 - course)*0.5235988;
-        Double deltax=-Math.sin(angle), deltay=Math.cos(angle), x=initialX, y=initialY, bigger;
+        Double deltay=-Math.sin(angle), deltax=Math.cos(angle), x=initialX, y=initialY, bigger;
         Double ang, temp, xx, yy, h1;
 
         bigger = Math.abs(deltax);
@@ -119,29 +118,35 @@ public class Photon {
         for(int i=1; i<=15; i++){
             x += deltax;
             ix = (int) ( x + 0.5);
-            if (ix < 1 || ix > 10) 
+            if (ix < 0 || ix > 9) 
                 break;
             y += deltay;
             iy = (int) (y + 0.5);
-            if (iy < 1 || iy > 10) 
+            if (iy < 0 || iy > 9) 
                 break;
 
             if (i==4 || i==9)
                 this.game.con.printf("\n");
-            this.game.con.printf("%.1f - %.1f   ", x, y);
+            this.game.con.printf("%.1f - %.1f   ", y+1.0, x+1.0);
 
             Coordinate quad = this.game.getEnterprise().getPosition().getQuadrant();
 
+            // this.game.con.printf("iy: %.1f - ix: %.1f   ", iy+1.0, ix+1.0);
             char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
+
+            if(symbol == Game.NOTHING) continue;
+
+            this.game.con.printf("\n");
+
             Position pos = buildPosFromQuad(quad, iy, ix);
-            switch(symbol){
+            switch(symbol) {
                 case 'E': //hits our ship
                 case 'F': //hits Faire Queene
                     break;
                 case 'C': //hit a commander
                 case 'S': //hit a super commander
                 if (Math.random() <= 0.05) {
-                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputDestroy(iy, ix, symbol));
+                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputEntity(iy+1, ix+1, symbol));
 					return;
 				}
                 case 'R': //hit a romulan
@@ -157,13 +162,14 @@ public class Photon {
                         // kill klingon?
                         return;
                     }
-                    this.game.con.printf("%s\n", outputDestroy(iy, ix, symbol));
+                    this.game.con.printf("%s", outputEntity(iy+1, ix+1, symbol));
                     /* If enemy damaged but not destroyed, try to displace */
                     ang = angle + 2.5*(Math.random()-0.5);
                     temp = Math.abs(Math.sin(ang));
-                    if (Math.abs(Math.cos(ang)) > temp) temp = Math.abs(Math.cos(ang));
-                    xx = -Math.sin(ang)/temp;
-                    yy = Math.cos(ang)/temp;
+                    if (Math.abs(Math.cos(ang)) > temp) 
+                        temp = Math.abs(Math.cos(ang));
+                    yy = -Math.sin(ang)/temp;
+                    xx = Math.cos(ang)/temp;
                     jx= (int) (ix+xx+0.5);
                     jy= (int) (iy+yy+0.5);
                     Position klingonPos = buildPosFromQuad(quad, jy, jx);
@@ -189,15 +195,42 @@ public class Photon {
                     this.game.destroyStarbase(pos);
                     return;
                 case 'P': // Hit a planet
-                    this.game.con.printf("%s\n", outputDestroy(iy, ix, symbol));
+                    this.game.destroyPlanet(pos);
+                    return;
                 case '*': // Hit a star 
+                    if (Math.random() > 0.10) {
+                        // TODO: create supernova
+                        this.game.con.printf("SUPER NOVA not yet implemented\n");
+                        return;
+                    }
+                    this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, symbol));
+                    return;
                 case '?': // Hit a thingy 
-                case ' ': // Black hole 
+                    this.game.con.printf("\nAAAAIIIIEEEEEEEEAAAAAAAAUUUUUGGGGGHHHHHHHHHHHH!!!\n    HACK!     HACK!    HACK!        *CHOKE!*  \nMr. Spock-\n  \"Fascinating!\"\n");
+                    // TODO: remove thingy
+                    return;
+                case ' ': // Black hole
+                    this.game.con.printf("\n%s swallows torpedo.\n", outputEntity(iy+1, ix+1, symbol));
+                    return;
                 case '#': // hit the web 
+                    this.game.con.printf("\n***Torpedo absorbed by Tholian web.\"\n");
+                    return;
                 case 'T': // Hit a Tholian 
+                    // TODO: handle hitting a Tholian
+                    this.game.con.printf("\n%s hitting tholians not implemented.\n", outputEntity(iy+1, ix+1, symbol));
                 default: // Problem! 
+                    this.game.con.printf("\nDon't know how to handle collision with %s\n", outputEntity(iy+1, ix+1, symbol));
+                    return;
             }
+            break;
         }
+        if (shoved == 1) {
+            this.game.updateMap();
+            this.game.con.printf(" displaced by blast to %d - %d\n", jy+1, jx+1);
+            return;
+        }
+        this.game.con.printf("\nTorpedo missed.\n");
+        return;
     }
 
     private Double getInitialCourse(Double y, Double x) {

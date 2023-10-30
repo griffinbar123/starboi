@@ -66,7 +66,7 @@ public class Init {
         // TODO: initialize these numbers based on game type, length, and skill
         planets = 30;
         starbases = 4;
-        stars = 300;
+        stars = 200;
         romulans = 4;
 
         initializeEnterprise();
@@ -321,7 +321,12 @@ public class Init {
         // use this to check if a position is empty, but can't check the map because it
         // might not be updated
         return !(checkEntityAgainstPosition(position, this.game.getEnterprise())
+                || checkEntityAgainstPosition(position, this.game.getKlingonSuperCommander())
                 || checkEntityListAgainstPosition(position, this.game.getKlingons())
-                || checkEntityListAgainstPosition(position, this.game.getPlanets()));
+                || checkEntityListAgainstPosition(position, this.game.getPlanets())
+                || checkEntityListAgainstPosition(position, this.game.getStars())
+                || checkEntityListAgainstPosition(position, this.game.getStarbases())
+                || checkEntityListAgainstPosition(position, this.game.getRomulans())
+                || checkEntityListAgainstPosition(position, this.game.getKlingonCommanders()));
     }
 }

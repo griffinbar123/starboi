@@ -58,6 +58,6 @@ public class Chart {
                 this.game.getCoordinateString(7, 0), this.game.getCoordinateString(7, 1), this.game.getCoordinateString(7, 2),
                 this.game.getCoordinateString(7, 3), this.game.getCoordinateString(7, 4), this.game.getCoordinateString(7, 5),
                 this.game.getCoordinateString(7, 6), this.game.getCoordinateString(7, 7),
-                enterprise.getPosition().getQuadrant().getX() + 1, enterprise.getPosition().getQuadrant().getY() + 1);
+                enterprise.getPosition().getQuadrant().getY() + 1, enterprise.getPosition().getQuadrant().getX() + 1);
     }
 }

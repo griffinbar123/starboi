@@ -44,7 +44,7 @@ public class SrScan {
                             && !isAdjacent(r, c, enterprise.getPosition())) {
                         sb.append(String.format("%c ", '-'));
                     } else {
-                        sb.append(String.format("%c ", this.game.getMap()[row][column][r - 1][c - 1]));
+                        sb.append(String.format("%c ", this.game.getMap()[column][row][r - 1][c - 1]));
                     }
             }
 
@@ -60,8 +60,8 @@ public class SrScan {
                         break;
                     case 3:
                         sb.append(String.format("Position      %d - %d, %d - %d",
-                                (enterprise.getPosition().getQuadrant().getX() + 1),
                                 (enterprise.getPosition().getQuadrant().getY() + 1),
+                                (enterprise.getPosition().getQuadrant().getX() + 1),
                                 (enterprise.getPosition().getSector().getY() + 1),
                                 (enterprise.getPosition().getSector().getX() + 1)));
                         break;

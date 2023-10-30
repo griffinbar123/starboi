@@ -267,7 +267,7 @@ public class Utils {
         }
     }
 
-    public static String outputDestroy(Integer iy, Integer ix, char symbol) {
+    public static String outputEntity(Integer iy, Integer ix, char symbol) {
         return "***"+getEntityStringFromChar(symbol)+" at " + iy + " - " + ix;
     }
 
