@@ -40,7 +40,7 @@ public class Status {
                 enterprise.getPosition().getSector().getX() + 1,
                 (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"),
                 enterprise.getWarp(), enterprise.getEnergy(), enterprise.getTorpedoes(),
-                enterprise.getSheilds().getActive(),
+                enterprise.getSheilds().getStatus().toString(),
                 enterprise.getSheilds().getLevel(),
                 enterprise.getSheilds().getUnits(),
                 game.getKlingonCount(),

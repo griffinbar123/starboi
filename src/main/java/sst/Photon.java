@@ -7,6 +7,8 @@ import Model.Coordinate;
 import Model.Game;
 import Model.Klingon;
 import Model.Position;
+import Model.Sheild;
+import Model.Enterprise;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static Utils.Utils.readCommands;
@@ -84,7 +86,7 @@ public class Photon {
 
             if(this.game.getEnterprise().getCloak())
                 r *= 1.2;
-            if(this.game.getEnterprise().getSheilds().getActive() == "DOWN" || this.game.getEnterprise().getCondition() == "DOCKED") 
+            if(this.game.getEnterprise().getSheilds().getStatus() == Sheild.Status.DOWN || this.game.getEnterprise().getCondition() == Enterprise.Condition.DOCKED) 
                 r *= 1.0 + 0.0001*this.game.getEnterprise().getSheilds().getUnits(); 
 
             if(numOfTorpedoesToFire > 1) 
@@ -150,7 +152,7 @@ public class Photon {
                         h1 = power;
                     k.setPower(k.getPower() < 0 ? -h1: h1);
                     if(k.getPower() == 0) {
-                        
+
                     }
                 case 'B': // Hit a base
                 case 'P': // Hit a planet

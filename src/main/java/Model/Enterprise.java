@@ -1,6 +1,9 @@
 package Model;
 
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -42,9 +45,18 @@ public class Enterprise extends Entity {
             return deviceName;
         }
     }
+
+    public static enum Condition {
+        GREEN,
+        YELLOW,
+        RED,
+        DOCKED,
+        DEAD;
+    }
+
     private Map<Device, Double> deviceDamage;
 
-    private String condition = "GREEN";
+    private Condition condition = Condition.GREEN;
 
     private byte lifeSupport;
 
@@ -57,6 +69,7 @@ public class Enterprise extends Entity {
 
     private Sheild sheilds = new Sheild();
 
+    @JsonIgnore
     private final char symbol = 'E';
 
     public Enterprise(@NonNull Position position) {

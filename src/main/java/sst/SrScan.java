@@ -78,7 +78,7 @@ public class SrScan {
                         break;
                     case 8:
                         sb.append(String.format("Shields       %s, %d%% %.1f units",
-                                enterprise.getSheilds().getActive(),
+                                enterprise.getSheilds().getStatus().toString(),
                                 enterprise.getSheilds().getLevel(),
                                 enterprise.getSheilds().getUnits()));
                         break;
