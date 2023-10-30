@@ -23,7 +23,6 @@ import Model.KlingonSuperCommander;
 import Model.Position;
 import Model.Shield;
 import Model.Device;
-import sst.CommandHandler.Command;
 
 public class CommandTest {
     private Game game;

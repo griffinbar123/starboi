@@ -270,5 +270,4 @@ public class Utils {
     public static String outputEntity(Integer iy, Integer ix, char symbol) {
         return "***"+getEntityStringFromChar(symbol)+" at " + iy + " - " + ix;
     }
-
 }

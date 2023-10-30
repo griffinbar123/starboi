@@ -48,6 +48,7 @@ public class Init {
         this.game = new Game();
         CommandHandler handler = new CommandHandler(this.game);
         int planets, starbases, stars, romulans;
+        double starDate;
 
         // TODO: for testing so we don't have to type in the same thing every time
         // this.game.setType(getGameParam(GameType.REGULAR));
@@ -61,6 +62,9 @@ public class Init {
         System.out.print("Please type in a secret password (9 characters maximum)-");
         System.out.println("changeit");
 
+        starDate = randDouble(21, 39) * 100;
+        this.game.setStarDate(starDate);
+        this.game.getScore().setInitStarDate(starDate);
         this.game.setTime(this.game.getLength().getLengthValue() * 7);
 
         // TODO: initialize these numbers based on game type, length, and skill
@@ -219,6 +223,7 @@ public class Init {
             rom[i].setPower(randDouble(0, 1)*400.0 + 450.0 + 50.0*this.game.getSkill().getSkillValue());
         }
         this.game.setRomulans(rom);
+        this.game.getScore().setInitRomulans(numberOfRomulans);
     }
 
     private void initializeStars(int numberOfStars) {
@@ -259,10 +264,10 @@ public class Init {
         // Original: 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15)
         skill = this.game.getSkill().getSkillValue();
         initKling = (int) (2 * this.game.getTime() * ((skill + 1 - 2 * randInt(0, 1)) * skill * 0.1 + 0.15));
+        cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
         sCmd = (this.game.getSkill() == GameLevel.GOOD ||
                 this.game.getSkill() == GameLevel.EXPERT ||
                 this.game.getSkill() == GameLevel.EMERITUS ? 1 : 0);
-        cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
         ord = initKling - cmd - sCmd;
 
         Klingon[] klingons = new Klingon[ord];
@@ -290,6 +295,11 @@ public class Init {
 
         this.game.setKlingons(klingons);
         this.game.setKlingonCommanders(klingonCommanders);
+
+        game.getScore().setInitTotKlingons(initKling);
+        game.getScore().setInitKlingons(ord);
+        game.getScore().setInitKlingonCmds(cmd);
+        game.getScore().setInitKlingonSupCmds(sCmd);
     }
 
     private Position generateNewPosition(int maxElementsInQuadrant, Entity... entities) {

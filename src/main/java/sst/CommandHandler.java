@@ -23,6 +23,7 @@ public class CommandHandler {
     private Damages damages;
     private Move move;
     private Photon photon;
+    private Score score;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -36,61 +37,7 @@ public class CommandHandler {
         this.damages = new Damages(game);
         this.move = new Move(game);
         this.photon = new Photon(game);
-    }
-
-    public enum Command {
-        SRSCAN,
-        MOVE,
-        PHASERS,
-        CALL(false),
-        STATUS,
-        IMPULSE,
-        PHOTONS,
-        ABANDON(false),
-        LRSCAN,
-        WARP,
-        SHIELDS,
-        DESTRUCT(false),
-        CHART,
-        REST,
-        DOCK,
-        QUIT(false),
-        DAMAGES,
-        REPORT,
-        SENSORS,
-        ORBIT,
-        TRANSPORT,
-        MINE,
-        CRYSTALS,
-        SHUTTLE,
-        PLANETS,
-        REQUEST,
-        DEATHRAY(false),
-        FREEZE(false),
-        COMPUTER,
-        EMEXIT,
-        PROBE,
-        COMMANDS,
-        SCORE,
-        CLOAK,
-        CAPTURE,
-        HELP(false),
-        // DEBUG(false),
-        undefined;
-        
-        private boolean canAbbrev;
-        
-        Command() {
-            canAbbrev = true;
-        }
-
-        Command(boolean abrOk) {
-            canAbbrev = abrOk;
-        }
-
-        public boolean CanAbbrev() {
-            return canAbbrev;
-        }
+        this.score = new Score(game);
     }
 
     /**
@@ -152,6 +99,9 @@ public class CommandHandler {
                     break;
                 case PHOTONS:
                     photon.ExecPHOTON(params);
+                    break;
+                case SCORE:
+                    score.ExecSCORE(false);
                     break;
                 case undefined:
                     help.printValidCommands();

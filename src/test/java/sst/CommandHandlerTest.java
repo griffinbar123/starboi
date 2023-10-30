@@ -26,6 +26,7 @@ public class CommandHandlerTest {
     private Damages damages;
     private Move move;
     private Photon photon;
+    private Score score;
 
     @Before
     public void setUp() {
@@ -41,92 +42,93 @@ public class CommandHandlerTest {
         damages = mock(Damages.class);
         move = mock(Move.class);
         photon = mock(Photon.class);
+        score = mock(Score.class);
 
         handler = new CommandHandler(game, srScan, lrScan, status, computer,
-                chart, freeze, help, damages, move, photon);
+                chart, freeze, help, damages, move, photon, score);
     }
 
     @Test
     public void matchCommandShouldWorkAsExpected() {
-        assert(handler.matchCommand("SRSCAN") == CommandHandler.Command.SRSCAN);
-        assert(handler.matchCommand("MOVE") == CommandHandler.Command.MOVE);
-        assert(handler.matchCommand("PHASERS") == CommandHandler.Command.PHASERS);
-        assert(handler.matchCommand("CALL") == CommandHandler.Command.CALL);
-        assert(handler.matchCommand("STATUS") == CommandHandler.Command.STATUS);
-        assert(handler.matchCommand("IMPULSE") == CommandHandler.Command.IMPULSE);
-        assert(handler.matchCommand("PHOTONS") == CommandHandler.Command.PHOTONS);
-        assert(handler.matchCommand("ABANDON") == CommandHandler.Command.ABANDON);
-        assert(handler.matchCommand("LRSCAN") == CommandHandler.Command.LRSCAN);
-        assert(handler.matchCommand("WARP") == CommandHandler.Command.WARP);
-        assert(handler.matchCommand("SHIELDS") == CommandHandler.Command.SHIELDS);
-        assert(handler.matchCommand("DESTRUCT") == CommandHandler.Command.DESTRUCT);
-        assert(handler.matchCommand("CHART") == CommandHandler.Command.CHART);
-        assert(handler.matchCommand("REST") == CommandHandler.Command.REST);
-        assert(handler.matchCommand("DOCK") == CommandHandler.Command.DOCK);
-        assert(handler.matchCommand("QUIT") == CommandHandler.Command.QUIT);
-        assert(handler.matchCommand("DAMAGES") == CommandHandler.Command.DAMAGES);
-        assert(handler.matchCommand("REPORT") == CommandHandler.Command.REPORT);
-        assert(handler.matchCommand("SENSORS") == CommandHandler.Command.SENSORS);
-        assert(handler.matchCommand("ORBIT") == CommandHandler.Command.ORBIT);
-        assert(handler.matchCommand("TRANSPORT") == CommandHandler.Command.TRANSPORT);
-        assert(handler.matchCommand("MINE") == CommandHandler.Command.MINE);
-        assert(handler.matchCommand("CRYSTALS") == CommandHandler.Command.CRYSTALS);
-        assert(handler.matchCommand("SHUTTLE") == CommandHandler.Command.SHUTTLE);
-        assert(handler.matchCommand("PLANETS") == CommandHandler.Command.PLANETS);
-        assert(handler.matchCommand("REQUEST") == CommandHandler.Command.REQUEST);
-        assert(handler.matchCommand("DEATHRAY") == CommandHandler.Command.DEATHRAY);
-        assert(handler.matchCommand("FREEZE") == CommandHandler.Command.FREEZE);
-        assert(handler.matchCommand("COMPUTER") == CommandHandler.Command.COMPUTER);
-        assert(handler.matchCommand("EMEXIT") == CommandHandler.Command.EMEXIT);
-        assert(handler.matchCommand("PROBE") == CommandHandler.Command.PROBE);
-        assert(handler.matchCommand("COMMANDS") == CommandHandler.Command.COMMANDS);
-        assert(handler.matchCommand("SCORE") == CommandHandler.Command.SCORE);
-        assert(handler.matchCommand("CLOAK") == CommandHandler.Command.CLOAK);
-        assert(handler.matchCommand("CAPTURE") == CommandHandler.Command.CAPTURE);
-        assert(handler.matchCommand("HELP") == CommandHandler.Command.HELP);
-        assert(handler.matchCommand("invalid") == CommandHandler.Command.undefined);
+        assert(handler.matchCommand("SRSCAN") == Command.SRSCAN);
+        assert(handler.matchCommand("MOVE") == Command.MOVE);
+        assert(handler.matchCommand("PHASERS") == Command.PHASERS);
+        assert(handler.matchCommand("CALL") == Command.CALL);
+        assert(handler.matchCommand("STATUS") == Command.STATUS);
+        assert(handler.matchCommand("IMPULSE") == Command.IMPULSE);
+        assert(handler.matchCommand("PHOTONS") == Command.PHOTONS);
+        assert(handler.matchCommand("ABANDON") == Command.ABANDON);
+        assert(handler.matchCommand("LRSCAN") == Command.LRSCAN);
+        assert(handler.matchCommand("WARP") == Command.WARP);
+        assert(handler.matchCommand("SHIELDS") == Command.SHIELDS);
+        assert(handler.matchCommand("DESTRUCT") == Command.DESTRUCT);
+        assert(handler.matchCommand("CHART") == Command.CHART);
+        assert(handler.matchCommand("REST") == Command.REST);
+        assert(handler.matchCommand("DOCK") == Command.DOCK);
+        assert(handler.matchCommand("QUIT") == Command.QUIT);
+        assert(handler.matchCommand("DAMAGES") == Command.DAMAGES);
+        assert(handler.matchCommand("REPORT") == Command.REPORT);
+        assert(handler.matchCommand("SENSORS") == Command.SENSORS);
+        assert(handler.matchCommand("ORBIT") == Command.ORBIT);
+        assert(handler.matchCommand("TRANSPORT") == Command.TRANSPORT);
+        assert(handler.matchCommand("MINE") == Command.MINE);
+        assert(handler.matchCommand("CRYSTALS") == Command.CRYSTALS);
+        assert(handler.matchCommand("SHUTTLE") == Command.SHUTTLE);
+        assert(handler.matchCommand("PLANETS") == Command.PLANETS);
+        assert(handler.matchCommand("REQUEST") == Command.REQUEST);
+        assert(handler.matchCommand("DEATHRAY") == Command.DEATHRAY);
+        assert(handler.matchCommand("FREEZE") == Command.FREEZE);
+        assert(handler.matchCommand("COMPUTER") == Command.COMPUTER);
+        assert(handler.matchCommand("EMEXIT") == Command.EMEXIT);
+        assert(handler.matchCommand("PROBE") == Command.PROBE);
+        assert(handler.matchCommand("COMMANDS") == Command.COMMANDS);
+        assert(handler.matchCommand("SCORE") == Command.SCORE);
+        assert(handler.matchCommand("CLOAK") == Command.CLOAK);
+        assert(handler.matchCommand("CAPTURE") == Command.CAPTURE);
+        assert(handler.matchCommand("HELP") == Command.HELP);
+        assert(handler.matchCommand("invalid") == Command.undefined);
     }
 
     @Test
     public void matchCommandShouldWorkOnAbbreviations() {
-        assert(handler.matchCommand("SR") == CommandHandler.Command.SRSCAN);
-        assert(handler.matchCommand("MO") == CommandHandler.Command.MOVE);
-        assert(handler.matchCommand("PH") == CommandHandler.Command.PHASERS);
-        assert(handler.matchCommand("ST") == CommandHandler.Command.STATUS);
-        assert(handler.matchCommand("IM") == CommandHandler.Command.IMPULSE);
-        assert(handler.matchCommand("PHO") == CommandHandler.Command.PHOTONS);
-        assert(handler.matchCommand("LR") == CommandHandler.Command.LRSCAN);
-        assert(handler.matchCommand("WA") == CommandHandler.Command.WARP);
-        assert(handler.matchCommand("SH") == CommandHandler.Command.SHIELDS);
-        assert(handler.matchCommand("CH") == CommandHandler.Command.CHART);
-        assert(handler.matchCommand("RE") == CommandHandler.Command.REST);
-        assert(handler.matchCommand("DO") == CommandHandler.Command.DOCK);
-        assert(handler.matchCommand("DA") == CommandHandler.Command.DAMAGES);
-        assert(handler.matchCommand("REP") == CommandHandler.Command.REPORT);
-        assert(handler.matchCommand("SE") == CommandHandler.Command.SENSORS);
-        assert(handler.matchCommand("OR") == CommandHandler.Command.ORBIT);
-        assert(handler.matchCommand("TR") == CommandHandler.Command.TRANSPORT);
-        assert(handler.matchCommand("MI") == CommandHandler.Command.MINE);
-        assert(handler.matchCommand("CR") == CommandHandler.Command.CRYSTALS);
-        assert(handler.matchCommand("SHU") == CommandHandler.Command.SHUTTLE);
-        assert(handler.matchCommand("PL") == CommandHandler.Command.PLANETS);
-        assert(handler.matchCommand("REQ") == CommandHandler.Command.REQUEST);
-        assert(handler.matchCommand("CO") == CommandHandler.Command.COMPUTER);
-        assert(handler.matchCommand("EM") == CommandHandler.Command.EMEXIT);
-        assert(handler.matchCommand("PR") == CommandHandler.Command.PROBE);
-        assert(handler.matchCommand("COMM") == CommandHandler.Command.COMMANDS);
-        assert(handler.matchCommand("SC") == CommandHandler.Command.SCORE);
-        assert(handler.matchCommand("CL") == CommandHandler.Command.CLOAK);
-        assert(handler.matchCommand("CA") == CommandHandler.Command.CAPTURE);
+        assert(handler.matchCommand("SR") == Command.SRSCAN);
+        assert(handler.matchCommand("MO") == Command.MOVE);
+        assert(handler.matchCommand("PH") == Command.PHASERS);
+        assert(handler.matchCommand("ST") == Command.STATUS);
+        assert(handler.matchCommand("IM") == Command.IMPULSE);
+        assert(handler.matchCommand("PHO") == Command.PHOTONS);
+        assert(handler.matchCommand("LR") == Command.LRSCAN);
+        assert(handler.matchCommand("WA") == Command.WARP);
+        assert(handler.matchCommand("SH") == Command.SHIELDS);
+        assert(handler.matchCommand("CH") == Command.CHART);
+        assert(handler.matchCommand("RE") == Command.REST);
+        assert(handler.matchCommand("DO") == Command.DOCK);
+        assert(handler.matchCommand("DA") == Command.DAMAGES);
+        assert(handler.matchCommand("REP") == Command.REPORT);
+        assert(handler.matchCommand("SE") == Command.SENSORS);
+        assert(handler.matchCommand("OR") == Command.ORBIT);
+        assert(handler.matchCommand("TR") == Command.TRANSPORT);
+        assert(handler.matchCommand("MI") == Command.MINE);
+        assert(handler.matchCommand("CR") == Command.CRYSTALS);
+        assert(handler.matchCommand("SHU") == Command.SHUTTLE);
+        assert(handler.matchCommand("PL") == Command.PLANETS);
+        assert(handler.matchCommand("REQ") == Command.REQUEST);
+        assert(handler.matchCommand("CO") == Command.COMPUTER);
+        assert(handler.matchCommand("EM") == Command.EMEXIT);
+        assert(handler.matchCommand("PR") == Command.PROBE);
+        assert(handler.matchCommand("COMM") == Command.COMMANDS);
+        assert(handler.matchCommand("SC") == Command.SCORE);
+        assert(handler.matchCommand("CL") == Command.CLOAK);
+        assert(handler.matchCommand("CA") == Command.CAPTURE);
 
         // cannot abbreviate
-        assert(handler.matchCommand("CAL") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("AB") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("DE") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("QU") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("DE") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("FRE") == CommandHandler.Command.undefined);
-        assert(handler.matchCommand("HE") == CommandHandler.Command.undefined);
+        assert(handler.matchCommand("CAL") == Command.undefined);
+        assert(handler.matchCommand("AB") == Command.undefined);
+        assert(handler.matchCommand("DE") == Command.undefined);
+        assert(handler.matchCommand("QU") == Command.undefined);
+        assert(handler.matchCommand("DE") == Command.undefined);
+        assert(handler.matchCommand("FRE") == Command.undefined);
+        assert(handler.matchCommand("HE") == Command.undefined);
     }
 
     @Test

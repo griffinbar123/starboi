@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import sst.CommandHandler.Command;
 import static Utils.Utils.readCommands;
 
 /**
@@ -85,9 +84,6 @@ public class Help {
 
         Stream.of(sb.toString().split("Mnemonic:")).skip(1).forEach(s -> {
             Command c = handler.matchCommand(s.split("\n")[0].trim());
-            // split at any number of spaces followed by at least 11 asterisks
-            // or a new line followed by a line of at least 20 spaces
-            // (Just how the original file is formatted)
             helpText.put(c, s.split("\\s+\\*{11,}|\n\\s{20,}")[0].trim());
         });
     }
