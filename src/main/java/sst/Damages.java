@@ -5,7 +5,7 @@ import java.util.Map;
 
 import Model.Enterprise;
 import Model.Game;
-import Model.Enterprise.Device;
+import Model.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

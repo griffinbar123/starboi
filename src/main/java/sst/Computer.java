@@ -5,7 +5,7 @@ import java.util.Optional;
 import Model.Coordinate;
 import Model.Game;
 import Model.Position;
-import Model.Enterprise.Device;
+import Model.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static Utils.Utils.readCommands;

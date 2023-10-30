@@ -21,8 +21,8 @@ import Model.Klingon;
 import Model.KlingonCommander;
 import Model.KlingonSuperCommander;
 import Model.Position;
-import Model.Sheild;
-import Model.Enterprise.Device;
+import Model.Shield;
+import Model.Device;
 import sst.CommandHandler.Command;
 
 public class CommandTest {
@@ -436,7 +436,7 @@ public class CommandTest {
     @Test
     public void damagedDevicesShouldDisplayRepairTimes() {
         Map<Device, Double> dmg = new HashMap<Device, Double>();
-        for (Device d : Enterprise.Device.values()) {
+        for (Device d : Device.values()) {
             dmg.put(d, 1.0);
         }
         when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
@@ -526,7 +526,7 @@ public class CommandTest {
         map[5][5][4][3] = 'E';
 
         Map<Device, Double> dmg = new HashMap<Device, Double>();
-        for (Device d : Enterprise.Device.values()) {
+        for (Device d : Device.values()) {
             dmg.put(d, 0.0);
         }
         
@@ -544,15 +544,15 @@ public class CommandTest {
         game.setTime(10.0);
         
         // Mock objects
-        when(enterprise.getCondition()).thenReturn(Enterprise.Condition.GREEN);
+        when(enterprise.getCondition()).thenReturn(Model.Condition.GREEN);
         position = new Position(new Coordinate(5, 5), new Coordinate(4, 3));
         when(game.getEnterprise().getPosition()).thenReturn(position);
         when(enterprise.getLifeSupport()).thenReturn((byte) 1);
         when(enterprise.getWarp()).thenReturn(1.0);
         when(enterprise.getEnergy()).thenReturn(100.0);
         when(enterprise.getTorpedoes()).thenReturn(10);
-        Sheild shields = new Sheild();
-        shields.setStatus(Sheild.Status.UP);
+        Shield shields = new Shield();
+        shields.setStatus(Model.ShieldStatus.UP);
         shields.setLevel(100);
         shields.setUnits(1.0);
         when(enterprise.getSheilds()).thenReturn(shields);

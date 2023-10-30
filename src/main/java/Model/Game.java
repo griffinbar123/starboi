@@ -16,54 +16,10 @@ import static Utils.Utils.outputDestroy;
 
 
 /**
- * Game entity container. In the future, this should help
- * when we try to save and restore saved games
+ * Game entity container
  */
 @Data
 public class Game {
-    public enum GameType {
-        REGULAR,
-        // TOURNAMENT,
-        // FROZEN,
-        UNDEFINED;
-    }
-
-    public enum GameLength {
-        SHORT(1),
-        MEDIUM(2),
-        LONG(3),
-        UNDEFINED(0);
-
-        private final int lengthVal;
-
-        private GameLength(int lengthVal) {
-            this.lengthVal = lengthVal;
-        }
-
-        public int getLengthValue() {
-            return lengthVal;
-        }
-    }
-
-    public enum GameLevel {
-        NOVICE(1),
-        FAIR(2),
-        GOOD(3),
-        EXPERT(4),
-        EMERITUS(5),
-        UNDEFINED(0);
-
-        private final int skillVal;
-
-        private GameLevel(int skillVal) {
-            this.skillVal = skillVal;
-        }
-
-        public int getSkillValue() {
-            return skillVal;
-        }
-    }
-
     public int getKlingonCount() {
         return klingons.length + klingonCommanders.length + (klingonSuperCommander != null ? 1 : 0);
     }

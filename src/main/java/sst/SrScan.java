@@ -3,6 +3,7 @@ package sst;
 import Model.Enterprise;
 import Model.Game;
 import Model.Position;
+import Model.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +40,7 @@ public class SrScan {
                 sb.append(String.format("%2d  ", r));
 
                 for (c = 1; c <= 10; c++)
-                    if (enterprise.getDeviceDamage().get(Enterprise.Device.SR_SENSORS) > 0
+                    if (enterprise.getDeviceDamage().get(Device.SR_SENSORS) > 0
                             && !isAdjacent(r, c, enterprise.getPosition())) {
                         sb.append(String.format("%c ", '-'));
                     } else {

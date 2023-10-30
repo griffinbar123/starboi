@@ -17,7 +17,10 @@ import Model.Position;
 import Model.Romulan;
 import Model.Star;
 import Model.Starbase;
-import Model.Enterprise.Device;
+import Model.Device;
+import Model.GameLength;
+import Model.GameLevel;
+import Model.GameType;
 import Utils.Utils;
 import static Utils.Utils.randInt;
 import static Utils.Utils.randDouble;
@@ -47,12 +50,12 @@ public class Init {
         int planets, starbases, stars, romulans;
 
         // TODO: for testing so we don't have to type in the same thing every time
-        // this.game.setType(getGameParam(Game.GameType.class));
-        // this.game.setLength(getGameParam(Game.GameLength.class));
-        // this.game.setSkill(getGameParam(Game.GameLevel.class));
-        this.game.setType(Game.GameType.REGULAR);
-        this.game.setLength(Game.GameLength.SHORT);
-        this.game.setSkill(Game.GameLevel.NOVICE);
+        // this.game.setType(getGameParam(GameType.REGULAR));
+        // this.game.setLength(getGameParam(GameLength.SHORT));
+        // this.game.setSkill(getGameParam(GameLevel.NOVICE));
+        this.game.setType(GameType.REGULAR);
+        this.game.setLength(GameLength.SHORT);
+        this.game.setSkill(GameLevel.NOVICE);
 
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
@@ -115,7 +118,7 @@ public class Init {
         String parsed = "";
 
         while (true) {
-            if (t == Game.GameType.class) {
+            if (t == GameType.class) {
                 in = this.game.con.readLine("Are you a " + getEnumString(t) + " player?");
             } else {
                 in = this.game.con.readLine("Would you like a " + getEnumString(t) + " game?");
@@ -199,7 +202,7 @@ public class Init {
         Enterprise enterprise = new Enterprise(pos);
         Map<Device, Double> devices = new HashMap<>();
 
-        for (Enterprise.Device d : Enterprise.Device.values()) {
+        for (Device d : Device.values()) {
             devices.put(d, 0.0);
         }
         enterprise.setDeviceDamage(devices);
@@ -256,9 +259,9 @@ public class Init {
         // Original: 2.0*intime*((skill+1 - 2*Rand())*skill*0.1+.15)
         skill = this.game.getSkill().getSkillValue();
         initKling = (int) (2 * this.game.getTime() * ((skill + 1 - 2 * randInt(0, 1)) * skill * 0.1 + 0.15));
-        sCmd = (this.game.getSkill() == Game.GameLevel.GOOD ||
-                this.game.getSkill() == Game.GameLevel.EXPERT ||
-                this.game.getSkill() == Game.GameLevel.EMERITUS ? 1 : 0);
+        sCmd = (this.game.getSkill() == GameLevel.GOOD ||
+                this.game.getSkill() == GameLevel.EXPERT ||
+                this.game.getSkill() == GameLevel.EMERITUS ? 1 : 0);
         cmd = (int) (skill + 0.0625 * initKling * randDouble(0, 1));
         ord = initKling - cmd - sCmd;
 
