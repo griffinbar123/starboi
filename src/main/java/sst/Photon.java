@@ -157,9 +157,9 @@ public class Photon {
                     h1 = Math.abs(700.0 + 100.0*Math.random() - 1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*Math.abs(Math.sin(bullseye-angle)));
                     if (power < h1) 
                         h1 = power;
-                    k.setPower(k.getPower() < 0 ? -h1: h1);
+                    k.setPower(k.getPower() - (k.getPower() < 0 ? -h1: h1));
                     if(k.getPower() == 0) {
-                        // kill klingon?
+                        game.destroyKlingon(k);
                         return;
                     }
                     this.game.con.printf("%s", outputEntity(iy+1, ix+1, symbol));
@@ -179,7 +179,7 @@ public class Photon {
                     }
                     if (this.game.getPositionChar(klingonPos)==' ') {
                         this.game.con.printf(" buffeted into black hole\n");
-                        // kill klingon?
+                        game.destroyKlingon(k);
                         return;
                     }
                     if (this.game.getPositionChar(klingonPos) != Game.NOTHING) {

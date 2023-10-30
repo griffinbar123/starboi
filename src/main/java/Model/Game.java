@@ -173,14 +173,9 @@ public class Game {
      @JsonIgnore
     public void destroyStarbase(Position pos) {
         con.printf("***STARBASE DESTROYED..\n");
-
-        Starbase[] newStarbases = new Starbase[starbases.length-1];
-        int j = 0;
         for(int i=0; i < starbases.length; i++)
-            if(!positionsAreEqual(starbases[i].getPosition(), pos))
-                newStarbases[j++] = starbases[i];
-        starbases = newStarbases;
-
+            if(positionsAreEqual(starbases[i].getPosition(), pos))
+                starbases[i] = null;
         updateMap();
 
         // TODO: adjust game score and states
@@ -191,15 +186,45 @@ public class Game {
     @JsonIgnore
     public void destroyPlanet(Position pos) {
         con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, 'P'));
-
         for(int i=0; i < planets.length; i++)
             if(positionsAreEqual(planets[i].getPosition(), pos))
                 planets[i] = null;
-
         updateMap();
 
         // TODO: adjust game score and states
         destroyedPlanets += 1;
         // TODO: check if enterprise was landed. if so, end game
+    }
+
+    @JsonIgnore
+    public void destroyKlingon(Klingon k) {
+        char symbol = k.getSymbol();
+        Position pos = k.getPosition();
+        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, symbol));
+
+        switch (symbol) {
+            case 'K':
+                for(int i=0; i < klingons.length; i++)
+                    if(positionsAreEqual(klingons[i].getPosition(), pos))
+                        klingons[i] = null;
+                break;
+            case 'C':
+                for(int i=0; i < klingonCommanders.length; i++)
+                    if(positionsAreEqual(klingonCommanders[i].getPosition(), pos))
+                        klingonCommanders[i] = null;
+                break;
+            case 'R':
+                for(int i=0; i < romulans.length; i++)
+                    if(positionsAreEqual(romulans[i].getPosition(), pos))
+                        romulans[i] = null;
+                break;
+            case 'S':
+                klingonSuperCommander = null;
+                break;
+        }
+        updateMap();
+
+        // TODO: adjust game score and states dependent on entity
+        destroyedPlanets += 1;
     }
 }
