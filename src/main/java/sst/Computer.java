@@ -5,6 +5,7 @@ import java.util.Optional;
 import Model.Coordinate;
 import Model.Game;
 import Model.Position;
+import Model.ShieldStatus;
 import Model.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -130,7 +131,7 @@ public class Computer {
     public double calcPower(Position pos, Position dest) {
         double distance = pos.calcDistance(dest);
         double warpSpeed = game.getEnterprise().getWarp();
-        double powerNeeded = (distance/10.0)*warpSpeed*warpSpeed*warpSpeed*(0+1); //TODO: implement draining power based off shields * (shldup+1)
+        double powerNeeded = (distance/10.0)*warpSpeed*warpSpeed*warpSpeed*((game.getEnterprise().getSheilds().getStatus() == ShieldStatus.UP ? 1 : 0) +1);
         return powerNeeded;
     }
 
@@ -138,7 +139,7 @@ public class Computer {
      * calculate the time required for travel between two positions in stardates
      * 
      * @param pos starting position
-     * @param dest position to travel to
+     * @param dest position to travel
      * @return the time in stardates required to make the journey
      * @author Matthias Schrock
      * @author Griffin Barnard
