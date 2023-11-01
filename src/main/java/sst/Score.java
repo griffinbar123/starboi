@@ -1,5 +1,7 @@
 package sst;
 
+import static Utils.Utils.clearScreen;
+
 import Model.Condition;
 import Model.Game;
 import lombok.NonNull;
@@ -15,6 +17,7 @@ public class Score {
         int score = (int) calcScore(finalScore);
 
         if (finalScore) {
+            game.con.printf(clearScreen());
             sb.append("\n\nYour score --\n\n");
 
             // TODO: add the rest of the score for game win
@@ -34,11 +37,11 @@ public class Score {
         double timeUsed = game.getStarDate() - game.getScore().getInitStarDate();
         
         // gains
-        int klDest = game.getScore().getInitKlingons() - game.getKlingons().length;
-        int klCmdDest = game.getScore().getInitKlingonCmds() - game.getKlingonCommanders().length;
+        int klDest = game.getScore().getInitKlingons() - game.getRegularKlingonCount();
+        int klCmdDest = game.getScore().getInitKlingonCmds() - game.getKlingonCommanderCount();
         int klSCmdDest = game.getScore().getInitKlingonSupCmds() - (game.getKlingonSuperCommander() != null ? 1 : 0);
         int klCap = 0;
-        int romDest = game.getRomulans().length - game.getScore().getInitRomulans();
+        int romDest = game.getRomulansCount() - game.getScore().getInitRomulans();
         int romSur = 0;
         // perdate = (d.killc + d.killk + d.nsckill)/timused;
         double perDate = (game.getScore().getInitTotKlingons() - game.getRemainingKlingonCount()) /

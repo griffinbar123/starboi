@@ -47,15 +47,29 @@ public class Finish {
      */
     public void finish(GameOverReason gameOverReason) {
         game.con.printf("\n\n\nIt is stardate %.1f .\n\n", this.game.getStarDate());
-
+        Score score = new Score(game);
+        
         switch (gameOverReason) {
             case WON:
-                break;
+                if(game.getRomulansCount() !=  0)
+                    game.con.printf("The remaining %d Romulan ships surrender to the Starfleet Command.\n", game.getRomulansCount());
+                
+                game.con.printf("You have smashed the Klingon invasion fleet and saved\nthe Federation.");
+
+                //TODO: implement capturing the remaining klingons
+
+                if(game.getEnterprise().getCondition() != Condition.DEAD) {
+                    //TODO: promote the player
+
+                    game.con.printf("\nLIVE LONG AND PROSPER.\n");
+                }
+                score.ExecSCORE(true);
+                return;
             case DEPLETED:
                 game.con.printf("Your time has run out and the Federation has been\nconquered.  Your starship is now Klingon property,\nand you are put on trial as a war criminal. On the\nbasis of your record, you are %s\n", (game.getRemainingKlingonCount() * 3) > game.getScore().getInitTotKlingons() ? "aquitted.\n\nLIVE LONG AND PROSPER." : "found guilty and\nsentenced to death by slow torture.");
                 game.getEnterprise().setCondition(Condition.DEAD);
-                //TODO: original game calls its score function with the value of 0
-                break;
+                score.ExecSCORE(true);
+                return;
             case LIFESUPPORT:
                 game.con.printf("Your life support reserves have run out, and\nyou die of thirst, starvation, and asphyxiation.\nYour starship is a derelict in space.\n");
                 break;
@@ -67,8 +81,8 @@ public class Finish {
                 break;
             case BARRIER:
                 game.con.printf("You have made three attempts to cross the negative energy\nbarrier which surrounds the galaxy.\n\nYour navigation is abominable.\n");
-                //TODO: original game calls its score function with the value of 0
-                break;
+                score.ExecSCORE(true);
+                return;
             case NOVA:
                 game.con.printf("Your starship has been destroyed by a nova.\nThat was a great shot.\n\n");
                 break;

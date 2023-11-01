@@ -273,4 +273,9 @@ public class Utils {
     public static String outputEntity(Integer iy, Integer ix, char symbol) {
         return "***"+getEntityStringFromChar(symbol)+" at " + iy + " - " + ix;
     }
+
+    public static String clearScreen(){
+        return "\033[2J\033[0;0H";	/* Hope for an ANSI display */
+        
+    }
 }
