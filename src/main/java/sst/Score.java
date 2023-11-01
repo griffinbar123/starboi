@@ -41,7 +41,7 @@ public class Score {
         int romDest = game.getRomulans().length - game.getScore().getInitRomulans();
         int romSur = 0;
         // perdate = (d.killc + d.killk + d.nsckill)/timused;
-        double perDate = (game.getScore().getInitTotKlingons() - game.getKlingonCount()) /
+        double perDate = (game.getScore().getInitTotKlingons() - game.getRemainingKlingonCount()) /
                 (game.getScore().getInitStarDate() - game.getStarDate());
         int win = (finalScore ? game.getSkill().getSkillValue() * 100 : 0);
 
@@ -55,7 +55,7 @@ public class Score {
         int starPen = 5 * 0;
         int casualties = 0;
 
-        timeUsed = ((timeUsed == 0 || game.getKlingonCount() != 0) && timeUsed < 5.0) ? 5.0 : timeUsed;
+        timeUsed = ((timeUsed == 0 || game.getRemainingKlingonCount() != 0) && timeUsed < 5.0) ? 5.0 : timeUsed;
 
         return (10 * klDest) +
                 (50 * klCmdDest) +

@@ -84,7 +84,7 @@ public class SrScan {
                                 enterprise.getSheilds().getUnits()));
                         break;
                     case 9:
-                        sb.append(String.format("Klingons Left %d", game.getKlingonCount()));
+                        sb.append(String.format("Klingons Left %d", game.getRemainingKlingonCount()));
                         break;
                     case 10:
                         sb.append(String.format("Time Left     %.2f", game.getTime()));

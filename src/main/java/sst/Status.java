@@ -43,7 +43,7 @@ public class Status {
                 enterprise.getSheilds().getStatus().toString(),
                 enterprise.getSheilds().getLevel(),
                 enterprise.getSheilds().getUnits(),
-                game.getKlingonCount(),
+                game.getRemainingKlingonCount(),
                 game.getTime());
     }
 }

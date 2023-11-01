@@ -18,8 +18,8 @@ import static Utils.Utils.outputEntity;
  */
 @Data
 public class Game {
-    public int getKlingonCount() {
-        return klingons.length + klingonCommanders.length + (klingonSuperCommander != null ? 1 : 0);
+    public int getRemainingKlingonCount() {
+        return getRegularKlingonCount() + getKlingonCommanderCount()+ (klingonSuperCommander != null ? 1 : 0);
     }
 
     @JsonIgnore
@@ -169,6 +169,33 @@ public class Game {
             return klingonSuperCommander;
             
         return null;
+    }
+
+    @JsonIgnore
+    public int getRegularKlingonCount() {
+        int total = 0;
+        for(int i = 0; i < klingons.length; i++)
+            if(klingons[i] != null) 
+                total++;
+        return total;
+    }
+
+    @JsonIgnore
+    public int getKlingonCommanderCount() {
+        int total = 0;
+        for(int i = 0; i < klingonCommanders.length; i++)
+            if(klingonCommanders[i] != null) 
+                total++;
+        return total;
+    }
+
+    @JsonIgnore
+    public int getRomulansCount() {
+        int total = 0;
+        for(int i = 0; i < romulans.length; i++)
+            if(romulans[i] != null) 
+                total++;
+        return total;
     }
 
      @JsonIgnore
