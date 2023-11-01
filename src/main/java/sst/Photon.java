@@ -81,6 +81,7 @@ public class Photon {
                 if(Math.random() <= 0.2) {
                     this.game.con.printf("\n***Photon tubes damaged by misfire.");
                     // TODO damage photon tubes
+                    
                     break;
                 }
             }

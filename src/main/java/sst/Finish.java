@@ -56,7 +56,7 @@ public class Finish {
                 
                 game.con.printf("You have smashed the Klingon invasion fleet and saved\nthe Federation.");
 
-                //TODO: implement capturing the remaining klingons
+                //TODO: implement capturing the remaining klingons if they r suppposed to be
 
                 if(game.getEnterprise().getCondition() != Condition.DEAD) {
                     //TODO: promote the player
