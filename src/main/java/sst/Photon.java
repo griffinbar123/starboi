@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Coordinate;
+import Model.Device;
+import Model.EntityType;
 import Model.Game;
 import Model.Klingon;
 import Model.Position;
@@ -80,7 +82,7 @@ public class Photon {
 
                 if(Math.random() <= 0.2) {
                     this.game.con.printf("\n***Photon tubes damaged by misfire.");
-                    // TODO damage photon tubes
+                    game.getEnterprise().getDeviceDamage().put(Device.PHOTON_TUBES, 0.2);
                     break;
                 }
             }
@@ -134,7 +136,7 @@ public class Photon {
             // this.game.con.printf("iy: %.1f - ix: %.1f   ", iy+1.0, ix+1.0);
             char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
 
-            if(symbol == Game.NOTHING) continue;
+            if(symbol == EntityType.NOTHING.getSymbol()) continue;
 
             this.game.con.printf("\n");
 
@@ -146,7 +148,7 @@ public class Photon {
                 case 'C': //hit a commander
                 case 'S': //hit a super commander
                 if (Math.random() <= 0.05) {
-                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputEntity(iy+1, ix+1, EntityType.SUPER_COMMANDER));
 					return;
 				}
                 case 'R': //hit a romulan
@@ -162,7 +164,7 @@ public class Photon {
                         game.destroyKlingon(k);
                         return;
                     }
-                    this.game.con.printf("%s", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s", outputEntity(iy+1, ix+1, EntityType.KLINGON));
                     // move enemy
                     ang = angle + 2.5*(Math.random()-0.5);
                     temp = Math.abs(Math.sin(ang));
@@ -182,7 +184,7 @@ public class Photon {
                         game.destroyKlingon(k);
                         return;
                     }
-                    if (this.game.getPositionChar(klingonPos) != Game.NOTHING) {
+                    if (this.game.getPositionChar(klingonPos) != EntityType.NOTHING.getSymbol()) {
                         /* can't move into object */
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
@@ -203,23 +205,23 @@ public class Photon {
                         this.game.con.printf("NOVA not yet implemented\n");
                         return;
                     }
-                    this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, EntityType.STAR));
                     return;
                 case '?': // Hit a thingy 
                     this.game.con.printf("\nAAAAIIIIEEEEEEEEAAAAAAAAUUUUUGGGGGHHHHHHHHHHHH!!!\n    HACK!     HACK!    HACK!        *CHOKE!*  \nMr. Spock-\n  \"Fascinating!\"\n");
                     // TODO: remove thingy
                     return;
                 case ' ': // Black hole
-                    this.game.con.printf("\n%s swallows torpedo.\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("\n%s swallows torpedo.\n", outputEntity(iy+1, ix+1, EntityType.BLACK_HOLE));
                     return;
                 case '#': // hit the web 
                     this.game.con.printf("\n***Torpedo absorbed by Tholian web.\"\n");
                     return;
                 case 'T': // Hit a Tholian 
                     // TODO: handle hitting a Tholian
-                    this.game.con.printf("\n%s hitting tholians not implemented.\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("\n%s hitting tholians not implemented.\n", outputEntity(iy+1, ix+1, EntityType.THOLIAN));
                 default: // Problem! 
-                    this.game.con.printf("\nDon't know how to handle collision with %s\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("\nDon't know how to handle collision with %s\n", outputEntity(iy+1, ix+1, EntityType.undefined));
                     return;
             }
             break;
