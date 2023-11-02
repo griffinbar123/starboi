@@ -1,6 +1,5 @@
 package sst;
 
-import static Utils.Utils.clearScreen;
 
 import Model.Condition;
 import Model.Game;
@@ -12,12 +11,11 @@ public class Score {
     @NonNull
     private Game game;
 
-    public void ExecSCORE(boolean finalScore) {
+    public void ExecSCORE(boolean finalScore, boolean gameWon) {
         StringBuilder sb = new StringBuilder();
         int score = (int) calcScore(finalScore);
 
         if (finalScore) {
-            game.con.printf(clearScreen());
             sb.append("\n\nYour score --\n\n");
 
             // TODO: add the rest of the score for game win

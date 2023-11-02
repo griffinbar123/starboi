@@ -12,6 +12,8 @@ import Model.Condition;
 import Model.ShieldStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import sst.Finish.GameOverReason;
+
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
@@ -31,10 +33,17 @@ public class Photon {
      * Moves player in the map
      */
     public void ExecPHOTON(List<String> params) {
+        if(game.getEnterprise().getDeviceDamage().get(Device.PHOTON_TUBES) > 0.0){
+            game.con.printf("Photon tubes damaged.\n");
+            return;
+        }
+
         Integer numOfTorpedoesToFire = getNumberOfTorpedoesToFire(params);
 
-        if(numOfTorpedoesToFire == null)
+        if(numOfTorpedoesToFire == null){
+            game.begPardon();
             return;
+        }
 
         if(params.size() % 2 == 1)
             params.remove(0);

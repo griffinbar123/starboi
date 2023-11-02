@@ -4,6 +4,7 @@ import Model.Condition;
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import static Utils.Utils.clearScreen;
 
 /**
  * Handles the finish boi
@@ -46,6 +47,7 @@ public class Finish {
      * @author Griffin Barnard
      */
     public void finish(GameOverReason gameOverReason) {
+        game.con.printf(clearScreen());
         game.con.printf("\n\n\nIt is stardate %.1f .\n\n", this.game.getStarDate());
         Score score = new Score(game);
         
@@ -54,7 +56,7 @@ public class Finish {
                 if(game.getRomulansCount() !=  0)
                     game.con.printf("The remaining %d Romulan ships surrender to the Starfleet Command.\n", game.getRomulansCount());
                 
-                game.con.printf("You have smashed the Klingon invasion fleet and saved\nthe Federation.");
+                game.con.printf("You have smashed the Klingon invasion fleet and saved\nthe Federation.\n");
 
                 //TODO: implement capturing the remaining klingons if they r suppposed to be
 
@@ -63,12 +65,12 @@ public class Finish {
 
                     game.con.printf("\nLIVE LONG AND PROSPER.\n");
                 }
-                score.ExecSCORE(true);
+                score.ExecSCORE(true, true);
                 return;
             case DEPLETED:
                 game.con.printf("Your time has run out and the Federation has been\nconquered.  Your starship is now Klingon property,\nand you are put on trial as a war criminal. On the\nbasis of your record, you are %s\n", (game.getRemainingKlingonCount() * 3) > game.getScore().getInitTotKlingons() ? "aquitted.\n\nLIVE LONG AND PROSPER." : "found guilty and\nsentenced to death by slow torture.");
                 game.getEnterprise().setCondition(Condition.DEAD);
-                score.ExecSCORE(true);
+                score.ExecSCORE(true, false);
                 return;
             case LIFESUPPORT:
                 game.con.printf("Your life support reserves have run out, and\nyou die of thirst, starvation, and asphyxiation.\nYour starship is a derelict in space.\n");
@@ -81,7 +83,7 @@ public class Finish {
                 break;
             case BARRIER:
                 game.con.printf("You have made three attempts to cross the negative energy\nbarrier which surrounds the galaxy.\n\nYour navigation is abominable.\n");
-                score.ExecSCORE(true);
+                score.ExecSCORE(true, false);
                 return;
             case NOVA:
                 game.con.printf("Your starship has been destroyed by a nova.\nThat was a great shot.\n\n");

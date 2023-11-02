@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import sst.Finish;
+import sst.Finish.GameOverReason;
+
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
@@ -98,17 +101,21 @@ public class Game {
                     for (int l = 0; l < map[i][j][k].length; l++) {
                         Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
                         if (checkEntityListAgainstPosition(position, klingons)) {
-                            map[j][i][k][l] = klingons[0].getSymbol();
+                            map[j][i][k][l] = EntityType.KLINGON.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, planets)) {
-                            map[j][i][k][l] = planets[0].getSymbol();
+                            map[j][i][k][l] = EntityType.PLANET.getSymbol();
                         } else if (checkEntityAgainstPosition(position, enterprise)) {
-                            map[j][i][k][l] = enterprise.getSymbol();
+                            map[j][i][k][l] = EntityType.ENTERPRISE.getSymbol();
+                        } else if (checkEntityAgainstPosition(position, klingonSuperCommander)) {
+                            map[j][i][k][l] = EntityType.ENTERPRISE.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, starbases)) {
-                            map[j][i][k][l] = starbases[0].getSymbol();
+                            map[j][i][k][l] = EntityType.STARBASE.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, stars)) {
-                            map[j][i][k][l] = stars[0].getSymbol();
+                            map[j][i][k][l] = EntityType.STAR.getSymbol();
                         } else if (checkEntityListAgainstPosition(position, romulans)) {
-                            map[j][i][k][l] = romulans[0].getSymbol();
+                            map[j][i][k][l] = EntityType.ROMULAN.getSymbol();
+                        } else if (checkEntityListAgainstPosition(position, klingonCommanders)) {
+                            map[j][i][k][l] = EntityType.COMMANDER.getSymbol();
                         } else {
                             map[j][i][k][l] = NOTHING;
                         }
@@ -256,6 +263,11 @@ public class Game {
                 klingonSuperCommander = null;
                 superCommandersKilled += 1; 
                 break;
+        }
+
+        if(getRemainingKlingonCount() == 0) {
+            Finish finish = new Finish(this);
+            finish.finish(GameOverReason.WON);
         }
         updateMap();
 

@@ -101,7 +101,7 @@ public class CommandHandler {
                     photon.ExecPHOTON(params);
                     break;
                 case SCORE:
-                    score.ExecSCORE(false);
+                    score.ExecSCORE(false, false);
                     break;
                 case undefined:
                     help.printValidCommands();

@@ -68,7 +68,7 @@ public class LrScan {
         }
         int thousands = 0;
         // System.out.println(row + " " + column);
-        int hundreds = getNumberOfEntiesInMapQuadrant(row, column, 'K') * 100;
+        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, 'K') + getNumberOfEntiesInMapQuadrant(row, column, 'C') + getNumberOfEntiesInMapQuadrant(row, column, 'S')) * 100;
         int tens = getNumberOfEntiesInMapQuadrant(row, column, 'B') * 10;
         int ones = getNumberOfEntiesInMapQuadrant(row, column, '*');
 
