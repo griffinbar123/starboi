@@ -12,7 +12,6 @@ import Model.Condition;
 import Model.ShieldStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import sst.Finish.GameOverReason;
 
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;

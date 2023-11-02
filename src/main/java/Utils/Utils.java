@@ -224,7 +224,7 @@ public class Utils {
      * @param pos2 pos2 to be compared
      * @return a boolean inticating wether 2 positions are in the same Quadrant
      */
-    public static Boolean checkIfPositionsHaveSameQuadrant(Position position, Position position2) {
+    public static Boolean positionsHaveSameQuadrant(Position position, Position position2) {
         // checks if any entity in the list provided is is in the provided position
         return position.getQuadrant().getX() == position2.getQuadrant().getX()
                 && position.getQuadrant().getY() == position2.getQuadrant().getY();

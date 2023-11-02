@@ -11,6 +11,7 @@ import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
 import static Utils.Utils.positionsAreEqual;
+import static Utils.Utils.positionsHaveSameQuadrant;
 
 /**
  * Handles the move command
@@ -92,6 +93,9 @@ public class Move {
         Position newPosition = new Position(quad, sect);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
+        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) 
+            this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
+
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
@@ -100,6 +104,9 @@ public class Move {
     private void manualMove(List<String> params) {
         if (parseDoubles(params.get(0)).isEmpty())
             params.remove(0);
+        else 
+            this.game.con.printf("(Manual movenemnt assumed.)\n");
+
 
         while (params == null || params.size() == 0) {
             String displacements = this.game.con.readLine("X and Y displacements- ");
@@ -120,6 +127,9 @@ public class Move {
 
         Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
+
+         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) 
+            this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
