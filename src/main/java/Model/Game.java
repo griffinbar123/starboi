@@ -28,9 +28,6 @@ public class Game {
     @JsonIgnore
     public Console con = System.console();
 
-    @JsonIgnore
-    public static final char NOTHING = '\u00B7';
-
     private double starDate;
 
     private char[][][][] map = new char[8][8][10][10];
@@ -68,7 +65,7 @@ public class Game {
     public void addCoordinateString(Coordinate coord, String s){
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
-            if(coordinatesAreEqual(key, coord)){
+            if(key.isEqual(coord)){
                 ScannedQuadrants.remove(key);
                 break;
             }
@@ -81,16 +78,11 @@ public class Game {
         for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
             Coordinate key = entry.getKey();
             String value = entry.getValue();
-            if(coordinatesAreEqual(key, new Coordinate(row, col))){
+            if(key.isEqual(new Coordinate(row, col))){
                 return value;
             }
         }
         return  "...";
-    }
-
-    @JsonIgnore
-    private Boolean coordinatesAreEqual(Coordinate x, Coordinate y) {
-        return x.getX() == y.getX() && x.getY() == y.getY();
     }
 
     @JsonIgnore
@@ -117,7 +109,7 @@ public class Game {
                         } else if (checkEntityListAgainstPosition(position, klingonCommanders)) {
                             map[j][i][k][l] = EntityType.COMMANDER.getSymbol();
                         } else {
-                            map[j][i][k][l] = NOTHING;
+                            map[j][i][k][l] = EntityType.NOTHING.getSymbol();
                         }
                     }
                 }
@@ -159,22 +151,30 @@ public class Game {
     }
 
     @JsonIgnore
-    public Klingon getEnemyAtPosition(Position pos) {
-        for(Klingon k: klingons)
-            if(checkEntityAgainstPosition(pos, k))
-                return k;
+    @SuppressWarnings("unchecked")
+    public <T extends Enemy> T getEnemyAtPosition(Position pos) {
+        for(Klingon k: klingons) {
+            if(checkEntityAgainstPosition(pos, k)) {
+                return (T) k;
+            }
+        }
 
-        for(Romulan r: romulans)
-            if(checkEntityAgainstPosition(pos, r))
-                return r;
+        for(KlingonCommander c: klingonCommanders) {
+            if(checkEntityAgainstPosition(pos, c)) {
+                return (T) c;
+            }
+        }
 
-        for(KlingonCommander c: klingonCommanders)
-            if(checkEntityAgainstPosition(pos, c))
-                return c;
+        for(Romulan r: romulans) {
+            if(checkEntityAgainstPosition(pos, r)) {
+                return (T) r;
+            }
+        }
 
-        if(checkEntityAgainstPosition(pos, klingonSuperCommander))
-            return klingonSuperCommander;
-            
+        if(checkEntityAgainstPosition(pos, klingonSuperCommander)) {
+            return (T) klingonSuperCommander;
+        }
+
         return null;
     }
 
@@ -220,7 +220,7 @@ public class Game {
 
     @JsonIgnore
     public void destroyPlanet(Position pos) {
-        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, 'P'));
+        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, EntityType.PLANET));
         for(int i=0; i < planets.length; i++)
             if(planets[i] != null && positionsAreEqual(planets[i].getPosition(), pos))
                 planets[i] = null;
@@ -233,33 +233,33 @@ public class Game {
 
     @JsonIgnore
     public void destroyKlingon(Klingon k) {
-        char symbol = k.getSymbol();
+        EntityType type = k.getType();
         Position pos = k.getPosition();
-        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, symbol));
+        con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, type));
 
-        switch (symbol) {
-            case 'K':
+        switch (type) {
+            case KLINGON:
                 for(int i=0; i < klingons.length; i++)
                     if(klingons[i] != null && positionsAreEqual(klingons[i].getPosition(), pos)) {
                         klingons[i] = null;
                         klingonsKilled += 1;
                     }
                 break;
-            case 'C':
+            case COMMANDER:
                 for(int i=0; i < klingonCommanders.length; i++)
                     if(klingonCommanders[i] != null && positionsAreEqual(klingonCommanders[i].getPosition(), pos)){
                         klingonCommanders[i] = null;
                         commandersKilled += 1;
                     }
                 break;
-            case 'R':
+            case ROMULAN:
                 for(int i=0; i < romulans.length; i++)
                     if(romulans[i] != null && positionsAreEqual(romulans[i].getPosition(), pos)) {
                         romulans[i] = null;
                         romulansKilled += 1;
                     }
                 break;
-            case 'S':
+            case SUPER_COMMANDER:
                 klingonSuperCommander = null;
                 superCommandersKilled += 1; 
                 break;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import Model.Coordinate;
 import Model.Device;
+import Model.EntityType;
 import Model.Game;
 import Model.Klingon;
 import Model.Position;
@@ -144,7 +145,7 @@ public class Photon {
             // this.game.con.printf("iy: %.1f - ix: %.1f   ", iy+1.0, ix+1.0);
             char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
 
-            if(symbol == Game.NOTHING) continue;
+            if(symbol == EntityType.NOTHING.getSymbol()) continue;
 
             this.game.con.printf("\n");
 
@@ -192,7 +193,7 @@ public class Photon {
                         game.destroyKlingon(k);
                         return;
                     }
-                    if (this.game.getPositionChar(klingonPos) != Game.NOTHING) {
+                    if (this.game.getPositionChar(klingonPos) != EntityType.NOTHING.getSymbol()) {
                         /* can't move into object */
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;

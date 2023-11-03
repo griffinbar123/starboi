@@ -1,7 +1,6 @@
 package Model;
 
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -9,6 +8,10 @@ import lombok.NonNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Enterprise extends Entity {
+    public Enterprise(@NonNull Position position) {
+        super(EntityType.ENTERPRISE, position);
+    }
+
     private Map<Device, Double> deviceDamage;
 
     private Condition condition = Condition.GREEN;
@@ -23,11 +26,4 @@ public class Enterprise extends Entity {
     private int torpedoes = 10;
 
     private Shield sheilds = new Shield();
-
-    @JsonIgnore
-    private final char symbol = 'E';
-
-    public Enterprise(@NonNull Position position) {
-        super(position);
-    }
 }
