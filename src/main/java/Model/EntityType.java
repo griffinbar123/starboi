@@ -6,12 +6,14 @@ public enum EntityType {
     FAERIE_QUEEN('F', "Faerie Queen"),
     KLINGON('K', "Klingon"),
     COMMANDER('C', "Commander"),
+    SUPER_COMMANDER('S', "Super Commander"),
     ROMULAN('R', "Romulan"),
     STAR('*', "Star"),
     STARBASE('B', "Starbase"),
     BLACK_HOLE(' ', "Black Hole"),
     THOLIAN('T', "Tholian"),
     THOLIAN_WEB('#', "Tholian Web"),
+    NOTHING('\u00B7', "Nothing"),
     undefined('?', "Undefined");
 
     private final char symbol;

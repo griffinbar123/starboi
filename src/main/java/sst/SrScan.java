@@ -28,7 +28,7 @@ public class SrScan {
         boolean leftside = true;
         boolean rightside = true;
 
-        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.SR_SENSORS, 1.0); // TODO: testing damaged sensors
+        // game.getEnterprise().getDeviceDamage().put(Device.SR_SENSORS, 1.0); // TODO: testing damaged sensors
 
         sb.append("    ");
         for (c = 1; c <= 10; c++)

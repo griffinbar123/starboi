@@ -3,6 +3,7 @@ package sst;
 import java.util.List;
 
 import Model.Coordinate;
+import Model.EntityType;
 import Model.Game;
 import Model.Position;
 import lombok.NonNull;
@@ -160,7 +161,7 @@ public class Move {
             return curPos;
         }
 
-        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != Game.NOTHING) {
+        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != EntityType.NOTHING.getSymbol()) {
             this.game.con.printf(
                     "\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n",
                     ns.getY()+1, ns.getX()+1);

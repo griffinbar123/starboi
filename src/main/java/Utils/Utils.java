@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Coordinate;
 import Model.Entity;
+import Model.EntityType;
 import Model.Position;
 
 public class Utils {
@@ -241,37 +242,12 @@ public class Utils {
         return new Position(quad, new Coordinate(y, x));
     }
 
-    public static String getEntityStringFromChar(char c) {
-        switch (c) {
-            case 'E':
-                return "Enterprise";
-            case 'K':
-                return "Klingon";
-            case 'R':
-                return "Romulan";
-            case 'P':
-                return "Planet";
-            case 'F':
-                return "Faerie Queen";
-            case 'C':
-                return "Commander";
-            case '*':
-                return "Star";
-            case 'B':
-                return "Starbase";
-            case ' ':
-                return "Black hole";
-            case 'T':
-                return "Tholian";
-            case '#':
-                return "Tholian web";
-            default:
-                return "Unknown??";
-        }
+    public static String outputEntity(Integer iy, Integer ix, EntityType type) {
+        return "***" + type.getName() + " at " + iy + " - " + ix;
     }
 
     public static String outputEntity(Integer iy, Integer ix, char symbol) {
-        return "***"+getEntityStringFromChar(symbol)+" at " + iy + " - " + ix;
+        return "***" + symbol + " at " + iy + " - " + ix;
     }
 
     public static String clearScreen(){
