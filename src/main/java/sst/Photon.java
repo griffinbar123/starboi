@@ -45,31 +45,97 @@ public class Photon {
             return;
         }
 
-        if(params.size() % 2 == 1)
+        if(!params.isEmpty())
             params.remove(0);
 
-        fireTorpedos(numOfTorpedoesToFire, params);
+        List<Double> courses = getCourses(numOfTorpedoesToFire, params);
+
+        if(courses == null) {
+            game.begPardon();
+            return;
+        }
+
+        fireTorpedos(numOfTorpedoesToFire, courses);
 
         // this.game.con.printf("\nNumber of torps: %d\n", numOfTorpedoesToFire);
     }
 
-
-    private void fireTorpedos(Integer numOfTorpedoesToFire, List<String> params) {
-
+    private List<Double> getCourses(Integer numOfTorpedoesToFire, List<String> params){
         List<Double> sects = parseDoubles(params);
         List<Double> courses = new ArrayList<Double>();
 
-        if(params.size() != sects.size() || (sects.size() / 2 != numOfTorpedoesToFire && sects.size() != 2)) {
-            this.game.begPardon();
-            return;
+        // check if params have bad input
+        if(params.size() != sects.size() || params.size() % 2 != 0) {
+            this.game.con.printf("\nheree4\n");
+            return null;
         }
 
-        for(int i = 0; i < numOfTorpedoesToFire; i+=2) {
-            Double course = getInitialCourse(sects.get(i), sects.get(i+1));
-            if(course == null)
-                return;
-            courses.add(course);
+        if(sects.isEmpty()) { //prompt for each destiniation
+            for(int i = 0; i < numOfTorpedoesToFire; i++){
+                String sectStr = game.con.readLine("Target sector for torpedo number %d- ", i+1);
+                List<Double> sect = parseDoubles(sectStr);
+                courses.add(getInitialCourse(sect.get(0), sect.get(1)));
+            }
+            return courses;
+        } else if(sects.size() == 2){ // all torpodoes have same destination
+            for(int i = 0; i < numOfTorpedoesToFire; i++)
+                courses.add(getInitialCourse(sects.get(0), sects.get(1)));   
+            return courses;
+        } else if (sects.size() / 2 == numOfTorpedoesToFire) { // all destinations were passed in
+            for(int i = 0; i < numOfTorpedoesToFire; i+=2)
+                courses.add(getInitialCourse(sects.get(i), sects.get(i+1)));
+            return courses;
+        } 
+
+        this.game.con.printf("\nheree5\n");
+        return null;
+    }
+
+     private Integer getNumberOfTorpedoesToFire(List<String> params){
+
+         List<Integer> numOfTorpedoesList = parseIntegers(params);
+
+        if(params != null && numOfTorpedoesList.size() != params.size()) {
+            this.game.begPardon();
+            return null;
         }
+
+        if(params == null || numOfTorpedoesList.isEmpty()) {
+            this.game.con.printf("%d torpedoes left.\n", this.game.getEnterprise().getTorpedoes());
+            String torpsStr = this.game.con.readLine("Number of torpedoes to fire- ");
+            params = readCommands(torpsStr).orElse(null);
+            numOfTorpedoesList = parseIntegers(params);
+            if(params  == null || params.size() == 0){
+                return getNumberOfTorpedoesToFire(null);
+            } else if(params.size() != 1 && numOfTorpedoesList.isEmpty()) {
+                this.game.begPardon();
+                return null;
+            } 
+        }
+        
+        int numOfTorpedoes = numOfTorpedoesList.get(0);
+
+        if(numOfTorpedoes > 3){
+            this.game.con.printf("Maximum of 3 torpedoes per burst.\n");
+            return getNumberOfTorpedoesToFire(null);
+        } else if(numOfTorpedoes < 0 || numOfTorpedoes == 0){
+            return null;
+        } else if(numOfTorpedoes > this.game.getEnterprise().getTorpedoes()){
+            return getNumberOfTorpedoesToFire(params);
+        }
+
+        return numOfTorpedoes;
+    }
+
+
+    private void fireTorpedos(Integer numOfTorpedoesToFire, List<Double> courses) {
+
+        // for(int i = 0; i < numOfTorpedoesToFire; i+=2) {
+        //     Double course = getInitialCourse(sects.get(i), sects.get(i+1));
+        //     if(course == null)
+        //         return;
+        //     courses.add(course);
+        // }
 
         Boolean breakFlag = false;
 
@@ -261,42 +327,6 @@ public class Photon {
         }
 
         return 1.90985932*Math.atan2(deltx, delty);
-    }
-
-    private Integer getNumberOfTorpedoesToFire(List<String> params){
-
-         List<Integer> numOfTorpedoesList = parseIntegers(params);
-
-        if(params!= null && numOfTorpedoesList.size() != params.size()) {
-            this.game.begPardon();
-            return null;
-        }
-
-        if(params == null || numOfTorpedoesList.isEmpty()) {
-            this.game.con.printf("%d torpedoes left.\n", this.game.getEnterprise().getTorpedoes());
-            String torpsStr = this.game.con.readLine("Number of torpedoes to fire- ");
-            params = readCommands(torpsStr).orElse(null);
-            numOfTorpedoesList = parseIntegers(params);
-            if(params  == null || params.size() == 0){
-                return getNumberOfTorpedoesToFire(null);
-            } else if(params.size() != 1 && numOfTorpedoesList.isEmpty()) {
-                this.game.begPardon();
-                return null;
-            } 
-        }
-        
-        int numOfTorpedoes = numOfTorpedoesList.get(0);
-
-        if(numOfTorpedoes > 3){
-            this.game.con.printf("Maximum of 3 torpedoes per burst.\n");
-            return getNumberOfTorpedoesToFire(null);
-        } else if(numOfTorpedoes < 0 || numOfTorpedoes == 0){
-            return null;
-        } else if(numOfTorpedoes > this.game.getEnterprise().getTorpedoes()){
-            return getNumberOfTorpedoesToFire(params);
-        }
-
-        return numOfTorpedoes;
     }
 
 

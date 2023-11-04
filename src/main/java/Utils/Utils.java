@@ -85,16 +85,16 @@ public class Utils {
      * @return list of Integers in user command
      * @author Matthias Schrock
      */
-    public static Optional<List<Integer>> parseIntegers(String str) {
+    public static List<Integer> parseIntegers(String str) {
         if(str == null)
-            return Optional.empty();
+            return new ArrayList<Integer>();
         List<Integer> integers = new ArrayList<Integer>(
                 Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .map(Double::intValue)
                         .toList());
-        return (integers.size() > 0 ? Optional.ofNullable(integers) : Optional.empty());
+        return integers;
     }
 
     /**
@@ -104,15 +104,15 @@ public class Utils {
      * @return list of Doubles in the input string
      * @author Matthias Schrock
      */
-    public static Optional<List<Double>> parseDoubles(String str) {
+    public static List<Double> parseDoubles(String str) {
         if(str == null)
-            return Optional.empty();
+            return new ArrayList<Double>();
         List<Double> doubles = new ArrayList<Double>(
                 Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .toList());
-        return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
+        return doubles;
     }
 
     /**

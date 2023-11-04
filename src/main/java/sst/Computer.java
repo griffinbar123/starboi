@@ -164,7 +164,7 @@ public class Computer {
             return Optional.empty();
         }
 
-        return Optional.of(parseDoubles(cmd).orElse(null).get(0));
+        return Optional.of(!parseDoubles(cmd).isEmpty() ? parseDoubles(cmd).get(0) : null);
     }
 
     /**
@@ -184,7 +184,8 @@ public class Computer {
             return Optional.empty();
         }
 
-        fact = parseDoubles(cmd).orElse(null).get(0);
+        fact = !parseDoubles(cmd).isEmpty() ? parseDoubles(cmd).get(0) : null;
+
 
         if (fact >= 1.0 && fact <= 10.0) {
             return Optional.ofNullable(fact);

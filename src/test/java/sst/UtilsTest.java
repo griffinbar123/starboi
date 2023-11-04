@@ -120,70 +120,70 @@ public class UtilsTest {
 
     @Test
     public void parseIntegersShouldReturnEmptyOptionalForEmptyString() {
-        Optional<List<Integer>> result = Utils.parseIntegers("");
+        List<Integer> result = Utils.parseIntegers("");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseIntegersShouldReturnEmptyOptionalForWhitespaceString() {
-        Optional<List<Integer>> result = Utils.parseIntegers("   ");
+        List<Integer> result = Utils.parseIntegers("   ");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseIntegersShouldReturnEmptyOptionalForNonIntegerString() {
-        Optional<List<Integer>> result = Utils.parseIntegers("abc");
+        List<Integer> result = Utils.parseIntegers("abc");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseIntegersShouldReturnListOfIntegers() {
-        Optional<List<Integer>> result = Utils.parseIntegers("1 2 3 abc");
-        assertTrue(result.isPresent());
+        List<Integer> result = Utils.parseIntegers("1 2 3 abc");
+        assertTrue(!result.isEmpty());
         List<Integer> expected = List.of(1, 2, 3);
-        assertEquals(expected, result.get());
+        assertEquals(expected, result);
     }
 
     @Test
     public void parseIntegersShouldHandleNegatives() {
-        Optional<List<Integer>> result = Utils.parseIntegers("1 1.0 -2 3 abc");
-        assertTrue(result.isPresent());
+        List<Integer> result = Utils.parseIntegers("1 1.0 -2 3 abc");
+        assertTrue(!result.isEmpty());
         List<Integer> expected = List.of(1, 1, -2, 3);
-        assertEquals(expected, result.get());
+        assertEquals(expected, result);
     }
 
     @Test
     public void parseDoublesShouldReturnEmptyOptionalForEmptyString() {
-        Optional<List<Double>> result = Utils.parseDoubles("");
+        List<Double> result = Utils.parseDoubles("");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnEmptyOptionalForWhitespaceString() {
-        Optional<List<Double>> result = Utils.parseDoubles("   ");
+        List<Double> result = Utils.parseDoubles("   ");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnEmptyOptionalForNonDoubleString() {
-        Optional<List<Double>> result = Utils.parseDoubles("abc");
+        List<Double> result = Utils.parseDoubles("abc");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnListOfDoubles() {
-        Optional<List<Double>> result = Utils.parseDoubles("1 2.5 3.7 abc");
-        assertTrue(result.isPresent());
+        List<Double> result = Utils.parseDoubles("1 2.5 3.7 abc");
+        assertTrue(!result.isEmpty());
         List<Double> expected = List.of(1.0, 2.5, 3.7);
-        assertEquals(expected, result.get());
+        assertEquals(expected, result);
     }
 
     @Test
     public void parseDoublesShouldHandleNegatives() {
-        Optional<List<Double>> result = Utils.parseDoubles("1.0 -2.5 -3 3.7 abc");
-        assertTrue(result.isPresent());
+        List<Double> result = Utils.parseDoubles("1.0 -2.5 -3 3.7 abc");
+        assertTrue(!result.isEmpty());
         List<Double> expected = List.of(1.0, -2.5, -3.0, 3.7);
-        assertEquals(expected, result.get());
+        assertEquals(expected, result);
     }
 
     @Test
