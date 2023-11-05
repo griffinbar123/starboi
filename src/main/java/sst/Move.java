@@ -94,8 +94,9 @@ public class Move {
         Position newPosition = new Position(quad, sect);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
-        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) 
+        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
+        }
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
@@ -129,8 +130,9 @@ public class Move {
         Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
-         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) 
+         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
+         }
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
@@ -139,10 +141,10 @@ public class Move {
     }
 
     private void adjustStats(Position dest) {
-        Computer computer = new Computer(this.game);
+        Computer slay = new Computer(this.game);
 
-        double powerNeeded = computer.calcPower(this.game.getEnterprise().getPosition(), dest);
-        double timeNeeded = computer.calcTime(this.game.getEnterprise().getPosition(), dest);
+        double powerNeeded = slay.calcPower(this.game.getEnterprise().getPosition(), dest);
+        double timeNeeded = slay.calcTime(this.game.getEnterprise().getPosition(), dest);
         this.game.setStarDate(this.game.getStarDate() - timeNeeded);
         this.game.setTime(this.game.getTime() - timeNeeded);
         this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
@@ -154,14 +156,18 @@ public class Move {
         Coordinate nq = nextPos.getQuadrant();
         Coordinate ns = nextPos.getSector();
 
-        if (nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0) {
+        if (nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0 || ns.getX() < 0 || ns.getY() < 0) {
             this.game.con.printf(
                     "\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
 
             return curPos;
         }
 
-        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != EntityType.NOTHING.getSymbol()) {
+        if(!positionsHaveSameQuadrant(curPos, nextPos)){
+            game.randomizeQuadrant(nq);
+        }
+
+        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != EntityType.NOTHING) {
             this.game.con.printf(
                     "\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n",
                     ns.getY()+1, ns.getX()+1);

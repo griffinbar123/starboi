@@ -306,7 +306,7 @@ public class Init {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!isPositionEmpty(position) && entities != null
+        while (!game.isPositionEmpty(position) && entities != null
                 && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
             position = generateNewPosition(maxElementsInQuadrant, entities);
         }
@@ -325,18 +325,5 @@ public class Init {
             }
         }
         return numberOfElements;
-    }
-
-    private Boolean isPositionEmpty(Position position) {
-        // use this to check if a position is empty, but can't check the map because it
-        // might not be updated
-        return !(checkEntityAgainstPosition(position, this.game.getEnterprise())
-                || checkEntityAgainstPosition(position, this.game.getKlingonSuperCommander())
-                || checkEntityListAgainstPosition(position, this.game.getKlingons())
-                || checkEntityListAgainstPosition(position, this.game.getPlanets())
-                || checkEntityListAgainstPosition(position, this.game.getStars())
-                || checkEntityListAgainstPosition(position, this.game.getStarbases())
-                || checkEntityListAgainstPosition(position, this.game.getRomulans())
-                || checkEntityListAgainstPosition(position, this.game.getKlingonCommanders()));
     }
 }

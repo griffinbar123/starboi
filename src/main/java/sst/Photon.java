@@ -5,6 +5,7 @@ import java.util.List;
 
 import Model.Coordinate;
 import Model.Device;
+import Model.Enemy;
 import Model.EntityType;
 import Model.Game;
 import Model.Klingon;
@@ -130,13 +131,6 @@ public class Photon {
 
     private void fireTorpedos(Integer numOfTorpedoesToFire, List<Double> courses) {
 
-        // for(int i = 0; i < numOfTorpedoesToFire; i+=2) {
-        //     Double course = getInitialCourse(sects.get(i), sects.get(i+1));
-        //     if(course == null)
-        //         return;
-        //     courses.add(course);
-        // }
-
         Boolean breakFlag = false;
 
         for(int i = 1; i <= numOfTorpedoesToFire && !breakFlag; i+=2) {
@@ -208,26 +202,26 @@ public class Photon {
             Coordinate quad = this.game.getEnterprise().getPosition().getQuadrant();
 
             // this.game.con.printf("iy: %.1f - ix: %.1f   ", iy+1.0, ix+1.0);
-            char symbol = this.game.getPositionChar(new Position(quad, new Coordinate(iy, ix)));
+            EntityType entityType = this.game.getPositionEntityType(new Position(quad, new Coordinate(iy, ix)));
 
-            if(symbol == EntityType.NOTHING.getSymbol()) continue;
+            if(entityType == EntityType.NOTHING) continue;
 
             this.game.con.printf("\n");
 
             Position pos = buildPosFromQuad(quad, iy, ix);
-            switch(symbol) {
-                case 'E': //hits our ship
-                case 'F': //hits Faire Queene
+            switch(entityType) {
+                case ENTERPRISE: //hits our ship
+                case FAERIE_QUEEN: //hits Faire Queene
                     break;
-                case 'C': //hit a commander
-                case 'S': //hit a super commander
+                case COMMANDER: //hit a commander
+                case SUPER_COMMANDER: //hit a super commander
                 if (Math.random() <= 0.05) {
-                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s\nuses anti-photon device;\n   torpedo neutralized.",outputEntity(iy+1, ix+1, entityType));
 					return;
 				}
-                case 'R': //hit a romulan
-                case 'K': //hit a klingon
-                    Klingon k = this.game.getEnemyAtPosition(pos);
+                case ROMULAN: //hit a romulan
+                case KLINGON: //hit a klingon
+                    Enemy k = this.game.getEntityAtPosition(pos);
                     Double power = Math.abs(k.getPower());
                     //not sure whath1 stands for rn
                     h1 = Math.abs(700.0 + 100.0*Math.random() - 1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*Math.abs(Math.sin(bullseye-angle)));
@@ -235,10 +229,10 @@ public class Photon {
                         h1 = power;
                     k.setPower(k.getPower() - (k.getPower() < 0 ? -h1: h1));
                     if(k.getPower() == 0) {
-                        game.destroyKlingon(k);
+                        game.destroyEnemy(k);
                         return;
                     }
-                    this.game.con.printf("%s", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s", outputEntity(iy+1, ix+1, entityType));
                     // move enemy
                     ang = angle + 2.5*(Math.random()-0.5);
                     temp = Math.abs(Math.sin(ang));
@@ -253,12 +247,12 @@ public class Photon {
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
                     }
-                    if (this.game.getPositionChar(klingonPos)==' ') {
+                    if (this.game.getPositionEntityType(klingonPos)==EntityType.BLACK_HOLE) {
                         this.game.con.printf(" buffeted into black hole\n");
-                        game.destroyKlingon(k);
+                        game.destroyEnemy(k);
                         return;
                     }
-                    if (this.game.getPositionChar(klingonPos) != EntityType.NOTHING.getSymbol()) {
+                    if (this.game.getPositionEntityType(klingonPos) != EntityType.NOTHING) {
                         /* can't move into object */
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
@@ -267,35 +261,35 @@ public class Photon {
                     k.setPosition(klingonPos);
                     shoved = 1;
                     break;
-                case 'B': // Hit a base
+                case STARBASE: // Hit a base
                     this.game.destroyStarbase(pos);
                     return;
-                case 'P': // Hit a planet
+                case PLANET: // Hit a planet
                     this.game.destroyPlanet(pos);
                     return;
-                case '*': // Hit a star 
+                case STAR: // Hit a star 
                     if (Math.random() > 0.10) {
                         // TODO: create supernova
                         this.game.con.printf("NOVA not yet implemented\n");
                         return;
                     }
-                    this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, entityType));
                     return;
-                case '?': // Hit a thingy 
+                case undefined: // Hit a thingy 
                     this.game.con.printf("\nAAAAIIIIEEEEEEEEAAAAAAAAUUUUUGGGGGHHHHHHHHHHHH!!!\n    HACK!     HACK!    HACK!        *CHOKE!*  \nMr. Spock-\n  \"Fascinating!\"\n");
                     // TODO: remove thingy
                     return;
-                case ' ': // Black hole
-                    this.game.con.printf("\n%s swallows torpedo.\n", outputEntity(iy+1, ix+1, symbol));
+                case BLACK_HOLE: // Black hole
+                    this.game.con.printf("\n%s swallows torpedo.\n", outputEntity(iy+1, ix+1, entityType));
                     return;
-                case '#': // hit the web 
+                case THOLIAN_WEB: // hit the web 
                     this.game.con.printf("\n***Torpedo absorbed by Tholian web.\"\n");
                     return;
-                case 'T': // Hit a Tholian 
+                case THOLIAN: // Hit a Tholian 
                     // TODO: handle hitting a Tholian
-                    this.game.con.printf("\n%s hitting tholians not implemented.\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("\n%s hitting tholians not implemented.\n", outputEntity(iy+1, ix+1, entityType));
                 default: // Problem! 
-                    this.game.con.printf("\nDon't know how to handle collision with %s\n", outputEntity(iy+1, ix+1, symbol));
+                    this.game.con.printf("\nDon't know how to handle collision with %s\n", outputEntity(iy+1, ix+1, entityType));
                     return;
             }
             break;

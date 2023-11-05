@@ -2,6 +2,7 @@ package sst;
 
 import Model.Coordinate;
 import Model.Enterprise;
+import Model.EntityType;
 import Model.Game;
 import Model.Device;
 import lombok.NonNull;
@@ -68,14 +69,14 @@ public class LrScan {
         }
         int thousands = 0;
         // System.out.println(row + " " + column);
-        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, 'K') + getNumberOfEntiesInMapQuadrant(row, column, 'C') + getNumberOfEntiesInMapQuadrant(row, column, 'S')) * 100;
-        int tens = getNumberOfEntiesInMapQuadrant(row, column, 'B') * 10;
-        int ones = getNumberOfEntiesInMapQuadrant(row, column, '*');
+        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(row, column,  EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(row, column,  EntityType.SUPER_COMMANDER)) * 100;
+        int tens = getNumberOfEntiesInMapQuadrant(row, column,  EntityType.STARBASE) * 10;
+        int ones = getNumberOfEntiesInMapQuadrant(row, column, EntityType.STAR);
 
         return Integer.toString(thousands + hundreds + tens + ones);
     }
 
-    private int getNumberOfEntiesInMapQuadrant(int row, int column, char entity) {
+    private int getNumberOfEntiesInMapQuadrant(int row, int column, EntityType entity) {
         int numberOfElements = 0;
         for (int i = 0; i < this.game.getMap()[column][row].length; i++) {
             for (int j = 0; j < this.game.getMap()[column][row][i].length; j++) {

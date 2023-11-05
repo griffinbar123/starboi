@@ -44,7 +44,7 @@ public class SrScan {
                             && !isAdjacent(r, c, enterprise.getPosition())) {
                         sb.append(String.format("%c ", '-'));
                     } else {
-                        sb.append(String.format("%c ", this.game.getMap()[column][row][r - 1][c - 1]));
+                        sb.append(String.format("%c ", this.game.getMap()[column][row][r - 1][c - 1].getSymbol()));
                     }
             }
 
