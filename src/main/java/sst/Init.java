@@ -68,9 +68,13 @@ public class Init {
         this.game.setTime(this.game.getLength().getLengthValue() * 7);
 
         // TODO: initialize these numbers based on game type, length, and skill
-        planets = 30;
-        starbases = 4;
-        stars = 200;
+        planets =  (int) ((10/2) + (10/2+1)*randDouble(0, 1));
+        starbases = 3*((int) randDouble(0, 1))+2;
+        stars = 0;
+        for (int i=1; i<=8; i++)
+            for (int j=1; j<=8; j++) 
+                stars += ((int)(randDouble(0, 1)*9.0)) + 1;
+		
         romulans = 4;
 
         initializeEnterprise();

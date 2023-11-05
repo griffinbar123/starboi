@@ -7,7 +7,7 @@ package Model;
 public enum GameLength {
     SHORT(1),
     MEDIUM(2),
-    LONG(3),
+    LONG(4),
     UNDEFINED(0);
 
     private final int lengthVal;
