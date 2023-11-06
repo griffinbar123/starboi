@@ -24,6 +24,7 @@ public class CommandHandler {
     private Move move;
     private Photon photon;
     private Score score;
+    private Dock dock;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -38,6 +39,7 @@ public class CommandHandler {
         this.move = new Move(game);
         this.photon = new Photon(game);
         this.score = new Score(game);
+        this.dock = new Dock(game);
     }
 
     /**
@@ -70,6 +72,9 @@ public class CommandHandler {
                 case COMMANDS:
                     // COMMANDS functionality now handled in Help.java
                     help.printValidCommands();
+                    break;
+                case DOCK:
+                    dock.ExecDOCK();
                     break;
                 case STATUS:
                     status.ExecSTATUS();
