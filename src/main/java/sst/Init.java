@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import Model.BlackHole;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
@@ -47,7 +48,7 @@ public class Init {
     public void start() {
         this.game = new Game();
         CommandHandler handler = new CommandHandler(this.game);
-        int planets, starbases, stars, romulans;
+        int planets, starbases, stars, romulans, blackHoles;
         double starDate;
 
         // TODO: for testing so we don't have to type in the same thing every time
@@ -67,14 +68,18 @@ public class Init {
         this.game.getScore().setInitStarDate(starDate);
         this.game.setTime(this.game.getLength().getLengthValue() * 7);
 
-        // TODO: initialize these numbers based on game type, length, and skill
         planets =  (int) ((10/2) + (10/2+1)*randDouble(0, 1));
         starbases = 3*((int) randDouble(0, 1))+2;
         stars = 0;
         for (int i=1; i<=8; i++)
             for (int j=1; j<=8; j++) 
                 stars += ((int)(randDouble(0, 1)*9.0)) + 1;
+        blackHoles = 0;
+            for (int i=1; i<=8; i++)
+                for (int j=1; j<=8; j++) 
+                    blackHoles += randDouble(0, 1) > 0.5 ? 1 : 0;
 		
+        // TODO: initialize these romulans on game type, length, and skill
         romulans = 4;
 
         initializeEnterprise();
@@ -83,6 +88,7 @@ public class Init {
         initializeStarbases(starbases);
         initializeStars(stars);
         initializeRomulans(romulans);
+        initializeBlackHoles(blackHoles);
         this.game.updateMap();
 
         printStartupMessage();
@@ -228,6 +234,16 @@ public class Init {
         }
         this.game.setRomulans(rom);
         this.game.getScore().setInitRomulans(numberOfRomulans);
+    }
+
+    private void initializeBlackHoles(int numberOfBlackHoles) {
+        Position pos;
+        BlackHole blackHoles[] = new BlackHole[numberOfBlackHoles];
+        for (int i = 0; i < numberOfBlackHoles; i++) {
+            pos = generateNewPosition(3, blackHoles);
+            blackHoles[i] = new BlackHole(pos);
+        }
+        this.game.setBlackHoles(blackHoles);
     }
 
     private void initializeStars(int numberOfStars) {

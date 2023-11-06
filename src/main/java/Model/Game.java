@@ -41,6 +41,7 @@ public class Game {
     private Enterprise enterprise;
     private Planet[] planets;
     private Starbase[] starbases;
+    private BlackHole[] blackHoles;
     private Star[] stars;
     private Romulan[] romulans;
     private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
@@ -109,6 +110,8 @@ public class Game {
                             map[j][i][k][l] = EntityType.STAR;
                         } else if (checkEntityListAgainstPosition(position, romulans)) {
                             map[j][i][k][l] = EntityType.ROMULAN;
+                        } else if (checkEntityListAgainstPosition(position, blackHoles)) {
+                            map[j][i][k][l] = EntityType.BLACK_HOLE;
                         } else if (checkEntityListAgainstPosition(position, klingonCommanders)) {
                             map[j][i][k][l] = EntityType.COMMANDER;
                         } else {
@@ -235,6 +238,11 @@ public class Game {
         for(Planet p: planets) {
             if(checkEntityAgainstPosition(pos, p)) {
                 return (T) p;
+            }
+        }
+        for(BlackHole bl: blackHoles) {
+            if(checkEntityAgainstPosition(pos, bl)) {
+                return (T) bl;
             }
         }
 

@@ -8,6 +8,8 @@ import Model.Game;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import sst.Finish.GameOverReason;
+
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
@@ -129,6 +131,7 @@ public class Move {
 
         Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
+        if(movedPos == null) return;
 
          if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
@@ -151,6 +154,7 @@ public class Move {
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {
+        Computer computer = new Computer(this.game);
         Position nextPos = curPos.getClosestAdjecentPositionToDestination(destPos);
 
         Coordinate nq = nextPos.getQuadrant();
@@ -159,7 +163,6 @@ public class Move {
         if (nq.getY() >= 8 || nq.getY() < 0 || nq.getX() >= 8 || nq.getX() < 0 || ns.getX() < 0 || ns.getY() < 0) {
             this.game.con.printf(
                     "\nYOU HAVE ATTEMPTED TO CROSS THE NEGATIVE ENERGY BARRIER\nAT THE EDGE OF THE GALAXY.  THE THIRD TIME YOU TRY THIS,\nYOU WILL BE DESTROYED.\n");
-
             return curPos;
         }
 
@@ -167,13 +170,33 @@ public class Move {
             game.randomizeQuadrant(nq);
         }
 
-        if (this.game.getMap()[nq.getX()][nq.getY()][ns.getY()][ns.getX()] != EntityType.NOTHING) {
-            this.game.con.printf(
-                    "\nEnterprise blocked by object at Sector %d - %d\nEmergency stop required 125.00 units of energy.\n",
-                    ns.getY()+1, ns.getX()+1);
-            this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - 125.00);
-            return curPos;
+        EntityType entityType = this.game.getPositionEntityType(nextPos);
+
+        switch(entityType) {
+            case NOTHING: // do nothing
+                break;
+            case THOLIAN:
+            case KLINGON:
+            case COMMANDER:
+            case SUPER_COMMANDER:
+            case ROMULAN: // ram an enemy
+                break;
+            case BLACK_HOLE:
+                game.con.printf("\n***RED ALERT!  RED ALERT!\n***%s pulled into black hole at %d - %d\n", "Enterprise", ns.getY()+1, ns.getX()+1);
+                Finish finish = new Finish(game);
+                finish.finish(GameOverReason.HOLE);
+                return null;
+            default:
+                Double stopEnergy = 5.0*game.getEnterprise().getPosition().calcDistance(nextPos)/Math.max(computer.calcTime(game.getEnterprise().getPosition(), nextPos), 0.0001);
+                game.con.printf("\n%s %s %d - %d;\nEmergency stop required %.2f unit of energy.\n", "Enterprise", entityType == EntityType.THOLIAN_WEB ? "encounters Tholian web at" : "blocked by object at", ns.getY()+1, ns.getX()+1, stopEnergy);
+                this.game.getEnterprise().setEnergy(game.getEnterprise().getEnergy() - stopEnergy);
+                if(game.getEnterprise().getEnergy() <= 0) {
+                    new Finish(game).finish(GameOverReason.ENERGY);
+                    return null;
+                }
+                return curPos;
         }
+
         if (positionsAreEqual(destPos, nextPos)) {
             return nextPos;
         }
