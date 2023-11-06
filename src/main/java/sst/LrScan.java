@@ -1,5 +1,6 @@
 package sst;
 
+import Model.Condition;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.EntityType;
@@ -27,9 +28,11 @@ public class LrScan {
         int column = enterprise.getPosition().getQuadrant().getX();
         String out = "";
 
-        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.LR_SENSORS, 1.0); // TODO: testing damaged sensors
+        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.LR_SENSORS,
+        // 1.0); // TODO: testing damaged sensors
 
-        if (game.getEnterprise().getDeviceDamage().get(Device.LR_SENSORS) > 0) {
+        if (game.getEnterprise().getDeviceDamage().get(Device.LR_SENSORS) > 0 &&
+                game.getEnterprise().getCondition() != Condition.DOCKED) {
             this.game.con.printf("LONG-RANGE SENSORS DAMAGED.\n\n");
             return;
         }
@@ -69,8 +72,8 @@ public class LrScan {
         }
         int thousands = 0;
         // System.out.println(row + " " + column);
-        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(row, column,  EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(row, column,  EntityType.SUPER_COMMANDER)) * 100;
-        int tens = getNumberOfEntiesInMapQuadrant(row, column,  EntityType.STARBASE) * 10;
+        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(row, column, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(row, column, EntityType.SUPER_COMMANDER)) * 100;
+        int tens = getNumberOfEntiesInMapQuadrant(row, column, EntityType.STARBASE) * 10;
         int ones = getNumberOfEntiesInMapQuadrant(row, column, EntityType.STAR);
 
         return Integer.toString(thousands + hundreds + tens + ones);

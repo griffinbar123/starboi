@@ -3,6 +3,7 @@ package sst;
 import Model.Enterprise;
 import Model.Game;
 import Model.Position;
+import Model.Condition;
 import Model.Device;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class SrScan {
         int r, c;
         boolean leftside = true;
         boolean rightside = true;
+        boolean damaged = (enterprise.getDeviceDamage().get(Device.SR_SENSORS) > 0 && enterprise.getCondition() != Condition.DOCKED);
 
         // game.getEnterprise().getDeviceDamage().put(Device.SR_SENSORS, 1.0); // TODO: testing damaged sensors
 
@@ -40,8 +42,7 @@ public class SrScan {
                 sb.append(String.format("%2d  ", r));
 
                 for (c = 1; c <= 10; c++)
-                    if (enterprise.getDeviceDamage().get(Device.SR_SENSORS) > 0
-                            && !isAdjacent(r, c, enterprise.getPosition())) {
+                    if (damaged && !isAdjacent(r, c, enterprise.getPosition())) {
                         sb.append(String.format("%c ", '-'));
                     } else {
                         sb.append(String.format("%c ", this.game.getMap()[column][row][r - 1][c - 1].getSymbol()));

@@ -39,7 +39,6 @@ import static Utils.Utils.checkEntityListAgainstPosition;
  */
 public class Init {
     private Game game;
-    public static final char NOTHING = '\u00B7';
 
     /**
      * Starts the game
