@@ -4,7 +4,6 @@ import Model.Condition;
 import Model.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import static Utils.Utils.clearScreen;
 
 /**
  * Handles the finish boi
@@ -47,7 +46,7 @@ public class Finish {
      * @author Griffin Barnard
      */
     public void finish(GameOverReason gameOverReason) {
-        game.con.printf(clearScreen());
+        game.clearScreen();
         game.con.printf("\n\n\nIt is stardate %.1f .\n\n", this.game.getStarDate());
         Score score = new Score(game);
         

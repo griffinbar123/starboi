@@ -180,7 +180,9 @@ public class Move {
             case COMMANDER:
             case SUPER_COMMANDER:
             case ROMULAN: // ram an enemy
-                break;
+                game.pause(2);
+                new Ram(game).ram(nextPos, false);
+                return nextPos;
             case BLACK_HOLE:
                 game.con.printf("\n***RED ALERT!  RED ALERT!\n***%s pulled into black hole at %d - %d\n", "Enterprise", ns.getY()+1, ns.getX()+1);
                 Finish finish = new Finish(game);

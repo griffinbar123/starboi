@@ -31,18 +31,18 @@ public class Damages {
         StringBuilder sb = new StringBuilder();
 
         if (repairTimes.size() == 0) {
-            game.con.printf("All devices functional.\n");
+            game.con.printf("\nAll devices functional.\n");
             return;
         }
 
-        sb.append("Device       -REPAIR TIMES-\n");
-        sb.append("             IN FLIGHT  DOCKED\n");
+        sb.append("\nDevice            -REPAIR TIMES-\n");
+        sb.append("                IN FLIGHT   DOCKED\n");
         for (Device device : Device.values()) {
             if (!repairTimes.containsKey(device)) {
                 continue;
             }
 
-            sb.append(String.format("  %16s %.2f    %.2f\n",
+            sb.append(String.format("  %16s %8.2f  %8.2f\n",
                     device.getDeviceName(),
                     repairTimes.get(device),
                     repairTimes.get(device) * docFac));
@@ -61,7 +61,7 @@ public class Damages {
         Enterprise enterprise = game.getEnterprise();
 
         for (Device device : Device.values()) {
-            if (enterprise.getDeviceDamage().get(device) > 0.0) {
+            if (enterprise.getDeviceDamage().get(device) >= 0.0) {
                 if (device == Device.DEATHRAY) {
                     repairTimes.put(device,
                             enterprise.getDeviceDamage().get(device) + 0.005);

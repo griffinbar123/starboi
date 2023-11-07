@@ -56,8 +56,11 @@ public class Game {
     private Integer superCommandersKilled = 0;
     private Integer klingonsKilled = 0;
     private Integer commandersKilled = 0;
+    private Integer casualties = 0;
 
     private Score score = new Score();
+
+    public double damageFactor;
 
 
     @JsonIgnore
@@ -334,6 +337,8 @@ public class Game {
                 klingonSuperCommander = null;
                 superCommandersKilled += 1; 
                 break;
+            default:
+                break;
         }
 
         if(getRemainingKlingonCount() == 0) {
@@ -343,5 +348,40 @@ public class Game {
         updateMap();
 
         // TODO: adjust game score and states dependent on entity
+    }
+
+    @JsonIgnore
+    public void clearScreen(){
+        con.printf( "\033[2J\033[0;0H");	/* Hope for an ANSI display */
+    }
+
+    @JsonIgnore 
+    public void pause(int i){
+        //pause, implemented like original game almost verbatim
+        con.printf("\n");
+        if(i == 1){
+            if(skill.getSkillValue() > GameLevel.FAIR.getSkillValue())
+                con.printf("[ANNOUNCEMENT ARRIVING...]\n");
+            else 
+                con.printf("[IMPORTANT ANNOUNCEMENT ARRIVING -- HIT SPACE BAR TO CONTINUE]");
+            getSpaceBar();
+        } else {
+            if (skill.getSkillValue() > GameLevel.FAIR.getSkillValue())
+                con.printf("[CONTINUE?]\n");
+            else
+                con.printf("[HIT SPACE BAR TO CONTINUE]");
+            getSpaceBar();
+            con.printf("\r                           \r");
+        }
+        if (i != 0) {
+            clearScreen();
+        }
+    }
+
+    @JsonIgnore
+    public void getSpaceBar(){
+        // TODO: actually get input without enter key press
+        con.readLine("");
+        con.printf("\n");
     }
 }

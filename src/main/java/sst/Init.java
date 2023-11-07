@@ -27,8 +27,6 @@ import static Utils.Utils.randInt;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.turnEntityQuadrantsToStrings;
 import static Utils.Utils.readCommands;
-import static Utils.Utils.checkEntityAgainstPosition;
-import static Utils.Utils.checkEntityListAgainstPosition;
 
 /**
  * Initializes a game. In future versions, this class will be able
@@ -61,6 +59,8 @@ public class Init {
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
         System.out.println("changeit");
+
+        game.setDamageFactor(game.getSkill().getSkillValue() * 0.5);
 
         starDate = randDouble(21, 39) * 100;
         this.game.setStarDate(starDate);
@@ -326,7 +326,7 @@ public class Init {
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
         while (!game.isPositionEmpty(position) && entities != null
-                && getNumberOfEntiesBeforeMapUpdate(entities, position) <= maxElementsInQuadrant) {
+                || getNumberOfEntiesBeforeMapUpdate(entities, position) > maxElementsInQuadrant) {
             position = generateNewPosition(maxElementsInQuadrant, entities);
         }
         return position;
