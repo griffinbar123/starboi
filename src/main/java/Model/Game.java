@@ -14,7 +14,7 @@ import sst.Finish.GameOverReason;
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
-import static Utils.Utils.positionsAreEqual;
+import static Utils.Utils.isEqual;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;;
 
@@ -283,7 +283,7 @@ public class Game {
     public void destroyStarbase(Position pos) {
         con.printf("***STARBASE DESTROYED..\n");
         for(int i=0; i < starbases.length; i++)
-            if(starbases[i] != null && positionsAreEqual(starbases[i].getPosition(), pos))
+            if(starbases[i] != null && isEqual(starbases[i].getPosition(), pos))
                 starbases[i] = null;
         updateMap();
 
@@ -296,7 +296,7 @@ public class Game {
     public void destroyPlanet(Position pos) {
         con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, EntityType.PLANET));
         for(int i=0; i < planets.length; i++)
-            if(planets[i] != null && positionsAreEqual(planets[i].getPosition(), pos))
+            if(planets[i] != null && isEqual(planets[i].getPosition(), pos))
                 planets[i] = null;
         updateMap();
 
@@ -314,21 +314,21 @@ public class Game {
         switch (type) {
             case KLINGON:
                 for(int i=0; i < klingons.length; i++)
-                    if(klingons[i] != null && positionsAreEqual(klingons[i].getPosition(), pos)) {
+                    if(klingons[i] != null && isEqual(klingons[i].getPosition(), pos)) {
                         klingons[i] = null;
                         klingonsKilled += 1;
                     }
                 break;
             case COMMANDER:
                 for(int i=0; i < klingonCommanders.length; i++)
-                    if(klingonCommanders[i] != null && positionsAreEqual(klingonCommanders[i].getPosition(), pos)){
+                    if(klingonCommanders[i] != null && isEqual(klingonCommanders[i].getPosition(), pos)){
                         klingonCommanders[i] = null;
                         commandersKilled += 1;
                     }
                 break;
             case ROMULAN:
                 for(int i=0; i < romulans.length; i++)
-                    if(romulans[i] != null && positionsAreEqual(romulans[i].getPosition(), pos)) {
+                    if(romulans[i] != null && isEqual(romulans[i].getPosition(), pos)) {
                         romulans[i] = null;
                         romulansKilled += 1;
                     }

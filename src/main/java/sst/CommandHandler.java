@@ -131,6 +131,9 @@ public class CommandHandler {
         int tstlen = 0;
         cmdstr = cmdstr.trim();
 
+        if (cmdstr.length() == 0)
+            return c;
+
         for (Command cx : Command.values()) {
 
             if (cx.CanAbbrev()) {

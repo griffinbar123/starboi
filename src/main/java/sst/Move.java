@@ -12,8 +12,8 @@ import sst.Finish.GameOverReason;
 
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
+import static Utils.Utils.isEqual;
 import static Utils.Utils.parseDoubles;
-import static Utils.Utils.positionsAreEqual;
 import static Utils.Utils.positionsHaveSameQuadrant;
 
 /**
@@ -198,8 +198,7 @@ public class Move {
                 }
                 return curPos;
         }
-
-        if (positionsAreEqual(destPos, nextPos)) {
+        if (isEqual(destPos, nextPos)) {
             return nextPos;
         }
         return moveToPosition(nextPos, destPos);

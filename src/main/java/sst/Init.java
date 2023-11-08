@@ -49,9 +49,9 @@ public class Init {
         double starDate;
 
         // TODO: for testing so we don't have to type in the same thing every time
-        // this.game.setType(getGameParam(GameType.REGULAR));
-        // this.game.setLength(getGameParam(GameLength.SHORT));
-        // this.game.setSkill(getGameParam(GameLevel.NOVICE));
+        // this.game.setType(getGameParam(GameType.class));
+        // this.game.setLength(getGameParam(GameLength.class));
+        // this.game.setSkill(getGameParam(GameLevel.class));
         this.game.setType(GameType.REGULAR);
         this.game.setLength(GameLength.SHORT);
         this.game.setSkill(GameLevel.NOVICE);

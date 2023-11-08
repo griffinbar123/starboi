@@ -170,7 +170,7 @@ public class Utils {
      * @param pos2 second position to be compared
      * @return a boolean inticating wether two positions are equal
      */
-    public static boolean positionsAreEqual(Position pos1, Position pos2) {
+    public static boolean isEqual(Position pos1, Position pos2) {
         return pos1.getQuadrant().getX() == pos2.getQuadrant().getX() && pos1.getQuadrant().getY() == pos2.getQuadrant().getY()
         && pos1.getSector().getX() == pos2.getSector().getX() && pos1.getSector().getY() == pos2.getSector().getY();
     }
@@ -231,7 +231,7 @@ public class Utils {
                 && position.getQuadrant().getY() == position2.getQuadrant().getY();
     }
 
-        /**
+    /**
      * 
      * @param quad quadrant
      * @param y y coordinate
