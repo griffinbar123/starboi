@@ -109,7 +109,7 @@ public class Help {
 
             c = handler.matchCommand(cmdStr);
             if (c == Command.undefined) {
-                printValidCommands();
+                ExecCOMMANDS();
                 params = Arrays.asList();
             } else {
                 return c;
@@ -119,10 +119,10 @@ public class Help {
 
     /**
      * prints a list of valid commands to the console
-     * @see CommandHandler.Command
+     * @see Command
      * @author Matthias Schrock
      */
-    public void printValidCommands() {
+    public void ExecCOMMANDS() {
         int columns = 4;
         List<String> commands = Stream.of(Command.values())
                 .filter(c -> c != Command.undefined)

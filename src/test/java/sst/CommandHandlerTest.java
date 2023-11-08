@@ -162,7 +162,7 @@ public class CommandHandlerTest {
         verifyNoInteractions(computer);
         verifyNoInteractions(chart);
         verifyNoInteractions(freeze);
-        verify(help, times(1)).printValidCommands();
+        verify(help, times(1)).ExecCOMMANDS();
         verifyNoInteractions(damages);
         verifyNoInteractions(move);
     }

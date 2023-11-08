@@ -283,7 +283,7 @@ public class CommandTest {
 
     @Test
     public void commandsCommandShouldWorkAsExpected() {
-        help.printValidCommands();
+        help.ExecCOMMANDS();
 
         String out = "\nValid commands:\n" +
                 "SRSCAN     WARP       SENSORS    FREEZE     \n" +
@@ -419,7 +419,7 @@ public class CommandTest {
     public void damagesShouldPrintOKifNoDamage() {
         damages.ExecDAMAGES();
 
-        String expected = "All devices functional.\n";
+        String expected = "\nAll devices functional.\n";
 
         verify(game.con).printf(expected);
     }
@@ -428,7 +428,7 @@ public class CommandTest {
     public void assessDamagesShouldPrintOKifNoDamage() {
         damages.assessDamages();
 
-        String expected = "All devices functional.\n";
+        String expected = "\nAll devices functional.\n";
 
         verify(game.con).printf(expected);
     }
@@ -442,24 +442,24 @@ public class CommandTest {
         when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
         damages.ExecDAMAGES();
 
-        String expected = "Device       -REPAIR TIMES-\n" +
-                "             IN FLIGHT  DOCKED\n" +
-                "     S. R. Sensors 1.05    0.26\n" +
-                "     L. R. Sensors 1.05    0.26\n" +
-                "           Phasers 1.05    0.26\n" +
-                "       ProtonTubes 1.05    0.26\n" +
-                "      Life Support 1.05    0.26\n" +
-                "      Warp Engines 1.05    0.26\n" +
-                "   Impulse Engines 1.05    0.26\n" +
-                "           Shields 1.05    0.26\n" +
-                "    Subspace Radio 1.05    0.26\n" +
-                "     Shuttle Craft 1.05    0.26\n" +
-                "          Computer 1.05    0.26\n" +
-                "       Transporter 1.05    0.26\n" +
-                "    Shield Control 1.05    0.26\n" +
-                "         Death Ray 1.01    0.25\n" +
-                "       D. S. Probe 1.05    0.26\n" +
-                "   Cloaking Device 1.05    0.26\n";
+        String expected = "\nDevice            -REPAIR TIMES-\n" +
+                "                IN FLIGHT   DOCKED\n" +
+                "     S. R. Sensors     1.05      0.26\n" +
+                "     L. R. Sensors     1.05      0.26\n" +
+                "           Phasers     1.05      0.26\n" +
+                "       ProtonTubes     1.05      0.26\n" +
+                "      Life Support     1.05      0.26\n" +
+                "      Warp Engines     1.05      0.26\n" +
+                "   Impulse Engines     1.05      0.26\n" +
+                "           Shields     1.05      0.26\n" +
+                "    Subspace Radio     1.05      0.26\n" +
+                "     Shuttle Craft     1.05      0.26\n" +
+                "          Computer     1.05      0.26\n" +
+                "       Transporter     1.05      0.26\n" +
+                "    Shield Control     1.05      0.26\n" +
+                "         Death Ray     1.01      0.25\n" +
+                "       D. S. Probe     1.05      0.26\n" +
+                "   Cloaking Device     1.05      0.26\n";
 
         verify(game.con).printf("%s", expected);
     }
@@ -529,7 +529,7 @@ public class CommandTest {
         for (Device d : Device.values()) {
             dmg.put(d, 0.0);
         }
-        
+
         // Game objects
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
