@@ -94,15 +94,8 @@ public class Move {
             this.game.con.printf("\nEnsign Chekov- \"Course laid in, Captain.\"\n");
 
         Position newPosition = new Position(quad, sect);
-        Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
 
-        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
-            this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
-        }
-
-        adjustStats(movedPos);
-        this.game.getEnterprise().setPosition(movedPos);
-        this.game.updateMap();
+        wrapperMove(this.game.getEnterprise().getPosition(), newPosition);
     }
 
     private void manualMove(List<String> params) {
@@ -130,16 +123,8 @@ public class Move {
 
 
         Position newPosition = this.game.getEnterprise().getPosition().getPositionFromOffset(xOffset, yOffset * -1);
-        Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), newPosition);
-        if(movedPos == null) return;
-
-         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
-            this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
-         }
-
-        adjustStats(movedPos);
-        this.game.getEnterprise().setPosition(movedPos);
-        this.game.updateMap();
+        
+        wrapperMove(this.game.getEnterprise().getPosition(), newPosition);
 
     }
 
@@ -151,6 +136,18 @@ public class Move {
         this.game.setStarDate(this.game.getStarDate() - timeNeeded);
         this.game.setTime(this.game.getTime() - timeNeeded);
         this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
+    }
+
+    public void wrapperMove(Position curPos, Position destPos) {
+        Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), destPos);
+
+        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
+            this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
+        }
+
+        adjustStats(movedPos);
+        this.game.getEnterprise().setPosition(movedPos);
+        this.game.updateMap();
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {
@@ -170,7 +167,7 @@ public class Move {
             game.randomizeQuadrant(nq);
         }
 
-        EntityType entityType = this.game.getPositionEntityType(nextPos);
+        EntityType entityType = this.game.getEntityTypeAtPosition(nextPos);
 
         switch(entityType) {
             case NOTHING: // do nothing

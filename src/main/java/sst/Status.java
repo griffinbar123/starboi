@@ -28,7 +28,7 @@ public class Status {
                 "Warp Factor   %.1f\n" +
                 "Energy        %.2f\n" +
                 "Torpedoes     %d\n" +
-                "Shields       %s, %d%% %.1f units\n" +
+                "Shields       %s, %.0f%% %.1f units\n" +
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
         this.game.con.printf(stat,
@@ -41,8 +41,8 @@ public class Status {
                 (enterprise.getLifeSupport() == 1 ? "ACTIVE" : "RESERVES"),
                 enterprise.getWarp(), enterprise.getEnergy(), enterprise.getTorpedoes(),
                 enterprise.getSheilds().getStatus().toString(),
+                enterprise.getSheilds().getLevel()/enterprise.getSheilds().getMaxLevel()*100,
                 enterprise.getSheilds().getLevel(),
-                enterprise.getSheilds().getUnits(),
                 game.getRemainingKlingonCount(),
                 game.getTime());
     }

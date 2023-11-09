@@ -79,10 +79,10 @@ public class SrScan {
                         sb.append(String.format("Torpedoes     %d", enterprise.getTorpedoes()));
                         break;
                     case 8:
-                        sb.append(String.format("Shields       %s, %d%% %.1f units",
+                        sb.append(String.format("Shields       %s, %.0f%% %.1f units",
                                 enterprise.getSheilds().getStatus().toString(),
-                                enterprise.getSheilds().getLevel(),
-                                enterprise.getSheilds().getUnits()));
+                                enterprise.getSheilds().getLevel()/enterprise.getSheilds().getMaxLevel()*100,
+                                enterprise.getSheilds().getLevel()));
                         break;
                     case 9:
                         sb.append(String.format("Klingons Left %d", game.getRemainingKlingonCount()));

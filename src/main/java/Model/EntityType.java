@@ -14,6 +14,7 @@ public enum EntityType {
     THOLIAN('T', "Tholian"),
     THOLIAN_WEB('#', "Tholian Web"),
     NOTHING('\u00B7', "Nothing"),
+    // NOTHING('\u2665', "Nothing"),
     undefined('?', "Undefined");
 
     private final char symbol;

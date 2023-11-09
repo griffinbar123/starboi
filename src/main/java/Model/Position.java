@@ -59,6 +59,11 @@ public class Position {
         return getPositionFromOffset(1, 1);
     }
 
+    public Position[] getAdjecentPositions() {
+        Position[] positions = {getTopLeftPosition(), getTopMiddlePosition(), getTopRightPosition(), getMiddleLeftPosition(), getMiddleRightPosition(), getBotLeftPosition(), getBotMiddlePosition(), getBotRightPosition()};
+        return positions;
+    }
+
     /**
      * calculate the distance bteween two positions
      * 

@@ -1,9 +1,7 @@
 package sst;
 
 
-import Model.Condition;
 import Model.Device;
-import Model.Enemy;
 import Model.Entity;
 import Model.EntityType;
 import Model.Game;
@@ -49,7 +47,7 @@ public class Ram {
                 break;
         }
         
-        game.destroyEnemy((Enemy) entity);
+        game.destroyEntityAtPosition(position);
         game.con.printf("***%s heavily damaged.\n***Sickbay reports %d casualties.\n", "Enterprise", casualties);
         game.setCasualties(game.getCasualties() + casualties);
 

@@ -150,7 +150,7 @@ public class Photon {
 
                 if(Math.random() <= 0.2) {
                     this.game.con.printf("\n***Photon tubes damaged by misfire.");
-                    game.getEnterprise().getDeviceDamage().put(Device.PHOTON_TUBES, 0.2);
+                    game.damage(Device.PHOTON_TUBES, 0.2);
                     break;
                 }
             }
@@ -158,7 +158,7 @@ public class Photon {
             if(this.game.getEnterprise().getCloak())
                 r *= 1.2;
             if(this.game.getEnterprise().getSheilds().getStatus() == ShieldStatus.DOWN || this.game.getEnterprise().getCondition() == Condition.DOCKED) 
-                r *= 1.0 + 0.0001*this.game.getEnterprise().getSheilds().getUnits(); 
+                r *= 1.0 + 0.0001*this.game.getEnterprise().getSheilds().getLevel(); 
 
             if(numOfTorpedoesToFire > 1) 
                 this.game.con.printf("\nTrack for torpedo number %d-   ", i);
@@ -202,7 +202,7 @@ public class Photon {
             Coordinate quad = this.game.getEnterprise().getPosition().getQuadrant();
 
             // this.game.con.printf("iy: %.1f - ix: %.1f   ", iy+1.0, ix+1.0);
-            EntityType entityType = this.game.getPositionEntityType(new Position(quad, new Coordinate(iy, ix)));
+            EntityType entityType = this.game.getEntityTypeAtPosition(new Position(quad, new Coordinate(iy, ix)));
 
             if(entityType == EntityType.NOTHING) continue;
 
@@ -229,7 +229,7 @@ public class Photon {
                         h1 = power;
                     k.setPower(k.getPower() - (k.getPower() < 0 ? -h1: h1));
                     if(k.getPower() == 0) {
-                        game.destroyEnemy(k);
+                        game.destroyEntityAtPosition(pos);
                         return;
                     }
                     this.game.con.printf("%s", outputEntity(iy+1, ix+1, entityType));
@@ -247,12 +247,12 @@ public class Photon {
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
                     }
-                    if (this.game.getPositionEntityType(klingonPos)==EntityType.BLACK_HOLE) {
+                    if (this.game.getEntityTypeAtPosition(klingonPos)==EntityType.BLACK_HOLE) {
                         this.game.con.printf(" buffeted into black hole\n");
-                        game.destroyEnemy(k);
+                        game.destroyEntityAtPosition(pos);
                         return;
                     }
-                    if (this.game.getPositionEntityType(klingonPos) != EntityType.NOTHING) {
+                    if (this.game.getEntityTypeAtPosition(klingonPos) != EntityType.NOTHING) {
                         /* can't move into object */
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return;
@@ -262,15 +262,12 @@ public class Photon {
                     shoved = 1;
                     break;
                 case STARBASE: // Hit a base
-                    this.game.destroyStarbase(pos);
-                    return;
                 case PLANET: // Hit a planet
-                    this.game.destroyPlanet(pos);
+                    this.game.destroyEntityAtPosition(pos);
                     return;
                 case STAR: // Hit a star 
                     if (Math.random() > 0.10) {
-                        // TODO: create supernova
-                        this.game.con.printf("NOVA not yet implemented\n");
+                        game.destroyEntityAtPosition(pos);
                         return;
                     }
                     this.game.con.printf("%s unaffected by photon blast.\n", outputEntity(iy+1, ix+1, entityType));

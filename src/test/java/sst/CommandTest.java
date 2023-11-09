@@ -553,8 +553,8 @@ public class CommandTest {
         when(enterprise.getTorpedoes()).thenReturn(10);
         Shield shields = new Shield();
         shields.setStatus(Model.ShieldStatus.UP);
-        shields.setLevel(100);
-        shields.setUnits(1.0);
+        shields.setLevel(1.0);
+        shields.setMaxLevel(1.0);
         when(enterprise.getSheilds()).thenReturn(shields);
         when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
     }
