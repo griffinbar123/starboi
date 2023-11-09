@@ -8,7 +8,6 @@ import Model.Device;
 import Model.Enemy;
 import Model.EntityType;
 import Model.Game;
-import Model.Klingon;
 import Model.Position;
 import Model.Condition;
 import Model.ShieldStatus;
@@ -67,7 +66,7 @@ public class Photon {
 
         // check if params have bad input
         if(params.size() != sects.size() || params.size() % 2 != 0) {
-            this.game.con.printf("\nheree4\n");
+            // this.game.con.printf("\nheree4\n");
             return null;
         }
 
@@ -88,7 +87,7 @@ public class Photon {
             return courses;
         } 
 
-        this.game.con.printf("\nheree5\n");
+        // this.game.con.printf("\nheree5\n");
         return null;
     }
 

@@ -293,14 +293,14 @@ public class Game {
             case STARBASE:
                 con.printf("***STARBASE DESTROYED..\n");
                 for(int i=0; i < starbases.length; i++)
-                    if(starbases[i] != null && positionsAreEqual(starbases[i].getPosition(), pos)){
+                    if(starbases[i] != null && isEqual(starbases[i].getPosition(), pos)){
                         starbases[i] = null;
                         break;
                     }
             case PLANET:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < planets.length; i++)
-                    if(planets[i] != null && positionsAreEqual(planets[i].getPosition(), pos)){
+                    if(planets[i] != null && isEqual(planets[i].getPosition(), pos)){
                         planets[i] = null;
                         destroyedPlanets += 1;
                         break;
@@ -411,7 +411,7 @@ public class Game {
 
         Position[] positions = star.getPosition().getAdjecentPositions();
         for(int i = 0; i < stars.length; i++) {
-            if(stars[i] != null && positionsAreEqual(stars[i].getPosition(), star.getPosition())){
+            if(stars[i] != null && isEqual(stars[i].getPosition(), star.getPosition())){
                 stars[i] = null;
             }
         }
@@ -496,12 +496,12 @@ public class Game {
                     }
                     newPosition = new Position(positions[i].getQuadrant(), new Coordinate(newY, newX));
 
-                    if(getEntityTypeAtPosition(newPosition) == entityType.BLACK_HOLE) {
-                        con.printf(", blasted into %s at %d - %d\n", entityType.BLACK_HOLE.getName(), newY + 1, newX + 1);
+                    if(getEntityTypeAtPosition(newPosition) == EntityType.BLACK_HOLE) {
+                        con.printf(", blasted into %s at %d - %d\n", EntityType.BLACK_HOLE.getName(), newY + 1, newX + 1);
                         destroyEntityAtPosition(newPosition);
                         break;
                     }
-                    if(getEntityTypeAtPosition(newPosition) != entityType.NOTHING) {
+                    if(getEntityTypeAtPosition(newPosition) != EntityType.NOTHING) {
                         con.printf("\n");
                         break;
                     }
