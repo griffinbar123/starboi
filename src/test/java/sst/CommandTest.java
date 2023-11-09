@@ -283,7 +283,7 @@ public class CommandTest {
 
     @Test
     public void commandsCommandShouldWorkAsExpected() {
-        help.printValidCommands();
+        help.ExecCOMMANDS();
 
         String out = "\nValid commands:\n" +
                 "SRSCAN     WARP       SENSORS    FREEZE     \n" +
@@ -299,24 +299,24 @@ public class CommandTest {
         verify(game.con).printf(out);
     }
 
-    // @Test
-    // public void srScanShouldWorkAsExpected() {
-    //     srScan.ExecSRSCAN();
+    @Test
+    public void srScanShouldWorkAsExpected() {
+        srScan.ExecSRSCAN();
 
-    //     String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
-    //             " 1  . . . . . . . . . .  Stardate      123.4\n" +
-    //             " 2  . . . . . . . . . .  Condition     GREEN\n" +
-    //             " 3  . . . . . . . . . .  Position      6 - 6, 5 - 4\n" +
-    //             " 4  . . . . . . . . . .  Life Support  DAMAGED, Reserves = 2.30\n" +
-    //             " 5  . . . E . . . . . .  Warp Factor   1.0\n" +
-    //             " 6  . . . . . . . . . .  Energy        100.00\n" +
-    //             " 7  . . . . . . . . . .  Torpedoes     10\n" +
-    //             " 8  . . . . . . . . . .  Shields       UP, 100% 1.0 units\n" +
-    //             " 9  . . . . . . . . . .  Klingons Left 3\n" +
-    //             "10  . . . . . . . . . .  Time Left     10.00\n";
+        String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
+                " 1  · · · · · · · · · ·  Stardate      123.4\n" +
+                " 2  · · · · · · · · · ·  Condition     GREEN\n" +
+                " 3  · · · · · · · · · ·  Position      6 - 6, 5 - 4\n" +
+                " 4  · · · · · · · · · ·  Life Support  DAMAGED, Reserves = 2.30\n" +
+                " 5  · · · E · · · · · ·  Warp Factor   1.0\n" +
+                " 6  · · · · · · · · · ·  Energy        100.00\n" +
+                " 7  · · · · · · · · · ·  Torpedoes     10\n" +
+                " 8  · · · · · · · · · ·  Shields       UP, 100% 1.0 units\n" +
+                " 9  · · · · · · · · · ·  Klingons Left 3\n" +
+                "10  · · · · · · · · · ·  Time Left     10.00\n";
 
-    //     verify(game.con).printf("%s", scan);
-    // }
+        verify(game.con).printf("%s", scan);
+    }
 
     @Test
     public void lrSacnShouldWorkAsExpected() {
@@ -419,7 +419,7 @@ public class CommandTest {
     public void damagesShouldPrintOKifNoDamage() {
         damages.ExecDAMAGES();
 
-        String expected = "All devices functional.\n";
+        String expected = "\nAll devices functional.\n";
 
         verify(game.con).printf(expected);
     }
@@ -428,7 +428,7 @@ public class CommandTest {
     public void assessDamagesShouldPrintOKifNoDamage() {
         damages.assessDamages();
 
-        String expected = "All devices functional.\n";
+        String expected = "\nAll devices functional.\n";
 
         verify(game.con).printf(expected);
     }
@@ -442,50 +442,50 @@ public class CommandTest {
         when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
         damages.ExecDAMAGES();
 
-        String expected = "Device       -REPAIR TIMES-\n" +
-                "             IN FLIGHT  DOCKED\n" +
-                "     S. R. Sensors 1.05    0.26\n" +
-                "     L. R. Sensors 1.05    0.26\n" +
-                "           Phasers 1.05    0.26\n" +
-                "       ProtonTubes 1.05    0.26\n" +
-                "      Life Support 1.05    0.26\n" +
-                "      Warp Engines 1.05    0.26\n" +
-                "   Impulse Engines 1.05    0.26\n" +
-                "           Shields 1.05    0.26\n" +
-                "    Subspace Radio 1.05    0.26\n" +
-                "     Shuttle Craft 1.05    0.26\n" +
-                "          Computer 1.05    0.26\n" +
-                "       Transporter 1.05    0.26\n" +
-                "    Shield Control 1.05    0.26\n" +
-                "         Death Ray 1.01    0.25\n" +
-                "       D. S. Probe 1.05    0.26\n" +
-                "   Cloaking Device 1.05    0.26\n";
+        String expected = "\nDevice            -REPAIR TIMES-\n" +
+                "                IN FLIGHT   DOCKED\n" +
+                "     S. R. Sensors     1.05      0.26\n" +
+                "     L. R. Sensors     1.05      0.26\n" +
+                "           Phasers     1.05      0.26\n" +
+                "       ProtonTubes     1.05      0.26\n" +
+                "      Life Support     1.05      0.26\n" +
+                "      Warp Engines     1.05      0.26\n" +
+                "   Impulse Engines     1.05      0.26\n" +
+                "           Shields     1.05      0.26\n" +
+                "    Subspace Radio     1.05      0.26\n" +
+                "     Shuttle Craft     1.05      0.26\n" +
+                "          Computer     1.05      0.26\n" +
+                "       Transporter     1.05      0.26\n" +
+                "    Shield Control     1.05      0.26\n" +
+                "         Death Ray     1.01      0.25\n" +
+                "       D. S. Probe     1.05      0.26\n" +
+                "   Cloaking Device     1.05      0.26\n";
 
         verify(game.con).printf("%s", expected);
     }
 
-    // @Test
-    // public void damagedSrSensorsShouldLimitRange() {
-    //     Map<Device, Double> dmg = new HashMap<Device, Double>();
-    //     dmg.put(Device.SR_SENSORS, 1.0);
-    //     when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
+    @Test
+    public void damagedSrSensorsShouldLimitRange() {
+        Map<Device, Double> dmg = new HashMap<Device, Double>();
+        dmg.put(Device.SR_SENSORS, 1.0);
+        when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
 
-    //     srScan.ExecSRSCAN();
+        srScan.ExecSRSCAN();
 
-    //     String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
-    //             " 1  - - - - - - - - - -  Stardate      123.4\n" +
-    //             " 2  - - - - - - - - - -  Condition     GREEN\n" +
-    //             " 3  - - - - - - - - - -  Position      6 - 6, 5 - 4\n" +
-    //             " 4  - - . . . - - - - -  Life Support  DAMAGED, Reserves = 2.30\n" +
-    //             " 5  - - . E . - - - - -  Warp Factor   1.0\n" +
-    //             " 6  - - . . . - - - - -  Energy        100.00\n" +
-    //             " 7  - - - - - - - - - -  Torpedoes     10\n" +
-    //             " 8  - - - - - - - - - -  Shields       UP, 100% 1.0 units\n" +
-    //             " 9  - - - - - - - - - -  Klingons Left 3\n" +
-    //             "10  - - - - - - - - - -  Time Left     10.00\n";
+        String scan = "\n    1 2 3 4 5 6 7 8 9 10 \n" +
+                " 1  - - - - - - - - - -  Stardate      123.4\n" +
+                " 2  - - - - - - - - - -  Condition     GREEN\n" +
+                " 3  - - - - - - - - - -  Position      6 - 6, 5 - 4\n" +
+                " 4  - - · · · - - - - -  Life Support  DAMAGED, Reserves = 2.30\n" +
+                " 5  - - · E · - - - - -  Warp Factor   1.0\n" +
+                " 6  - - · · · - - - - -  Energy        100.00\n" +
+                " 7  - - - - - - - - - -  Torpedoes     10\n" +
+                " 8  - - - - - - - - - -  Shields       UP, 100% 1.0 units\n" +
+                " 9  - - - - - - - - - -  Klingons Left 3\n" +
+                "10  - - - - - - - - - -  Time Left     10.00\n";
 
-    //     verify(game.con).printf("%s", scan);
-    // }
+        verify(game.con).printf("%s", scan);
+    }
 
     @Test
     public void damagedLrSensorsShouldPreventDeviceFunctioning() {
@@ -529,7 +529,7 @@ public class CommandTest {
         for (Device d : Device.values()) {
             dmg.put(d, 0.0);
         }
-        
+
         // Game objects
         Position position = new Position(new Coordinate(0, 0), new Coordinate(0, 0));
         Klingon klingons[] = new Klingon[] { new Klingon(position) };

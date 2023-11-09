@@ -61,7 +61,7 @@ public class Damages {
         Enterprise enterprise = game.getEnterprise();
 
         for (Device device : Device.values()) {
-            if (enterprise.getDeviceDamage().get(device) >= 0.0) {
+            if (enterprise.getDeviceDamage().get(device) > 0.0) {
                 if (device == Device.DEATHRAY) {
                     repairTimes.put(device,
                             enterprise.getDeviceDamage().get(device) + 0.005);

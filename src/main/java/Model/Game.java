@@ -15,7 +15,7 @@ import sst.Finish.GameOverReason;
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.checkEntityAgainstQuadrant;
-import static Utils.Utils.positionsAreEqual;
+import static Utils.Utils.isEqual;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;
@@ -309,7 +309,7 @@ public class Game {
             case KLINGON:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < klingons.length; i++)
-                    if(klingons[i] != null && positionsAreEqual(klingons[i].getPosition(), pos)) {
+                    if(klingons[i] != null && isEqual(klingons[i].getPosition(), pos)) {
                         klingons[i] = null;
                         klingonsKilled += 1;
                     }
@@ -317,7 +317,7 @@ public class Game {
             case COMMANDER:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < klingonCommanders.length; i++)
-                    if(klingonCommanders[i] != null && positionsAreEqual(klingonCommanders[i].getPosition(), pos)){
+                    if(klingonCommanders[i] != null && isEqual(klingonCommanders[i].getPosition(), pos)){
                         klingonCommanders[i] = null;
                         commandersKilled += 1;
                     }
@@ -325,7 +325,7 @@ public class Game {
             case ROMULAN:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < romulans.length; i++)
-                    if(romulans[i] != null && positionsAreEqual(romulans[i].getPosition(), pos)) {
+                    if(romulans[i] != null && isEqual(romulans[i].getPosition(), pos)) {
                         romulans[i] = null;
                         romulansKilled += 1;
                     }

@@ -70,8 +70,7 @@ public class CommandHandler {
                     srScan.ExecSRSCAN();
                     break;
                 case COMMANDS:
-                    // COMMANDS functionality now handled in Help.java
-                    help.printValidCommands();
+                    help.ExecCOMMANDS();
                     break;
                 case DOCK:
                     dock.ExecDOCK();
@@ -109,7 +108,7 @@ public class CommandHandler {
                     score.ExecSCORE(false, false);
                     break;
                 case undefined:
-                    help.printValidCommands();
+                    help.ExecCOMMANDS();
                     break;
                 default:
                     this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
@@ -130,6 +129,9 @@ public class CommandHandler {
         int cmdlen = 0;
         int tstlen = 0;
         cmdstr = cmdstr.trim();
+
+        if (cmdstr.length() == 0)
+            return c;
 
         for (Command cx : Command.values()) {
 

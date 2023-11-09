@@ -2,6 +2,7 @@ package sst;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,14 +103,14 @@ public class Help {
         while (true) {
             if (params.size() < 1) {
                 cmdStr = game.con.readLine("Help on what command?");
-                params = readCommands(cmdStr).orElse(List.of(""));
+                params = readCommands(cmdStr).orElse(Arrays.asList(""));
             }
             cmdStr = params.get(0);
 
             c = handler.matchCommand(cmdStr);
             if (c == Command.undefined) {
-                printValidCommands();
-                params.clear();
+                ExecCOMMANDS();
+                params = Arrays.asList();
             } else {
                 return c;
             }
@@ -118,10 +119,10 @@ public class Help {
 
     /**
      * prints a list of valid commands to the console
-     * @see CommandHandler.Command
+     * @see Command
      * @author Matthias Schrock
      */
-    public void printValidCommands() {
+    public void ExecCOMMANDS() {
         int columns = 4;
         List<String> commands = Stream.of(Command.values())
                 .filter(c -> c != Command.undefined)
