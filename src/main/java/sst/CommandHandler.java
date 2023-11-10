@@ -54,7 +54,11 @@ public class CommandHandler {
         this.game.con.printf("\n            SUPER STAR TREK (Java Edition)\n");
         this.game.con.printf("\n *** Welcome aboard the USS Enterprise (NCC 1701) *** \n\n");
 
+        Double originalStarDate; // used to see if stardate changes by a command
+
         while (true) {
+            game.setReadyForHit(false);
+            originalStarDate = game.getStarDate();
             cmdstr = this.game.con.readLine("\nCOMMAND> ");
             params = readCommands(cmdstr).orElse(new ArrayList<>());
 
@@ -115,6 +119,29 @@ public class CommandHandler {
                             c.toString());
                     break;
             }
+            while(true) { // this is how the original game does it. look at sst.c
+                if(game.getIsOver()) break;
+
+                if(game.getStarDate() > originalStarDate) {
+                    //TODO: do events, and check if anyof them caused the game to end
+                    if(game.getIsOver()) break;
+                }
+                /* og game code i havent implemented
+                if (d.galaxy[quadx][quady] == 1000) { // Galaxy went Nova!
+                    atover(0);
+                    continue;
+                }
+                if (nenhere == 0) movetho();
+                */
+                if(game.getReadyForHit() && !game.getJustEnteredQuadrant()) {
+                    //attack player
+                    photon.klingonAttack(2);
+                    if(game.getIsOver()) break;
+                    //TODO: check if galaxy nova'd and attack player if so and continue loop
+                }
+                break;
+            }
+            if(game.getIsOver()) break;
         }
     }
 

@@ -63,8 +63,12 @@ public class Game {
     private Integer casualties = 0;
 
     private Score score = new Score();
+    private Boolean IsOver = false;
 
-    public double damageFactor;
+    private double damageFactor;
+
+    private Boolean readyForHit = false;
+    private Boolean justEnteredQuadrant = true;
 
 
     @JsonIgnore

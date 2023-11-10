@@ -33,6 +33,7 @@ public class Photon {
      * Moves player in the map
      */
     public void ExecPHOTON(List<String> params) {
+        game.setReadyForHit(false);
         if(game.getEnterprise().getDeviceDamage().get(Device.PHOTON_TUBES) > 0.0){
             game.con.printf("Photon tubes damaged.\n");
             return;
@@ -58,6 +59,10 @@ public class Photon {
         fireTorpedos(numOfTorpedoesToFire, courses);
 
         // this.game.con.printf("\nNumber of torps: %d\n", numOfTorpedoesToFire);
+    }
+
+    public void klingonAttack(int k){
+        game.con.printf("\nKlingon would attack\n");
     }
 
     private List<Double> getCourses(Integer numOfTorpedoesToFire, List<String> params){
@@ -91,7 +96,7 @@ public class Photon {
         return null;
     }
 
-     private Integer getNumberOfTorpedoesToFire(List<String> params){
+    private Integer getNumberOfTorpedoesToFire(List<String> params){
 
          List<Integer> numOfTorpedoesList = parseIntegers(params);
 
@@ -129,6 +134,8 @@ public class Photon {
 
 
     private void fireTorpedos(Integer numOfTorpedoesToFire, List<Double> courses) {
+
+        game.setReadyForHit(true);
 
         Boolean breakFlag = false;
 

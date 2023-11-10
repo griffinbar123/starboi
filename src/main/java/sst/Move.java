@@ -133,7 +133,7 @@ public class Move {
 
         double powerNeeded = slay.calcPower(this.game.getEnterprise().getPosition(), dest);
         double timeNeeded = slay.calcTime(this.game.getEnterprise().getPosition(), dest);
-        this.game.setStarDate(this.game.getStarDate() - timeNeeded);
+        this.game.setStarDate(this.game.getStarDate() + timeNeeded);
         this.game.setTime(this.game.getTime() - timeNeeded);
         this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
     }
@@ -143,6 +143,9 @@ public class Move {
 
         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
+            game.setJustEnteredQuadrant(true);
+        } else {
+            game.setJustEnteredQuadrant(false);
         }
 
         adjustStats(movedPos);
