@@ -37,15 +37,15 @@ public class LrScan {
             return;
         }
 
-        game.addCoordinateString(new Coordinate(row - 1, column - 1), getQuadrantNumber(row - 1, column - 1));
-        game.addCoordinateString(new Coordinate(row, column - 1), getQuadrantNumber(row, column - 1));
-        game.addCoordinateString(new Coordinate(row + 1, column - 1), getQuadrantNumber(row + 1, column - 1));
-        game.addCoordinateString(new Coordinate(row - 1, column), getQuadrantNumber(row - 1, column));
-        game.addCoordinateString(new Coordinate(row, column), getQuadrantNumber(row, column));
-        game.addCoordinateString(new Coordinate(row + 1, column), getQuadrantNumber(row + 1, column));
-        game.addCoordinateString(new Coordinate(row - 1, column + 1), getQuadrantNumber(row - 1, column + 1));
-        game.addCoordinateString(new Coordinate(row, column + 1), getQuadrantNumber(row, column + 1));
-        game.addCoordinateString(new Coordinate(row + 1, column + 1), getQuadrantNumber(row + 1, column + 1));
+        game.addCoordinateString(new Coordinate(row - 1, column - 1), getQuadrantNumberAsString(row - 1, column - 1));
+        game.addCoordinateString(new Coordinate(row, column - 1), getQuadrantNumberAsString(row, column - 1));
+        game.addCoordinateString(new Coordinate(row + 1, column - 1), getQuadrantNumberAsString(row + 1, column - 1));
+        game.addCoordinateString(new Coordinate(row - 1, column), getQuadrantNumberAsString(row - 1, column));
+        game.addCoordinateString(new Coordinate(row, column), getQuadrantNumberAsString(row, column));
+        game.addCoordinateString(new Coordinate(row + 1, column), getQuadrantNumberAsString(row + 1, column));
+        game.addCoordinateString(new Coordinate(row - 1, column + 1), getQuadrantNumberAsString(row - 1, column + 1));
+        game.addCoordinateString(new Coordinate(row, column + 1), getQuadrantNumberAsString(row, column + 1));
+        game.addCoordinateString(new Coordinate(row + 1, column + 1), getQuadrantNumberAsString(row + 1, column + 1));
 
         out = "\nLong-range scan for Quadrant %d - %d:\n" +
                 "%-5s%-5s%-5s\n" +
@@ -64,30 +64,7 @@ public class LrScan {
                 game.getCoordinateString(row + 1, column + 1));
     }
 
-    private String getQuadrantNumber(int row, int column) {
-        // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO:
-        // add supernova
-        if (row < 0 || row >= 8 || column < 0 || column >= 8) {
-            return "-1";
-        }
-        int thousands = 0;
-        // System.out.println(row + " " + column);
-        int hundreds = (getNumberOfEntiesInMapQuadrant(row, column, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(row, column, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(row, column, EntityType.SUPER_COMMANDER)) * 100;
-        int tens = getNumberOfEntiesInMapQuadrant(row, column, EntityType.STARBASE) * 10;
-        int ones = getNumberOfEntiesInMapQuadrant(row, column, EntityType.STAR);
-
-        return Integer.toString(thousands + hundreds + tens + ones);
-    }
-
-    private int getNumberOfEntiesInMapQuadrant(int row, int column, EntityType entity) {
-        int numberOfElements = 0;
-        for (int i = 0; i < this.game.getMap()[column][row].length; i++) {
-            for (int j = 0; j < this.game.getMap()[column][row][i].length; j++) {
-                if (this.game.getMap()[column][row][j][i] == entity) {
-                    numberOfElements += 1;
-                }
-            }
-        }
-        return numberOfElements;
+    private String getQuadrantNumberAsString(int row, int column) {
+        return Integer.toString(game.getQuadrantNumber(row, column));
     }
 }

@@ -14,7 +14,6 @@ import sst.Finish.GameOverReason;
 
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
-import static Utils.Utils.checkEntityAgainstQuadrant;
 import static Utils.Utils.isEqual;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.outputEntity;
@@ -98,6 +97,34 @@ public class Game {
             }
         }
         return  "...";
+    }
+
+    @JsonIgnore
+    public Integer getQuadrantNumber(int y, int x) {
+        // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO:
+        // add supernova
+        if (y < 0 || y >= 8 || x < 0 || x >= 8) {
+            return -1;
+        }
+        int thousands = 0;
+        // System.out.println(row + " " + column);
+        int hundreds = (getNumberOfEntiesInMapQuadrant(y, x, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.SUPER_COMMANDER)) * 100;
+        int tens = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STARBASE) * 10;
+        int ones = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STAR);
+
+        return thousands + hundreds + tens + ones;
+    }
+    @JsonIgnore
+    private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
+        int numberOfElements = 0;
+        for (int i = 0; i < getMap()[x][y].length; i++) {
+            for (int j = 0; j < getMap()[x][y][i].length; j++) {
+                if (getMap()[x][y][j][i] == entity) {
+                    numberOfElements += 1;
+                }
+            }
+        }
+        return numberOfElements;
     }
 
     @JsonIgnore
@@ -191,28 +218,6 @@ public class Game {
     @JsonIgnore
     public EntityType getEntityTypeAtPosition(Position position) {
         return map[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()];
-    }
-
-    @JsonIgnore
-    public List<Entity> getEnemiesInAQuadrant(Coordinate quad) {
-        List<Entity> enemeies = new ArrayList<Entity>();
-
-        for(Klingon k: klingons)
-            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), k))
-                enemeies.add(k);
-
-        for(Romulan r: romulans)
-            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), r))
-                enemeies.add(r);
-
-        for(KlingonCommander c: klingonCommanders)
-            if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), c))
-                enemeies.add(c);
-
-        if(checkEntityAgainstQuadrant(enterprise.getPosition().getQuadrant(), klingonSuperCommander))
-            enemeies.add(klingonSuperCommander);
-            
-        return enemeies;
     }
 
     @JsonIgnore
@@ -387,6 +392,46 @@ public class Game {
         // TODO: actually get input without enter key press
         con.readLine("");
         con.printf("\n");
+    }
+
+    @JsonIgnore
+    public Boolean checkIfCommanderInCurrentQuadrant(){
+        for(KlingonCommander c: klingonCommanders)
+            if(c != null && positionsHaveSameQuadrant(c.getPosition(), enterprise.getPosition())) return true;
+        return false;
+    }
+
+    @JsonIgnore
+    public Boolean checkIfSuperInCurrentQuadrant(){
+        return (klingonSuperCommander != null && positionsHaveSameQuadrant(klingonSuperCommander.getPosition(), enterprise.getPosition()));
+    }
+
+    @JsonIgnore
+    public List<Enemy> getEnemiesInQuadrant(){
+        List<Enemy> totalEnemies = new ArrayList<Enemy>();
+        for(Klingon k: klingons) 
+            if(k!= null && positionsHaveSameQuadrant(k.getPosition(), enterprise.getPosition()))
+                totalEnemies.add(k);
+        for(KlingonCommander c: klingonCommanders) 
+            if(c!= null && positionsHaveSameQuadrant(c.getPosition(), enterprise.getPosition()))
+               totalEnemies.add(c);
+        for(Romulan r: romulans) 
+            if(r!= null && positionsHaveSameQuadrant(r.getPosition(), enterprise.getPosition()))
+                totalEnemies.add(r);
+        if(klingonSuperCommander!= null && positionsHaveSameQuadrant(klingonSuperCommander.getPosition(), enterprise.getPosition()))
+            totalEnemies.add(klingonSuperCommander);
+
+        return totalEnemies;
+    }
+
+
+    @JsonIgnore 
+    public void assessCondition(){
+        enterprise.setCondition(Condition.GREEN);
+        if (enterprise.getEnergy() < 1000.0) enterprise.setCondition(Condition.YELLOW);
+        if (getQuadrantNumber(enterprise.getPosition().getQuadrant().getY(), enterprise.getPosition().getQuadrant().getY()) > 99)
+            enterprise.setCondition(Condition.RED);
+        
     }
 
     @JsonIgnore

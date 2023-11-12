@@ -46,9 +46,9 @@ public class Finish {
      * @author Griffin Barnard
      */
     public void finish(GameOverReason gameOverReason) {
-        game.clearScreen();
         game.con.printf("\n\n\nIt is stardate %.1f .\n\n", this.game.getStarDate());
         Score score = new Score(game);
+        game.setIsOver(true);
         
         switch (gameOverReason) {
             case WON:
@@ -69,7 +69,6 @@ public class Finish {
             case DEPLETED:
                 game.con.printf("Your time has run out and the Federation has been\nconquered.  Your starship is now Klingon property,\nand you are put on trial as a war criminal. On the\nbasis of your record, you are %s\n", (game.getRemainingKlingonCount() * 3) > game.getScore().getInitTotKlingons() ? "aquitted.\n\nLIVE LONG AND PROSPER." : "found guilty and\nsentenced to death by slow torture.");
                 game.getEnterprise().setCondition(Condition.DEAD);
-                score.ExecSCORE(true, false);
                 return;
             case LIFESUPPORT:
                 game.con.printf("Your life support reserves have run out, and\nyou die of thirst, starvation, and asphyxiation.\nYour starship is a derelict in space.\n");
@@ -82,7 +81,6 @@ public class Finish {
                 break;
             case BARRIER:
                 game.con.printf("You have made three attempts to cross the negative energy\nbarrier which surrounds the galaxy.\n\nYour navigation is abominable.\n");
-                score.ExecSCORE(true, false);
                 return;
             case NOVA:
                 game.con.printf("Your starship has been destroyed by a nova.\nThat was a great shot.\n\n");
@@ -133,6 +131,6 @@ public class Finish {
                 game.con.printf("You have violated the Treaty of Algeron.\nThe Romulan Empire can never trust you again.\n");
                 break;
         }
-
+        score.ExecSCORE(true, false);
     }
 }

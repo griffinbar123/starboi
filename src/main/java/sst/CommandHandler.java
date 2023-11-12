@@ -25,6 +25,8 @@ public class CommandHandler {
     private Photon photon;
     private Score score;
     private Dock dock;
+    // private Finish finish;
+    private Attack attack;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -40,6 +42,8 @@ public class CommandHandler {
         this.photon = new Photon(game);
         this.score = new Score(game);
         this.dock = new Dock(game);
+        // this.finish = new Finish(game);
+        this.attack = new Attack(game);
     }
 
     /**
@@ -58,6 +62,7 @@ public class CommandHandler {
 
         while (true) {
             game.setReadyForHit(false);
+            game.setJustEnteredQuadrant(false);
             originalStarDate = game.getStarDate();
             cmdstr = this.game.con.readLine("\nCOMMAND> ");
             params = readCommands(cmdstr).orElse(new ArrayList<>());
@@ -68,56 +73,58 @@ public class CommandHandler {
             } else {
                 c = Command.undefined;
             }
+            if(!game.getIsOver()) {
 
-            switch (c) {
-                case SRSCAN:
-                    srScan.ExecSRSCAN();
-                    break;
-                case COMMANDS:
-                    help.ExecCOMMANDS();
-                    break;
-                case DOCK:
-                    dock.ExecDOCK();
-                    break;
-                case STATUS:
-                    status.ExecSTATUS();
-                    break;
-                case LRSCAN:
-                    lrScan.ExecLRSCAN();
-                    break;
-                case COMPUTER:
-                    computer.ExecCOMPUTER(params);
-                    break;
-                case CHART:
-                    chart.ExecCHART();
-                    break;
-                case QUIT:
-                    return;
-                case FREEZE:
-                    freeze.ExecFREEZE();
-                    return;
-                case HELP:
-                    help.ExecHELP(params);
-                    break;
-                case DAMAGES:
-                    damages.ExecDAMAGES();
-                    break;
-                case MOVE:
-                    move.ExecMOVE(params);
-                    break;
-                case PHOTONS:
-                    photon.ExecPHOTON(params);
-                    break;
-                case SCORE:
-                    score.ExecSCORE(false, false);
-                    break;
-                case undefined:
-                    help.ExecCOMMANDS();
-                    break;
-                default:
-                    this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
-                            c.toString());
-                    break;
+                switch (c) {
+                    case SRSCAN:
+                        srScan.ExecSRSCAN();
+                        break;
+                    case COMMANDS:
+                        help.ExecCOMMANDS();
+                        break;
+                    case DOCK:
+                        dock.ExecDOCK();
+                        break;
+                    case STATUS:
+                        status.ExecSTATUS();
+                        break;
+                    case LRSCAN:
+                        lrScan.ExecLRSCAN();
+                        break;
+                    case COMPUTER:
+                        computer.ExecCOMPUTER(params);
+                        break;
+                    case CHART:
+                        chart.ExecCHART();
+                        break;
+                    case QUIT:
+                        return;
+                    case FREEZE:
+                        freeze.ExecFREEZE();
+                        return;
+                    case HELP:
+                        help.ExecHELP(params);
+                        break;
+                    case DAMAGES:
+                        damages.ExecDAMAGES();
+                        break;
+                    case MOVE:
+                        move.ExecMOVE(params);
+                        break;
+                    case PHOTONS:
+                        photon.ExecPHOTON(params);
+                        break;
+                    case SCORE:
+                        score.ExecSCORE(false, false);
+                        break;
+                    case undefined:
+                        help.ExecCOMMANDS();
+                        break;
+                    default:
+                        this.game.con.printf("Lt. Cmdr. Scott: \"Captain, '%s' is nae yet operational.\"\n\n",
+                                c.toString());
+                        break;
+                }
             }
             while(true) { // this is how the original game does it. look at sst.c
                 if(game.getIsOver()) break;
@@ -133,9 +140,11 @@ public class CommandHandler {
                 }
                 if (nenhere == 0) movetho();
                 */
+                // game.con.printf("\nhit: %b, NotJustEntered: %b\n", game.getReadyForHit(), !game.getJustEnteredQuadrant());
                 if(game.getReadyForHit() && !game.getJustEnteredQuadrant()) {
+                    // game.con.printf("\nattacking\n");
                     //attack player
-                    photon.klingonAttack(2);
+                    attack.klingonAttack(2);
                     if(game.getIsOver()) break;
                     //TODO: check if galaxy nova'd and attack player if so and continue loop
                 }

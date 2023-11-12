@@ -28,6 +28,7 @@ public class CommandHandlerTest {
     private Photon photon;
     private Score score;
     private Dock dock;
+    private Attack attack;
 
     @Before
     public void setUp() {
@@ -45,9 +46,10 @@ public class CommandHandlerTest {
         photon = mock(Photon.class);
         score = mock(Score.class);
         dock = mock(Dock.class);
+        attack = mock(Attack.class);
 
         handler = new CommandHandler(game, srScan, lrScan, status, computer,
-                chart, freeze, help, damages, move, photon, score, dock);
+                chart, freeze, help, damages, move, photon, score, dock, attack);
     }
 
     @Test

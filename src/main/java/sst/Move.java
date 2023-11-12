@@ -141,6 +141,8 @@ public class Move {
     public void wrapperMove(Position curPos, Position destPos) {
         Position movedPos = moveToPosition(this.game.getEnterprise().getPosition(), destPos);
 
+        if(movedPos == null)
+            return;
         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
             game.setJustEnteredQuadrant(true);
@@ -184,15 +186,16 @@ public class Move {
                 new Ram(game).ram(nextPos, false);
                 return nextPos;
             case BLACK_HOLE:
+                // game.clearScreen();
                 game.con.printf("\n***RED ALERT!  RED ALERT!\n***%s pulled into black hole at %d - %d\n", "Enterprise", ns.getY()+1, ns.getX()+1);
-                Finish finish = new Finish(game);
-                finish.finish(GameOverReason.HOLE);
+                new Finish(game).finish(GameOverReason.HOLE);
                 return null;
             default:
                 Double stopEnergy = 5.0*game.getEnterprise().getPosition().calcDistance(nextPos)/Math.max(computer.calcTime(game.getEnterprise().getPosition(), nextPos), 0.0001);
                 game.con.printf("\n%s %s %d - %d;\nEmergency stop required %.2f unit of energy.\n", "Enterprise", entityType == EntityType.THOLIAN_WEB ? "encounters Tholian web at" : "blocked by object at", ns.getY()+1, ns.getX()+1, stopEnergy);
                 this.game.getEnterprise().setEnergy(game.getEnterprise().getEnergy() - stopEnergy);
                 if(game.getEnterprise().getEnergy() <= 0) {
+                    // game.clearScreen();
                     new Finish(game).finish(GameOverReason.ENERGY);
                     return null;
                 }
