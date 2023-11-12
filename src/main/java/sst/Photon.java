@@ -157,7 +157,7 @@ public class Photon {
 
         Boolean breakFlag = false;
 
-        for(int i = 1; i <= numOfTorpedoesToFire && !breakFlag; i+=2) {
+        for(int i = 1; i <= numOfTorpedoesToFire && !breakFlag; i+=1) {
             Double r = (Math.random()+Math.random())*0.5 -0.5;
             if(Math.abs(r) >= 0.47) {
                 // misfire
