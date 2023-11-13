@@ -109,21 +109,6 @@ public class Game {
     }
 
     @JsonIgnore
-    public Integer getQuadrantNumber(int y, int x) {
-        // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO:
-        // add supernova
-        if (y < 0 || y >= 8 || x < 0 || x >= 8) {
-            return -1;
-        }
-        int thousands = 0;
-        // System.out.println(row + " " + column);
-        int hundreds = (getNumberOfEntiesInMapQuadrant(y, x, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.SUPER_COMMANDER)) * 100;
-        int tens = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STARBASE) * 10;
-        int ones = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STAR);
-
-        return thousands + hundreds + tens + ones;
-    }
-    @JsonIgnore
     private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
         int numberOfElements = 0;
         for (int i = 0; i < getMap()[x][y].length; i++) {
@@ -431,16 +416,6 @@ public class Game {
             totalEnemies.add(klingonSuperCommander);
 
         return totalEnemies;
-    }
-
-
-    @JsonIgnore 
-    public void assessCondition(){
-        enterprise.setCondition(Condition.GREEN);
-        if (enterprise.getEnergy() < 1000.0) enterprise.setCondition(Condition.YELLOW);
-        if (getQuadrantNumber(enterprise.getPosition().getQuadrant().getY(), enterprise.getPosition().getQuadrant().getY()) > 99)
-            enterprise.setCondition(Condition.RED);
-        
     }
 
     @JsonIgnore

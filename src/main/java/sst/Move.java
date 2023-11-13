@@ -134,7 +134,7 @@ public class Move {
         double powerNeeded = slay.calcPower(this.game.getEnterprise().getPosition(), dest);
         double timeNeeded = slay.calcTime(this.game.getEnterprise().getPosition(), dest);
         this.game.setStarDate(this.game.getStarDate() + timeNeeded);
-        this.game.setTime(this.game.getTime() - timeNeeded);
+        game.passTime(timeNeeded);
         this.game.getEnterprise().setEnergy(this.game.getEnterprise().getEnergy() - powerNeeded);
     }
 
