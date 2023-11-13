@@ -10,7 +10,6 @@ import Model.Entity;
 import Model.EntityType;
 import Model.Game;
 import Model.Position;
-import Model.BlackHole;
 import Model.Condition;
 import Model.ShieldStatus;
 import lombok.NonNull;

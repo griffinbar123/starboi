@@ -58,7 +58,7 @@ public class GameMap {
                         Position position = new Position(j, i, l, k);
                         if (checkEntityListAgainstPosition(position, game.getKlingons())) {
                             map.get(j).get(i).get(k).set(l, EntityType.KLINGON);
-                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
+                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
                         } else if (checkEntityListAgainstPosition(position, game.getPlanets())) {
                             map.get(j).get(i).get(k).set(l, EntityType.PLANET);
                         } else if (checkEntityAgainstPosition(position, game.getEnterprise())) {
@@ -71,14 +71,14 @@ public class GameMap {
                             entityMap.get(i).set(j, entityMap.get(j).get(i) + 10);
                         } else if (checkEntityListAgainstPosition(position, game.getStars())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STAR);
-                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 1);
+                            entityMap.get(i).set(i, entityMap.get(j).get(i) + 1);
                         } else if (checkEntityListAgainstPosition(position, game.getRomulans())) {
                             map.get(j).get(i).get(k).set(l, EntityType.ROMULAN);
                         } else if (checkEntityListAgainstPosition(position, game.getBlackHoles())) {
                             map.get(j).get(i).get(k).set(l, EntityType.BLACK_HOLE);
                         } else if (checkEntityListAgainstPosition(position, game.getKlingonCommanders())) {
                             map.get(j).get(i).get(k).set(l, EntityType.COMMANDER);
-                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
+                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
                         } else {
                             map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
                             entityMap.get(j).set(i, 0);
