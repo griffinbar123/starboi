@@ -5,13 +5,11 @@ import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import Utils.Utils;
 import lombok.Data;
 import sst.Finish;
 import sst.Move;
 import sst.Finish.GameOverReason;
-
 import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.isEqual;
@@ -36,6 +34,10 @@ public class Game {
     private double starDate;
 
     private EntityType[][][][] map = new EntityType[8][8][10][10];
+    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
+
+    // TODO: Testing abstraction of map
+    private GameMap gameMap = new GameMap(this);
 
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
@@ -46,7 +48,6 @@ public class Game {
     private BlackHole[] blackHoles;
     private Star[] stars;
     private Romulan[] romulans;
-    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private double time;
     private GameLevel skill = GameLevel.UNDEFINED;
     private GameLength length = GameLength.UNDEFINED;
@@ -69,6 +70,14 @@ public class Game {
     private Boolean readyForHit = false;
     private Boolean justEnteredQuadrant = true;
 
+    /**
+     * Handles passing time
+     * @author Matthias Schrock
+     */
+    @JsonIgnore
+    public void passTime(Integer time) {
+        this.starDate -= time;
+    }
 
     @JsonIgnore
     public void begPardon(){

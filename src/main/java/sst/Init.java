@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import Model.BlackHole;
 import Model.Coordinate;
 import Model.Enterprise;
@@ -43,18 +42,17 @@ public class Init {
      * @author Matthias Schrock
      */
     public void start() {
-        this.game = new Game();
+        game = new Game();
         CommandHandler handler = new CommandHandler(this.game);
-        int planets, starbases, stars, romulans, blackHoles;
         double starDate;
 
         // TODO: for testing so we don't have to type in the same thing every time
-        // this.game.setType(getGameParam(GameType.class));
-        // this.game.setLength(getGameParam(GameLength.class));
-        // this.game.setSkill(getGameParam(GameLevel.class));
-        this.game.setType(GameType.REGULAR);
-        this.game.setLength(GameLength.SHORT);
-        this.game.setSkill(GameLevel.NOVICE);
+        // game.setType(getGameParam(GameType.class));
+        // game.setLength(getGameParam(GameLength.class));
+        // game.setSkill(getGameParam(GameLevel.class));
+        game.setType(GameType.REGULAR);
+        game.setLength(GameLength.SHORT);
+        game.setSkill(GameLevel.NOVICE);
 
         // TODO
         System.out.print("Please type in a secret password (9 characters maximum)-");
@@ -63,32 +61,23 @@ public class Init {
         game.setDamageFactor(game.getSkill().getSkillValue() * 0.5);
 
         starDate = randDouble(21, 39) * 100;
-        this.game.setStarDate(starDate);
-        this.game.getScore().setInitStarDate(starDate);
-        this.game.setTime(this.game.getLength().getLengthValue() * 7);
+        game.setStarDate(starDate);
+        game.getScore().setInitStarDate(starDate);
+        game.setTime(this.game.getLength().getLengthValue() * 7);
 
-        planets =  (int) ((10/2) + (10/2+1)*randDouble(0, 1));
-        starbases = 3*((int) randDouble(0, 1))+2;
-        stars = 0;
-        for (int i=1; i<=8; i++)
-            for (int j=1; j<=8; j++) 
-                stars += ((int)(randDouble(0, 1)*9.0)) + 1;
-        blackHoles = 0;
-            for (int i=1; i<=8; i++)
-                for (int j=1; j<=8; j++) 
-                    blackHoles += randDouble(0, 1) > 0.5 ? 1 : 0;
-		
         // TODO: initialize these romulans on game type, length, and skill
-        romulans = 4;
+        int romulans = 4;
+
+        game.getGameMap().init(); // TODO: Testing game map class
 
         initializeEnterprise();
-        initializePlanets(planets);
+        initializePlanets();
         initializeKlingons();
-        initializeStarbases(starbases);
-        initializeStars(stars);
+        initializeStarbases();
+        initializeStars();
         initializeRomulans(romulans);
-        initializeBlackHoles(blackHoles);
-        this.game.updateMap();
+        initializeBlackHoles();
+        game.updateMap();
 
         printStartupMessage();
 
@@ -235,7 +224,11 @@ public class Init {
         this.game.getScore().setInitRomulans(numberOfRomulans);
     }
 
-    private void initializeBlackHoles(int numberOfBlackHoles) {
+    private void initializeBlackHoles() {
+        int numberOfBlackHoles = 0;
+        for (int i=1; i<=8; i++)
+            for (int j=1; j<=8; j++) 
+                numberOfBlackHoles += randDouble(0, 1) > 0.5 ? 1 : 0;
         Position pos;
         BlackHole blackHoles[] = new BlackHole[numberOfBlackHoles];
         for (int i = 0; i < numberOfBlackHoles; i++) {
@@ -245,7 +238,11 @@ public class Init {
         this.game.setBlackHoles(blackHoles);
     }
 
-    private void initializeStars(int numberOfStars) {
+    private void initializeStars() {
+        int numberOfStars = 0;
+        for (int i=1; i<=8; i++)
+            for (int j=1; j<=8; j++) 
+                numberOfStars += ((int)(randDouble(0, 1)*9.0)) + 1;
         Position pos;
         Star stars[] = new Star[numberOfStars];
         for (int i = 0; i < numberOfStars; i++) {
@@ -255,7 +252,13 @@ public class Init {
         this.game.setStars(stars);
     }
 
-    private void initializeStarbases(int numberOfStarbases) {
+    private void initializeStarbases() {
+        // TODO: From the original game
+        // Improved placement algorithm to spread out bases
+        // double distq = square(ix-d.baseqx[j]) + square(iy-d.baseqy[j]);
+        // if (distq < 6.0*(6-inbase) && Rand() < 0.75) {
+        // 	contflag = TRUE;
+        int numberOfStarbases = 3*((int) randDouble(0, 1))+2;
         Position pos;
         Starbase starBases[] = new Starbase[numberOfStarbases];
         for (int i = 0; i < numberOfStarbases; i++) {
@@ -266,7 +269,8 @@ public class Init {
         this.game.setStarbases(starBases);
     }
 
-    private void initializePlanets(int numberOfPlanets) {
+    private void initializePlanets() {
+        int numberOfPlanets =  (int) ((10/2) + (10/2+1)*randDouble(0, 1));
         Position pos;
         Planet planets[] = new Planet[numberOfPlanets];
         for (int i = 0; i < numberOfPlanets; i++) {

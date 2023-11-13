@@ -157,6 +157,7 @@ public class Move {
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
+        this.game.getEnterprise().refreshCondition(this.game.getGameMap().getEntityMap());
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {

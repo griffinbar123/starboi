@@ -11,6 +11,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Position {
+    public Position (int qX, int qY, int sX, int sY) {
+        this.quadrant = new Coordinate(qY, qX);
+        this.sector = new Coordinate(sY, sX);
+    }
+
     private Coordinate quadrant;
     private Coordinate sector;
 

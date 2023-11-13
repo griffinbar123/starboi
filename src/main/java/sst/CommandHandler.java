@@ -25,6 +25,7 @@ public class CommandHandler {
     private Photon photon;
     private Score score;
     private Dock dock;
+    private Rest rest;
     // private Finish finish;
     private Attack attack;
 
@@ -42,6 +43,7 @@ public class CommandHandler {
         this.photon = new Photon(game);
         this.score = new Score(game);
         this.dock = new Dock(game);
+        this.rest = new Rest(game);
         // this.finish = new Finish(game);
         this.attack = new Attack(game);
     }
@@ -113,6 +115,9 @@ public class CommandHandler {
                         break;
                     case PHOTONS:
                         photon.ExecPHOTON(params);
+                        break;
+                    case REST:
+                        rest.ExecREST(params);
                         break;
                     case SCORE:
                         score.ExecSCORE(false, false);

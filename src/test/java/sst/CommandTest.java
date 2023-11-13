@@ -273,12 +273,12 @@ public class CommandTest {
                 "Warp Factor   %.1f\n" +
                 "Energy        %.2f\n" +
                 "Torpedoes     %d\n" +
-                "Shields       %s, %d%% %.1f units\n" +
+                "Shields       %s, %.0f%% %.1f units\n" +
                 "Klingons Left %d\n" +
                 "Time Left     %.2f\n";
 
         verify(game.con).printf(stat, 123.4, "GREEN", 6, 6, 5, 4, "ACTIVE", 1.0, 100.00, 10,
-                "UP", 100, 1.0, 3, 10.00);
+                "UP", 100.0, 1.0, 3, 10.00);
     }
 
     @Test
