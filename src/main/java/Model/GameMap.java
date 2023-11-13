@@ -44,7 +44,7 @@ public class GameMap {
             for (int j = 0; j < QUADRANT_SIZE; j++) {
                 for (int k = 0; k < SECTOR_SIZE; k++) {
                     for (int l = 0; l < SECTOR_SIZE; l++) {
-                        Position position = new Position(i, j, k, l);
+                        Position position = new Position(j, i, l, k);
                         if (checkEntityListAgainstPosition(position, game.getKlingons())) {
                             map.get(j).get(i).get(k).set(l, EntityType.KLINGON);
                             entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);

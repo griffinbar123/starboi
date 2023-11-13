@@ -231,17 +231,6 @@ public class Utils {
                 && position.getQuadrant().getY() == position2.getQuadrant().getY();
     }
 
-    /**
-     * 
-     * @param quad quadrant
-     * @param y y coordinate
-     * @param x x coordinate
-     * @return a position
-     */
-    public static Position buildPosFromQuad(Coordinate quad, int y, int x) {
-        return new Position(quad, new Coordinate(y, x));
-    }
-
     public static String outputEntity(Integer iy, Integer ix, EntityType type) {
         return "***" + type.getName() + " at " + iy + " - " + ix;
     }
