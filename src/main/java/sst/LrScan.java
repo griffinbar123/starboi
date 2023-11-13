@@ -64,6 +64,6 @@ public class LrScan {
     }
 
     private String getQuadrantNumberAsString(int row, int column) {
-        return Integer.toString(game.getQuadrantNumber(row, column));
+        return Integer.toString(game.getGameMap().getSectorNumber(row, column));
     }
 }

@@ -7,7 +7,6 @@ import Model.Enemy;
 import Model.EntityType;
 import Model.Game;
 import Model.GameLevel;
-import Model.Position;
 import Model.ShieldStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import sst.Finish.GameOverReason;
 
 import static Utils.Utils.randDouble;
 
-import java.util.List;
 
 /**
  * Handles the move command

@@ -244,8 +244,8 @@ public class Photon {
                         1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*
                         Math.abs(Math.sin(bullseye-angle));
                     hit = Math.abs(hit);
-                    game.assessCondition(); /* TODO: undock, right now i just asses conditioon here */
-                    //if (landed==1) return; /* Cheat if on a planet */
+                    game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
+
 
                     ang = angle + 2.5*(Math.random()-0.5);
                     temp = Math.abs(Math.sin(ang));
