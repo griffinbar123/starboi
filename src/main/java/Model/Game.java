@@ -419,6 +419,15 @@ public class Game {
     }
 
     @JsonIgnore
+    public void refreshCondition(){
+        enterprise.setCondition(Condition.GREEN);
+        if (enterprise.getEnergy() < 1000.0) enterprise.setCondition(Condition.YELLOW);
+        if (gameMap.getQuadrantNumber(enterprise.getPosition()) > 99) {
+                    enterprise.setCondition(Condition.RED);
+        }
+    }
+
+    @JsonIgnore
     public void nova(Star star){
 
         Coordinate sector;

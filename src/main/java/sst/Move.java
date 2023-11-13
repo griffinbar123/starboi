@@ -144,20 +144,20 @@ public class Move {
         if(movedPos == null)
             return;
         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
-            game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
+            game.refreshCondition();
             new Attack(game).klingonAttack(0);
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
             game.setJustEnteredQuadrant(true);
         } else {
             new Attack(game).klingonAttack(0);
-            game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
+            game.refreshCondition();
             game.setJustEnteredQuadrant(false);
         }
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
         this.game.updateMap();
-        this.game.getEnterprise().refreshCondition(this.game.getGameMap().getEntityMap());
+        game.refreshCondition();
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {

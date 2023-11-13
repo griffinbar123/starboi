@@ -23,8 +23,12 @@ public class GameMap {
     private final int QUADRANT_SIZE = 8;
     private final int SECTOR_SIZE = 10;
 
-    public Integer getSectorNumber(int y, int x) {
+    public Integer getQuadrantNumber(int y, int x) {
         return entityMap.get(x).get(y);
+    }
+
+    public Integer getQuadrantNumber(Position pos) {
+        return entityMap.get(pos.getQuadrant().getX()).get(pos.getQuadrant().getY());
     }
 
     public void init() {
