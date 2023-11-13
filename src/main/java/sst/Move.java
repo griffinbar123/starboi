@@ -156,7 +156,7 @@ public class Move {
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
-        this.game.updateMap();
+        this.game.getGameMap().updateMap();
         game.refreshCondition();
     }
 
@@ -174,10 +174,10 @@ public class Move {
         }
 
         if(!positionsHaveSameQuadrant(curPos, nextPos)){
-            game.randomizeQuadrant(nq);
+            game.getGameMap().randomizeQuadrant(nq);
         }
 
-        EntityType entityType = this.game.getEntityTypeAtPosition(nextPos);
+        EntityType entityType = this.game.getGameMap().getEntityTypeAtPosition(nextPos);
 
         switch(entityType) {
             case NOTHING: // do nothing

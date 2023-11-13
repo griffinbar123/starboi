@@ -24,7 +24,7 @@ public class Ram {
         double typeDamageScore = 1.0;
         Integer casualties = (int) (10.0+20.0*randDouble(0, 1));
 
-        Entity entity = game.getEntityAtPosition(position);
+        Entity entity = game.getGameMap().getEntityAtPosition(position);
         EntityType entityType = entity.getType();
 
         game.clearScreen();
@@ -47,7 +47,7 @@ public class Ram {
                 break;
         }
         
-        game.destroyEntityAtPosition(position);
+        game.getGameMap().destroyEntityAtPosition(position);
         game.con.printf("***%s heavily damaged.\n***Sickbay reports %d casualties.\n", "Enterprise", casualties);
         game.setCasualties(game.getCasualties() + casualties);
 

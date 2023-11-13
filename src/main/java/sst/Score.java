@@ -28,7 +28,7 @@ public class Score {
             sb.append("\nREMEMBER--The score doesn't really matter until the mission is accomplished!\n\n");
         }
 
-        game.con.printf("%s", sb.toString());
+        game.con.printf("%s\n", sb.toString());
     }
     
     private double calcScore(boolean finalScore) {

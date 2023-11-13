@@ -77,7 +77,7 @@ public class Init {
         initializeStars();
         initializeRomulans(romulans);
         initializeBlackHoles();
-        game.updateMap();
+        game.getGameMap().updateMap();
 
         printStartupMessage();
 
@@ -329,7 +329,7 @@ public class Init {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!game.isPositionEmpty(position) && entities != null
+        while (!game.getGameMap().isPositionEmpty(position) && entities != null
                 || getNumberOfEntiesBeforeMapUpdate(entities, position) > maxElementsInQuadrant) {
             position = generateNewPosition(maxElementsInQuadrant, entities);
         }
