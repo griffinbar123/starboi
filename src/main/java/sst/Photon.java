@@ -20,7 +20,6 @@ import sst.Finish.GameOverReason;
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
 import static Utils.Utils.parseDoubles;
-import static Utils.Utils.buildPosFromQuad;
 import static Utils.Utils.outputEntity;
 /**
  * Handles the move command
@@ -235,7 +234,7 @@ public class Photon {
 
             this.game.con.printf("\n");
 
-            Position pos = buildPosFromQuad(quad, iy, ix);
+            Position pos = new Position(quad, iy, ix);
             switch(entityType) {
                 case ENTERPRISE: //hits our ship
                 case FAERIE_QUEEN: //hits Faire Queene
@@ -255,7 +254,7 @@ public class Photon {
                     jx=(int) (ix+xx+0.5);
                     jy=(int) (iy+yy+0.5);
                     if (jx<1 || jx>10 || jy<1 ||jy > 10) return 0.0;
-                    Position entPos = buildPosFromQuad(quad, jy, jx);
+                    Position entPos = new Position(quad, jy, jx);
                     if (this.game.getEntityTypeAtPosition(entPos)==EntityType.BLACK_HOLE) {
                         new Finish(game).finish(GameOverReason.HOLE);
                         return 0.0;
@@ -297,7 +296,7 @@ public class Photon {
                     xx = Math.cos(ang)/temp;
                     jx= (int) (ix+xx+0.5);
                     jy= (int) (iy+yy+0.5);
-                    Position klingonPos = buildPosFromQuad(quad, jy, jx);
+                    Position klingonPos = new Position(quad, jy, jx);
                     if (jx<0 || jx>9 || jy<0 ||jy > 9) {
                         this.game.con.printf(" damaged but not destroyed.\n");
                         return 0.0;
