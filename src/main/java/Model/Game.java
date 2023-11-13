@@ -75,7 +75,7 @@ public class Game {
      * @author Matthias Schrock
      */
     @JsonIgnore
-    public void passTime(Integer time) {
+    public void passTime(Double time) {
         this.starDate -= time;
     }
 
