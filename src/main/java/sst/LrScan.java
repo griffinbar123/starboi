@@ -3,7 +3,6 @@ package sst;
 import Model.Condition;
 import Model.Coordinate;
 import Model.Enterprise;
-import Model.EntityType;
 import Model.Game;
 import Model.Device;
 import lombok.NonNull;

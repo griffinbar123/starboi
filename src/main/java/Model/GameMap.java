@@ -20,7 +20,6 @@ public class GameMap {
     private Game game;
     private List<List<List<List<EntityType>>>> map = new ArrayList<List<List<List<EntityType>>>>();
     private List<List<Integer>> entityMap = new ArrayList<List<Integer>>();
-    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
     private final int QUADRANT_SIZE = 8;
     private final int SECTOR_SIZE = 10;
 
@@ -51,6 +50,7 @@ public class GameMap {
                             map.get(j).get(i).get(k).set(l, EntityType.ENTERPRISE);
                         } else if (checkEntityAgainstPosition(position, game.getKlingonSuperCommander())) {
                             map.get(j).get(i).get(k).set(l, EntityType.SUPER_COMMANDER);
+                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else if (checkEntityListAgainstPosition(position, game.getStarbases())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STARBASE);
                             entityMap.get(i).set(j, entityMap.get(j).get(i) + 10);
@@ -63,6 +63,7 @@ public class GameMap {
                             map.get(j).get(i).get(k).set(l, EntityType.BLACK_HOLE);
                         } else if (checkEntityListAgainstPosition(position, game.getKlingonCommanders())) {
                             map.get(j).get(i).get(k).set(l, EntityType.COMMANDER);
+                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else {
                             map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
                             entityMap.get(j).set(i, 0);
