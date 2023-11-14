@@ -1,6 +1,6 @@
 package sst;
 
-import static Utils.Utils.parseIntegers;
+import static Utils.Utils.parseDoubles;
 import static Utils.Utils.readCommands;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +24,8 @@ public class Rest {
      * @param params
      */
     public void ExecREST(List<String> params) {
-        List<Integer> iParams = new ArrayList<Integer>();
-        Integer dur = null;
+        List<Double> iParams = new ArrayList<Double>();
+        Double dur = null;
         if (params.size() == 0) {
             game.con.printf("How long? ");
             params = readCommands(game.con.readLine()).orElse(null);
@@ -36,16 +36,15 @@ public class Rest {
             }
         }
 
-        iParams = parseIntegers(params);
+        iParams = parseDoubles(params);
         if (iParams.size() == 0) {
             game.begPardon();
             return;
         }
 
-        dur = iParams.get(0);
-        sure(dur);
+        dur = sure(iParams.get(0));
 
-        game.setStarDate(game.getStarDate() - dur);
+        game.passTime(dur);
     }
 
     /**
@@ -53,14 +52,17 @@ public class Rest {
      * 
      * @param duration the duration (in stardates) of the rest period
      */
-    private void sure(Integer duration) {
+    private Double sure(Double duration) {
         String cont;
         if (duration > game.getStarDate()) {
             game.con.printf("Are you sure? ");
             cont = readCommands(game.con.readLine()).orElse(Arrays.asList("No")).get(0);
-            if (!cont.equals("YES")) {
-                // TODO: call end of game due to time
+            if (cont.equals("YES")) {
+                new Finish(game).finish(Finish.GameOverReason.DEPLETED);
+            } else {
+                return 0.0;
             }
         }
+        return duration;
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import Model.Enterprise;
 import Model.Game;
 import Model.Device;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +21,8 @@ public class Damages {
     /**
      * Factor by which repair times are multiplied when docked
      */
-    private final double docFac = 0.25;
+    @Getter
+    private final double DOCFAC = 0.25;
 
     /**
      * DAMAGES command implementation
@@ -45,7 +47,7 @@ public class Damages {
             sb.append(String.format("  %16s %8.2f  %8.2f\n",
                     device.getDeviceName(),
                     repairTimes.get(device),
-                    repairTimes.get(device) * docFac));
+                    repairTimes.get(device) * DOCFAC));
         }
         game.con.printf("%s", sb.toString());
     }
@@ -56,7 +58,7 @@ public class Damages {
      * @author Matthias Schrock
      * @author Fabrice Mpozenzi
      */
-    private Map<Device, Double> calcDamages() {
+    public Map<Device, Double> calcDamages() {
         Map<Device, Double> repairTimes = new HashMap<>();
         Enterprise enterprise = game.getEnterprise();
 

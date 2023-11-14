@@ -21,6 +21,11 @@ public class SrScan {
      * along with other status data
      */
     public void ExecSRSCAN() {
+        game.getEnterprise().getDeviceDamage().put(Device.SR_SENSORS, 1.0); // TODO: testing damaged sensors
+        game.getEnterprise().getDeviceDamage().put(Device.LR_SENSORS, 2.0); // TODO: testing damaged sensors
+        game.getEnterprise().getDeviceDamage().put(Device.DEATHRAY, 1.0); // TODO: testing damaged sensors
+        game.getEnterprise().getDeviceDamage().put(Device.CLOAKING_DEVICE, 0.5); // TODO: testing damaged sensors
+
         StringBuilder sb = new StringBuilder("\n");
         Enterprise enterprise = game.getEnterprise();
         int row = enterprise.getPosition().getQuadrant().getY();
@@ -29,8 +34,6 @@ public class SrScan {
         boolean leftside = true;
         boolean rightside = true;
         boolean damaged = (enterprise.getDeviceDamage().get(Device.SR_SENSORS) > 0 && enterprise.getCondition() != Condition.DOCKED);
-
-        // game.getEnterprise().getDeviceDamage().put(Device.SR_SENSORS, 1.0); // TODO: testing damaged sensors
 
         sb.append("    ");
         for (c = 1; c <= 10; c++)

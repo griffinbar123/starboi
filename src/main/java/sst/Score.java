@@ -20,11 +20,11 @@ public class Score {
 
             // TODO: add the rest of the score for game win
 
-            sb.append(String.format("TOTAL SCORE %35s", score));
+            sb.append(String.format("TOTAL SCORE %35s\n", score));
         } else {
             sb.append("\n\nYour score so far --\n\n");
             
-            sb.append(String.format("TOTAL SCORE %35s", score));
+            sb.append(String.format("TOTAL SCORE %35s\n", score));
             sb.append("\nREMEMBER--The score doesn't really matter until the mission is accomplished!\n\n");
         }
 

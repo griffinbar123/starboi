@@ -1,5 +1,7 @@
 package sst;
 
+import java.util.concurrent.TimeUnit;
+
 import Model.Condition;
 import Model.Game;
 import lombok.NonNull;
@@ -46,6 +48,8 @@ public class Finish {
      * @author Griffin Barnard
      */
     public void finish(GameOverReason gameOverReason) {
+        boolean fin = true;
+        boolean won = false;
         game.con.printf("\n\n\nIt is stardate %.1f .\n\n", this.game.getStarDate());
         Score score = new Score(game);
         game.setIsOver(true);
@@ -64,13 +68,15 @@ public class Finish {
 
                     game.con.printf("\nLIVE LONG AND PROSPER.\n");
                 }
-                score.ExecSCORE(true, true);
-                return;
+                fin = true;
+                won = true;
+                break;
             case DEPLETED:
                 game.con.printf("Your time has run out and the Federation has been\nconquered.  Your starship is now Klingon property,\nand you are put on trial as a war criminal. On the\nbasis of your record, you are %s\n", (game.getRemainingKlingonCount() * 3) > game.getScore().getInitTotKlingons() ? "aquitted.\n\nLIVE LONG AND PROSPER." : "found guilty and\nsentenced to death by slow torture.");
                 game.getEnterprise().setCondition(Condition.DEAD);
-                score.ExecSCORE(true, true);
-                return;
+                fin = true;
+                won = true;
+                break;
             case LIFESUPPORT:
                 game.con.printf("Your life support reserves have run out, and\nyou die of thirst, starvation, and asphyxiation.\nYour starship is a derelict in space.\n");
                 break;
@@ -82,7 +88,7 @@ public class Finish {
                 break;
             case BARRIER:
                 game.con.printf("You have made three attempts to cross the negative energy\nbarrier which surrounds the galaxy.\n\nYour navigation is abominable.\n");
-                return;
+                break;
             case NOVA:
                 game.con.printf("Your starship has been destroyed by a nova.\nThat was a great shot.\n\n");
                 break;
@@ -132,6 +138,20 @@ public class Finish {
                 game.con.printf("You have violated the Treaty of Algeron.\nThe Romulan Empire can never trust you again.\n");
                 break;
         }
-        score.ExecSCORE(true, false);
+        score.ExecSCORE(fin, won);
+        dramaticPrint();
+    }
+
+    private void dramaticPrint() {
+        game.con.printf("\n\n");
+        try {
+            for (int i = 0; i < 54; i++) {
+                TimeUnit.MILLISECONDS.sleep(50);
+                game.con.printf("*");
+            }
+        } catch (InterruptedException e) {
+            // pass
+        }
+        game.con.printf("\n\n");
     }
 }
