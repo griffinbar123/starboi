@@ -53,9 +53,10 @@ public class GameMap {
     public void updateMap() {
         for (int i = 0; i < QUADRANT_SIZE; i++) {
             for (int j = 0; j < QUADRANT_SIZE; j++) {
+                entityMap.get(j).set(i, 0);
                 for (int k = 0; k < SECTOR_SIZE; k++) {
                     for (int l = 0; l < SECTOR_SIZE; l++) {
-                        Position position = new Position(j, i, l, k);
+                        Position position = new Position(j, i, k, l);
                         if (checkEntityListAgainstPosition(position, game.getKlingons())) {
                             map.get(j).get(i).get(k).set(l, EntityType.KLINGON);
                             entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
@@ -68,10 +69,10 @@ public class GameMap {
                             entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else if (checkEntityListAgainstPosition(position, game.getStarbases())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STARBASE);
-                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 10);
+                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 10);
                         } else if (checkEntityListAgainstPosition(position, game.getStars())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STAR);
-                            entityMap.get(i).set(i, entityMap.get(j).get(i) + 1);
+                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 1);
                         } else if (checkEntityListAgainstPosition(position, game.getRomulans())) {
                             map.get(j).get(i).get(k).set(l, EntityType.ROMULAN);
                         } else if (checkEntityListAgainstPosition(position, game.getBlackHoles())) {
@@ -81,7 +82,6 @@ public class GameMap {
                             entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
                         } else {
                             map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
-                            entityMap.get(j).set(i, 0);
                         }
                     }
                 }
@@ -203,7 +203,7 @@ public class GameMap {
     }
 
     public EntityType getEntityTypeAtPosition(Position position) {
-        return map.get(position.getQuadrant().getX()).get(position.getQuadrant().getY()).get(position.getSector().getY()).get(position.getSector().getX());
+        return map.get(position.getQuadrant().getY()).get(position.getQuadrant().getX()).get(position.getSector().getY()).get(position.getSector().getX());
     }
 
     private void initializeEnterprise() {
