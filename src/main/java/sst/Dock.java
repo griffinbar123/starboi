@@ -25,21 +25,18 @@ public class Dock {
      * @see sst.Rest
      */
     public void ExecDOCK() {
-        StringBuilder sb = new StringBuilder();
         if (this.game.getEnterprise().getCondition() == Condition.DOCKED) {
-            sb.append("\nAlready docked.\n\n");
+            game.con.printf("Already docked.\n\n");
             return;
         } else if (!isAdjacentStarbase()) {
-            sb.append("Enterprise not adjacent to base.\n\n");
+            game.con.printf("Enterprise not adjacent to base.\n\n");
             return;
         }
 
-        sb.append("Docked.\n\n");
         this.game.getEnterprise().setCondition(Condition.DOCKED);
+        game.con.printf("Docked.\n\n");
         // Undocking/condition reevaluation is handled in Move.java when successful move
         // is made
-
-        game.con.printf(sb.toString());
     }
 
     /**

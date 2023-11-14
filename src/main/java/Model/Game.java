@@ -7,6 +7,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import Utils.Utils;
 import lombok.Data;
+import sst.Damages;
 import sst.Finish;
 import sst.Move;
 import sst.Finish.GameOverReason;
@@ -14,6 +15,7 @@ import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.isEqual;
 import static Utils.Utils.randDouble;
+import static Utils.Utils.roundN;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;
 import static Utils.Utils.positionsHaveSameQuadrant;
@@ -76,6 +78,29 @@ public class Game {
      */
     @JsonIgnore
     public void passTime(Double time) {
+        Damages dmg = new Damages(this);
+        Map<Device, Double> repairTimes = dmg.calcDamages();
+        double devDmg, rprTm, fac;
+        boolean docked = this.enterprise.getCondition() == Condition.DOCKED;
+
+        // Enterprise device repairs
+        for (Device d : this.enterprise.getDeviceDamage().keySet()) {
+            devDmg = this.enterprise.getDeviceDamage().get(d);
+            if (devDmg == 0.0 || (!docked && d == Device.DEATHRAY)) continue;
+
+            // TODO: going to need something tailored to final damage calculations
+            // Issue with this current solution is that repairing over multiple
+            // time periods does not add up to the correct, initial repair time
+            rprTm = repairTimes.get(d) * (docked ? dmg.getDOCFAC() : 1.0);
+            fac = (rprTm - time) / rprTm;
+
+            this.enterprise.getDeviceDamage().put(d, roundN(devDmg * fac, 2));
+        }
+
+        // TODO: are there any other things that happen as time passes?
+
+        // Passage of time
+        this.time += time;
         this.starDate -= time;
     }
 

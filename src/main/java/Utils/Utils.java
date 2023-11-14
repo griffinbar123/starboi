@@ -35,6 +35,10 @@ public class Utils {
         return min + (max - min) * r.nextDouble();
     }
 
+    public static double roundN(double num, int n) {
+        return Math.round(num * Math.pow(10, n)) / Math.pow(10, n);
+    }
+
     /**
      * 
      * @param obj to be serialized
