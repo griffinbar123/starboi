@@ -1,5 +1,8 @@
 package sst;
 
+import static Utils.Utils.*;
+
+import java.util.Map;
 
 import Model.Device;
 import Model.Entity;
@@ -11,26 +14,26 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import sst.Finish.GameOverReason;
 
-import static Utils.Utils.randDouble;
-
-import java.util.Map;
-
 @RequiredArgsConstructor
 public class Ram {
     @NonNull
     private Game game;
+    public Ram typeDamageScore;
 
     public void ram(Position position, Boolean gotRammed) {
         double typeDamageScore = 1.0;
-        Integer casualties = (int) (10.0+20.0*randDouble(0, 1));
+        Integer casualties = (int) (10.0 + 20.0 * randDouble(0, 1));
 
         Entity entity = game.getEntityAtPosition(position);
         EntityType entityType = entity.getType();
 
         game.clearScreen();
-        game.con.printf("***RED ALERT!  RED ALERT!\n***COLLISION IMMINENT.\n\n\n***%s %s %s at Sector %d - %d %s\n", "Enterprise", gotRammed ? "rammed by" : "rams", entity.getType().getName(), position.getSector().getY()+1, position.getSector().getX()+1, gotRammed ? "(original position)": "");
+        game.con.printf("***RED ALERT!  RED ALERT!\n***COLLISION IMMINENT.\n\n\n***%s %s %s at Sector %d - %d %s\n",
+                "Enterprise", gotRammed ? "rammed by" : "rams", entity.getType().getName(),
+                position.getSector().getY() + 1, position.getSector().getX() + 1,
+                gotRammed ? "(original position)" : "");
 
-        switch(entityType) {
+        switch (entityType) {
             case ROMULAN:
                 typeDamageScore = 1.5;
                 break;
@@ -46,22 +49,24 @@ public class Ram {
             default:
                 break;
         }
-        
+
         game.destroyEntityAtPosition(position);
         game.con.printf("***%s heavily damaged.\n***Sickbay reports %d casualties.\n", "Enterprise", casualties);
         game.setCasualties(game.getCasualties() + casualties);
 
-        //TODO: damage ship.
-        for(Map.Entry<Device,Double> entry : game.getEnterprise().getDeviceDamage().entrySet()){
-            if(entry.getKey() == Device.DEATHRAY) continue;
-            if (entry.getValue() < 0) continue;
-            double damage = (10.0*typeDamageScore*randDouble(0, 1)+1.0)*game.getDamageFactor();
+        // TODO: damage ship.
+        for (Map.Entry<Device, Double> entry : game.getEnterprise().getDeviceDamage().entrySet()) {
+            if (entry.getKey() == Device.DEATHRAY)
+                continue;
+            if (entry.getValue() < 0)
+                continue;
+            double damage = (10.0 * typeDamageScore * randDouble(0, 1) + 1.0) * game.getDamageFactor();
             game.getEnterprise().getDeviceDamage().put(entry.getKey(), damage);
         }
         game.getEnterprise().getSheilds().setStatus(ShieldStatus.DOWN);
 
-        if(game.getRemainingKlingonCount() > 0) {
-            //pause
+        if (game.getRemainingKlingonCount() > 0) {
+            // pause
             new Damages(game).ExecDAMAGES();
         } else {
             new Finish(game).finish(GameOverReason.WON);
