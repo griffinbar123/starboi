@@ -31,10 +31,8 @@ public class Game {
 
     private double starDate;
 
-    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
-
-    // TODO: Testing abstraction of map
     private GameMap gameMap = new GameMap(this);
+    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
 
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
@@ -127,8 +125,6 @@ public class Game {
         }
         return  "...";
     }
-
-
 
     @JsonIgnore
     public int getRegularKlingonCount() {
