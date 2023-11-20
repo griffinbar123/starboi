@@ -33,11 +33,8 @@ public class Game {
 
     private double starDate;
 
-    private EntityType[][][][] map = new EntityType[8][8][10][10];
-    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
-
-    // TODO: Testing abstraction of map
     private GameMap gameMap = new GameMap(this);
+    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
 
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;

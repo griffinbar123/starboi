@@ -513,12 +513,18 @@ public class CommandTest {
 
     private void mockObjects() {
         // Empty map
-        EntityType map[][][][] = new EntityType[8][8][10][10];
-        for (int a = 0; a < 8; a++) {
-            for (int b = 0; b < 8; b++) {
-                for (int c = 0; c < 10; c++) {
-                    for (int d = 0; d < 10; d++) {
-                        map[a][b][c][d] = EntityType.NOTHING;
+        List<List<List<List<EntityType>>>> map = new ArrayList<List<List<List<EntityType>>>>();
+        List<List<Integer>> entityMap = new ArrayList<List<Integer>>();
+        for (int i = 0; i < 8; i++) {
+            map.add(new ArrayList<List<List<EntityType>>>());
+            entityMap.add(new ArrayList<Integer>());
+            for (int j = 0; j < 8; j++) {
+                map.get(i).add(new ArrayList<List<EntityType>>());
+                entityMap.get(i).add(0);
+                for (int k = 0; k < 10; k++) {
+                    map.get(i).get(j).add(new ArrayList<EntityType>());
+                    for (int l = 0; l < 10; l++) {
+                        map.get(i).get(j).get(k).add(EntityType.NOTHING);
                     }
                 }
             }
@@ -535,7 +541,8 @@ public class CommandTest {
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
         KlingonCommander[] klingonCommanders = new KlingonCommander[] { new KlingonCommander(position) };
         KlingonSuperCommander klingonSuperCommander = new KlingonSuperCommander(position);
-        game.setMap(map);
+        game.getGameMap().setMap(map);
+        game.getGameMap().setEntityMap(entityMap);
         game.setEnterprise(enterprise);
         game.setStarDate(123.4);
         game.setKlingons(klingons);
