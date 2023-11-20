@@ -193,38 +193,6 @@ public class Utils {
 
     /**
      * 
-     * @param pos1 position to be compared
-     * @param entity entity to be compared
-     * @return a boolean inticating wether a pos on a map contains the symbol of an entity
-     */
-    public static Boolean checkEntityAgainstPosition(Position position, Entity entity) {
-        // checks if entity is in a position, used mainly if map may not be updated
-        return entity != null && checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
-                entity.getPosition().getSector().getX() == position.getSector().getX()
-                && entity.getPosition().getSector().getY() == position.getSector().getY();
-    }
-
-    /**
-     * 
-     * @param pos1 position to be compared
-     * @param entities entities to be compared
-     * @return a boolean inticating wether a pos on a map contains the symbol of an entity
-     */
-    public static Boolean checkEntityListAgainstPosition(Position position, Entity[] entities) {
-        // checks if any entity in the list provided is is in the provided position
-        if (entities == null)
-            return false;
-
-        for (int i = 0; i < entities.length; i++) {
-            if (checkEntityAgainstPosition(position, entities[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 
      * @param pos1 pos1 to be compared
      * @param pos2 pos2 to be compared
      * @return a boolean inticating wether 2 positions are in the same Quadrant

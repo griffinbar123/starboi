@@ -332,7 +332,7 @@ public class CommandTest {
 
     @Test
     public void lrScanShouldStoreScanForChart() {
-        EntityType map[][][][] = this.game.getMap();
+        EntityType map[][][][] = game.getMap();
         map[4][4][0][0] = EntityType.STARBASE;
         map[4][5][0][0] = EntityType.KLINGON;
         map[4][6][0][0] = EntityType.KLINGON;
@@ -344,7 +344,7 @@ public class CommandTest {
         map[6][5][0][0] = EntityType.KLINGON;
         map[6][6][0][0] = EntityType.STARBASE;
         map[6][6][0][1] = EntityType.KLINGON;
-        game.setMap(map);
+        game.getGameMap().setMap(map);
 
         // LrScan hasn't run, so chart should be empty
         chartCommandShouldWorkAsExpected();
@@ -535,7 +535,7 @@ public class CommandTest {
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
         KlingonCommander[] klingonCommanders = new KlingonCommander[] { new KlingonCommander(position) };
         KlingonSuperCommander klingonSuperCommander = new KlingonSuperCommander(position);
-        game.setMap(map);
+        game.getGameMap().setMap(map);
         game.setEnterprise(enterprise);
         game.setStarDate(123.4);
         game.setKlingons(klingons);

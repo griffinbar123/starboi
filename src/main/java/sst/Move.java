@@ -156,7 +156,7 @@ public class Move {
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
-        this.game.updateMap();
+        this.game.getGameMap().updateMap();
         this.game.getEnterprise().refreshCondition(this.game.getGameMap().getEntityMap());
     }
 

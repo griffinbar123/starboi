@@ -346,7 +346,7 @@ public class Photon {
             break;
         }
         if (shoved == 1) {
-            this.game.updateMap();
+            this.game.getGameMap().updateMap();
             this.game.con.printf(" displaced by blast to %d - %d\n", jy+1, jx+1);
             return hit;
         }

@@ -1,34 +1,34 @@
 package Model;
 
-import static Utils.Utils.checkEntityAgainstPosition;
-import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.randInt;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import Utils.Utils;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
-@Data
 public class GameMap {
     @NonNull
     private Game game;
-    private List<List<List<List<EntityType>>>> map = new ArrayList<List<List<List<EntityType>>>>();
-    private List<List<Integer>> entityMap = new ArrayList<List<Integer>>();
+    @Getter
     private final int QUADRANT_SIZE = 8;
+    @Getter
     private final int SECTOR_SIZE = 10;
-
-    public Integer getSectorNumber(int y, int x) {
-        return entityMap.get(x).get(y);
-    }
+    @Getter
+    @Setter
+    private EntityType[][][][] map = new EntityType[QUADRANT_SIZE][QUADRANT_SIZE][SECTOR_SIZE][SECTOR_SIZE];
+    @Getter
+    @Setter
+    private Integer[][] entityMap = new Integer[QUADRANT_SIZE][QUADRANT_SIZE];
+    @Getter
+    @Setter
+    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
 
     public void init() {
-        initializeMap();
         initializeEnterprise();
         initializePlanets();
         initializeKlingons();
@@ -42,35 +42,35 @@ public class GameMap {
     public void updateMap() {
         for (int i = 0; i < QUADRANT_SIZE; i++) {
             for (int j = 0; j < QUADRANT_SIZE; j++) {
+                entityMap[j][i] = 0;
                 for (int k = 0; k < SECTOR_SIZE; k++) {
                     for (int l = 0; l < SECTOR_SIZE; l++) {
                         Position position = new Position(j, i, l, k);
-                        if (checkEntityListAgainstPosition(position, game.getKlingons())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.KLINGON);
-                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
-                        } else if (checkEntityListAgainstPosition(position, game.getPlanets())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.PLANET);
-                        } else if (checkEntityAgainstPosition(position, game.getEnterprise())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.ENTERPRISE);
-                        } else if (checkEntityAgainstPosition(position, game.getKlingonSuperCommander())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.SUPER_COMMANDER);
-                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
-                        } else if (checkEntityListAgainstPosition(position, game.getStarbases())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.STARBASE);
-                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 10);
-                        } else if (checkEntityListAgainstPosition(position, game.getStars())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.STAR);
-                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 1);
-                        } else if (checkEntityListAgainstPosition(position, game.getRomulans())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.ROMULAN);
-                        } else if (checkEntityListAgainstPosition(position, game.getBlackHoles())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.BLACK_HOLE);
-                        } else if (checkEntityListAgainstPosition(position, game.getKlingonCommanders())) {
-                            map.get(j).get(i).get(k).set(l, EntityType.COMMANDER);
-                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
+                        if (game.checkEntityListAgainstPosition(position, game.getStars())) {
+                            map[j][i][k][l] = EntityType.STAR;
+                            entityMap[j][i] += 1;
+                        } else if (game.checkEntityListAgainstPosition(position, game.getKlingons())) {
+                            map[j][i][k][l] = EntityType.KLINGON;
+                            entityMap[j][i] += 100;
+                        } else if (game.checkEntityListAgainstPosition(position, game.getKlingonCommanders())) {
+                            map[j][i][k][l] = EntityType.COMMANDER;
+                            entityMap[j][i] += 100;
+                        } else if (game.checkEntityAgainstPosition(position, game.getKlingonSuperCommander())) {
+                            map[j][i][k][l] = EntityType.SUPER_COMMANDER;
+                            entityMap[j][i] += 100;
+                        } else if (game.checkEntityListAgainstPosition(position, game.getRomulans())) {
+                            map[j][i][k][l] = EntityType.ROMULAN;
+                        } else if (game.checkEntityListAgainstPosition(position, game.getBlackHoles())) {
+                            map[j][i][k][l] = EntityType.BLACK_HOLE;
+                        } else if (game.checkEntityListAgainstPosition(position, game.getPlanets())) {
+                            map[j][i][k][l] = EntityType.PLANET;
+                        }else if (game.checkEntityListAgainstPosition(position, game.getStarbases())) {
+                            map[j][i][k][l] = EntityType.STARBASE;
+                            entityMap[j][i] += 10;
+                        }else if (game.checkEntityAgainstPosition(position, game.getEnterprise())) {
+                            map[j][i][k][l] = EntityType.ENTERPRISE;
                         } else {
-                            map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
-                            entityMap.get(j).set(i, 0);
+                            map[j][i][k][l] = EntityType.NOTHING;
                         }
                     }
                 }
@@ -78,21 +78,32 @@ public class GameMap {
         }
     }
 
-    private void initializeMap() {
-        for (int i = 0; i < QUADRANT_SIZE; i++) {
-            map.add(new ArrayList<List<List<EntityType>>>());
-            entityMap.add(new ArrayList<Integer>());
-            for (int j = 0; j < QUADRANT_SIZE; j++) {
-                map.get(i).add(new ArrayList<List<EntityType>>());
-                entityMap.get(i).add(0);
-                for (int k = 0; k < SECTOR_SIZE; k++) {
-                    map.get(i).get(j).add(new ArrayList<EntityType>());
-                    for (int l = 0; l < SECTOR_SIZE; l++) {
-                        map.get(i).get(j).get(k).add(EntityType.NOTHING);
-                    }
-                }
+    public Integer getSectorNumber(int y, int x) {
+        if (y < 0 || y > 7 || x < 0 || x > 7)
+            return -1;
+        return entityMap[x][y];
+    }
+
+    public void addCoordinateString(Coordinate coord, String s){
+        for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
+            Coordinate key = entry.getKey();
+            if(key.isEqual(coord)){
+                ScannedQuadrants.remove(key);
+                break;
             }
         }
+        ScannedQuadrants.put(coord, s);
+    }
+
+    public String getCoordinateString(int row, int col){
+        for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
+            Coordinate key = entry.getKey();
+            String value = entry.getValue();
+            if(key.isEqual(new Coordinate(row, col))){
+                return value;
+            }
+        }
+        return  "...";
     }
 
     private void initializeEnterprise() {
@@ -155,7 +166,7 @@ public class GameMap {
         for (int i = 0; i < numberOfStarbases; i++) {
             pos = generateNewPosition(9, starBases);
             starBases[i] = new Starbase(pos);
-            this.game.addCoordinateString(pos.getQuadrant(), ".1.");
+            addCoordinateString(pos.getQuadrant(), ".1.");
         }
         this.game.setStarbases(starBases);
     }
