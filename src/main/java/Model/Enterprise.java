@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,4 +27,17 @@ public class Enterprise extends Entity {
     private int torpedoes = 10;
 
     private Shield sheilds = new Shield();
+
+    public void refreshCondition(List<List<Integer>> galaxy) {
+        // Original
+        // if (d.galaxy[quadx][quady] > 99 || d.newstuf[quadx][quady] > 9)
+        //     condit = IHRED;
+
+        this.condition = Condition.GREEN;
+        if (energy < 1000.0) this.condition = Condition.YELLOW;
+        if (galaxy.get(this.getPosition().getQuadrant().getX())
+                  .get(this.getPosition().getQuadrant().getY()) > 99) {
+                    this.condition = Condition.RED;
+        }
+    }
 }

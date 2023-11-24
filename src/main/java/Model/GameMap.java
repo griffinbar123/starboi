@@ -4,21 +4,14 @@ import static Utils.Utils.checkEntityAgainstPosition;
 import static Utils.Utils.checkEntityListAgainstPosition;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.randInt;
-import static Utils.Utils.outputEntity;
-import static Utils.Utils.isEqual;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import Utils.Utils;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import sst.Finish;
-import sst.Finish.GameOverReason;
 
 @RequiredArgsConstructor
 @Data
@@ -30,12 +23,8 @@ public class GameMap {
     private final int QUADRANT_SIZE = 8;
     private final int SECTOR_SIZE = 10;
 
-    public Integer getQuadrantNumber(int y, int x) {
+    public Integer getSectorNumber(int y, int x) {
         return entityMap.get(x).get(y);
-    }
-
-    public Integer getQuadrantNumber(Position pos) {
-        return entityMap.get(pos.getQuadrant().getX()).get(pos.getQuadrant().getY());
     }
 
     public void init() {
@@ -53,13 +42,12 @@ public class GameMap {
     public void updateMap() {
         for (int i = 0; i < QUADRANT_SIZE; i++) {
             for (int j = 0; j < QUADRANT_SIZE; j++) {
-                entityMap.get(j).set(i, 0);
                 for (int k = 0; k < SECTOR_SIZE; k++) {
                     for (int l = 0; l < SECTOR_SIZE; l++) {
-                        Position position = new Position(j, i, k, l);
+                        Position position = new Position(j, i, l, k);
                         if (checkEntityListAgainstPosition(position, game.getKlingons())) {
                             map.get(j).get(i).get(k).set(l, EntityType.KLINGON);
-                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
+                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else if (checkEntityListAgainstPosition(position, game.getPlanets())) {
                             map.get(j).get(i).get(k).set(l, EntityType.PLANET);
                         } else if (checkEntityAgainstPosition(position, game.getEnterprise())) {
@@ -69,17 +57,17 @@ public class GameMap {
                             entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else if (checkEntityListAgainstPosition(position, game.getStarbases())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STARBASE);
-                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 10);
+                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 10);
                         } else if (checkEntityListAgainstPosition(position, game.getStars())) {
                             map.get(j).get(i).get(k).set(l, EntityType.STAR);
-                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 1);
+                            entityMap.get(i).set(j, entityMap.get(j).get(i) + 1);
                         } else if (checkEntityListAgainstPosition(position, game.getRomulans())) {
                             map.get(j).get(i).get(k).set(l, EntityType.ROMULAN);
                         } else if (checkEntityListAgainstPosition(position, game.getBlackHoles())) {
                             map.get(j).get(i).get(k).set(l, EntityType.BLACK_HOLE);
                         } else if (checkEntityListAgainstPosition(position, game.getKlingonCommanders())) {
                             map.get(j).get(i).get(k).set(l, EntityType.COMMANDER);
-                            entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
+                            entityMap.get(j).set(j, entityMap.get(j).get(i) + 100);
                         } else {
                             map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
                         } //"hihihii"
@@ -104,106 +92,6 @@ public class GameMap {
                 }
             }
         }
-    }
-
-    @JsonIgnore
-    private List<Entity> getEntitiesInQuadrant(Coordinate quad){
-        List<Entity> entities = new ArrayList<Entity>();
-
-        for(int i = 0; i < SECTOR_SIZE; i++) {
-            for(int j = 0; j < SECTOR_SIZE; j++) {
-                Position position = new Position(quad, new Coordinate(i, j));
-                Entity entity = getEntityAtPosition(position);
-                if(entity != null){
-                    entities.add(entity);
-                }
-            }
-        }
-
-        return entities;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Entity> T getEntityAtPosition(Position pos) {
-        for(Klingon k: getGame().getKlingons()) {
-            if(checkEntityAgainstPosition(pos, k)) {
-                return (T) k;
-            }
-        }
-        for(KlingonCommander c: getGame().getKlingonCommanders()) {
-            if(checkEntityAgainstPosition(pos, c)) {
-                return (T) c;
-            }
-        }
-        for(Romulan r: getGame().getRomulans()) {
-            if(checkEntityAgainstPosition(pos, r)) {
-                return (T) r;
-            }
-        }
-        if(checkEntityAgainstPosition(pos, getGame().getKlingonSuperCommander())) {
-            return (T) game.getKlingonSuperCommander();
-        }
-        for(Star s: getGame().getStars()) {
-            if(checkEntityAgainstPosition(pos, s)) {
-                return (T) s;
-            }
-        }
-        for(Starbase b: getGame().getStarbases()) {
-            if(checkEntityAgainstPosition(pos, b)) {
-                return (T) b;
-            }
-        }
-        for(Planet p: getGame().getPlanets()) {
-            if(checkEntityAgainstPosition(pos, p)) {
-                return (T) p;
-            }
-        }
-        for(BlackHole bl: getGame().getBlackHoles()) {
-            if(checkEntityAgainstPosition(pos, bl)) {
-                return (T) bl;
-            }
-        }
-
-        return null;
-    }
-
-
-    public void randomizeQuadrant(Coordinate quad){
-        List<Entity> entitiesInQuadrant = getEntitiesInQuadrant(quad);
-        for(Entity entity : entitiesInQuadrant) {
-            entity.setPosition(generateRandomPositionWithinQuadrant(quad));
-        }
-        updateMap();
-    }
-
-    private Position generateRandomPositionWithinQuadrant(Coordinate quad) {
-        Coordinate sector = new Coordinate(randInt(0, 9), (randInt(0, 9)));
-        Position position = new Position(quad, sector);
-        while (!isPositionEmpty(position)) {
-            position = generateRandomPositionWithinQuadrant(quad);
-        }
-        return position;
-    }
-
-    public Boolean isPositionEmpty(Position position) {
-        // use this to check if a position is empty, but can't check the map because it
-        // might not be updated
-        return !(checkEntityAgainstPosition(position, getGame().getEnterprise())
-                || checkEntityAgainstPosition(position, getGame().getKlingonSuperCommander())
-                || checkEntityListAgainstPosition(position, getGame().getKlingons())
-                || checkEntityListAgainstPosition(position, getGame().getPlanets())
-                || checkEntityListAgainstPosition(position, getGame().getStars())
-                || checkEntityListAgainstPosition(position, getGame().getStarbases())
-                || checkEntityListAgainstPosition(position, getGame().getRomulans())
-                || checkEntityListAgainstPosition(position, getGame().getKlingonCommanders()));
-    }
-
-    public Boolean checkPositionForEntity(Position position, EntityType entityType) {
-        return getEntityTypeAtPosition(position) == entityType;
-    }
-
-    public EntityType getEntityTypeAtPosition(Position position) {
-        return map.get(position.getQuadrant().getY()).get(position.getQuadrant().getX()).get(position.getSector().getY()).get(position.getSector().getX());
     }
 
     private void initializeEnterprise() {
@@ -331,7 +219,7 @@ public class GameMap {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!isPositionEmpty(position) && entities != null
+        while (!game.isPositionEmpty(position) && entities != null
                 || getNumberOfEntiesBeforeMapUpdate(entities, position) > maxElementsInQuadrant) {
             position = generateNewPosition(maxElementsInQuadrant, entities);
         }
@@ -351,80 +239,4 @@ public class GameMap {
         }
         return numberOfElements;
     }
-
-    // private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
-    //     int numberOfElements = 0;
-    //     for (int i = 0; i < SECTOR_SIZE; i++) {
-    //         for (int j = 0; j < SECTOR_SIZE; j++) {
-    //             if (map.get(x).get(y).get(j).get(i) == entity) {
-    //                 numberOfElements += 1;
-    //             }
-    //         }
-    //     }
-    //     return numberOfElements;
-    // }
-
-    public void destroyEntityAtPosition(Position pos){
-        EntityType entityType = getEntityTypeAtPosition(pos);
-        switch(entityType){
-            case STARBASE:
-                game.con.printf("***STARBASE DESTROYED..\n");
-                for(int i=0; i < game.getStarbases().length; i++)
-                    if(game.getStarbases()[i] != null && isEqual(game.getStarbases()[i].getPosition(), pos)){
-                        game.getStarbases()[i] = null;
-                        break;
-                    }
-            case PLANET:
-                game.con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                for(int i=0; i < game.getPlanets().length; i++)
-                    if(game.getPlanets()[i] != null && isEqual(game.getPlanets()[i].getPosition(), pos)){
-                        game.getPlanets()[i] = null;
-                        game.setDestroyedPlanets(game.getDestroyedPlanets() + 1);
-                        break;
-                    }
-                break;
-            case KLINGON:
-                game.con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                for(int i=0; i < game.getKlingons().length; i++)
-                    if(game.getKlingons()[i] != null && isEqual(game.getKlingons()[i].getPosition(), pos)) {
-                        game.getKlingons()[i] = null;
-                        game.setKlingonsKilled(game.getKlingonsKilled() + 1);
-                    }
-                break;
-            case COMMANDER:
-                game.con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                for(int i=0; i < game.getKlingonCommanders().length; i++)
-                    if(game.getKlingonCommanders()[i] != null && isEqual(game.getKlingonCommanders()[i].getPosition(), pos)){
-                        game.getKlingonCommanders()[i] = null;
-                        game.setCommandersKilled(game.getCommandersKilled() + 1);
-                    }
-                break;
-            case ROMULAN:
-                game.con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                for(int i=0; i < game.getRomulans().length; i++)
-                    if(game.getRomulans()[i] != null && isEqual(game.getRomulans()[i].getPosition(), pos)) {
-                        game.getRomulans()[i] = null;
-                        game.setRomulansKilled(game.getRomulansKilled() + 1);
-                    }
-                break;
-            case SUPER_COMMANDER:
-                game.con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                game.setKlingonSuperCommander(null);
-                game.setSuperCommandersKilled(game.getSuperCommandersKilled()+1);
-                break;
-            case STAR:
-                // con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
-                game.nova((Star) getEntityAtPosition(pos));
-                break;
-            default:
-                game.con.printf("not implemented yet\n");
-        }
-
-        if(game.getRemainingKlingonCount() == 0) {
-            Finish finish = new Finish(game);
-            finish.finish(GameOverReason.WON);
-        }
-        updateMap();
-    }
-
 }

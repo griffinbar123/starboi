@@ -144,20 +144,20 @@ public class Move {
         if(movedPos == null)
             return;
         if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
-            game.refreshCondition();
+            game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
             new Attack(game).klingonAttack(0);
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
             game.setJustEnteredQuadrant(true);
         } else {
             new Attack(game).klingonAttack(0);
-            game.refreshCondition();
+            game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
             game.setJustEnteredQuadrant(false);
         }
 
         adjustStats(movedPos);
         this.game.getEnterprise().setPosition(movedPos);
-        this.game.getGameMap().updateMap();
-        game.refreshCondition();
+        this.game.updateMap();
+        this.game.getEnterprise().refreshCondition(this.game.getGameMap().getEntityMap());
     }
 
     private Position moveToPosition(Position curPos, Position destPos) {
@@ -174,10 +174,10 @@ public class Move {
         }
 
         if(!positionsHaveSameQuadrant(curPos, nextPos)){
-            game.getGameMap().randomizeQuadrant(nq);
+            game.randomizeQuadrant(nq);
         }
 
-        EntityType entityType = this.game.getGameMap().getEntityTypeAtPosition(nextPos);
+        EntityType entityType = this.game.getEntityTypeAtPosition(nextPos);
 
         switch(entityType) {
             case NOTHING: // do nothing

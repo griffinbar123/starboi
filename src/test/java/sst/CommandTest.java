@@ -332,19 +332,19 @@ public class CommandTest {
 
     @Test
     public void lrScanShouldStoreScanForChart() {
-        List<List<List<List<EntityType>>>> map = this.game.getGameMap().getMap();
-        map.get(4).get(4).get(0).set(0, EntityType.STARBASE);
-        map.get(4).get(5).get(0).set(0, EntityType.KLINGON);
-        map.get(4).get(6).get(0).set(0, EntityType.KLINGON);
-        map.get(5).get(4).get(0).set(0, EntityType.KLINGON);
-        map.get(5).get(5).get(0).set(0, EntityType.KLINGON);
-        map.get(5).get(5).get(0).set(1, EntityType.KLINGON);
-        map.get(5).get(6).get(0).set(0, EntityType.KLINGON);
-        map.get(6).get(4).get(0).set(0, EntityType.KLINGON);
-        map.get(6).get(5).get(0).set(0, EntityType.KLINGON);
-        map.get(6).get(6).get(0).set(0, EntityType.STARBASE);
-        map.get(6).get(6).get(0).set(1, EntityType.KLINGON);
-        game.getGameMap().setMap(map);
+        EntityType map[][][][] = this.game.getMap();
+        map[4][4][0][0] = EntityType.STARBASE;
+        map[4][5][0][0] = EntityType.KLINGON;
+        map[4][6][0][0] = EntityType.KLINGON;
+        map[5][4][0][0] = EntityType.KLINGON;
+        map[5][5][0][0] = EntityType.KLINGON;
+        map[5][5][0][1] = EntityType.KLINGON;
+        map[5][6][0][0] = EntityType.KLINGON;
+        map[6][4][0][0] = EntityType.KLINGON;
+        map[6][5][0][0] = EntityType.KLINGON;
+        map[6][6][0][0] = EntityType.STARBASE;
+        map[6][6][0][1] = EntityType.KLINGON;
+        game.setMap(map);
 
         // LrScan hasn't run, so chart should be empty
         chartCommandShouldWorkAsExpected();
@@ -513,17 +513,17 @@ public class CommandTest {
 
     private void mockObjects() {
         // Empty map
-        List<List<List<List<EntityType>>>> map = new ArrayList<List<List<List<EntityType>>>>();
+        EntityType map[][][][] = new EntityType[8][8][10][10];
         for (int a = 0; a < 8; a++) {
             for (int b = 0; b < 8; b++) {
                 for (int c = 0; c < 10; c++) {
                     for (int d = 0; d < 10; d++) {
-                        map.get(a).get(b).get(c).set(d, EntityType.NOTHING);
+                        map[a][b][c][d] = EntityType.NOTHING;
                     }
                 }
             }
         }
-        map.get(5).get(5).get(4).set(3, EntityType.ENTERPRISE);
+        map[5][5][4][3] = EntityType.ENTERPRISE;
 
         Map<Device, Double> dmg = new HashMap<Device, Double>();
         for (Device d : Device.values()) {
@@ -535,7 +535,7 @@ public class CommandTest {
         Klingon klingons[] = new Klingon[] { new Klingon(position) };
         KlingonCommander[] klingonCommanders = new KlingonCommander[] { new KlingonCommander(position) };
         KlingonSuperCommander klingonSuperCommander = new KlingonSuperCommander(position);
-        game.getGameMap().setMap(map);
+        game.setMap(map);
         game.setEnterprise(enterprise);
         game.setStarDate(123.4);
         game.setKlingons(klingons);

@@ -69,7 +69,6 @@ public class Finish {
             case DEPLETED:
                 game.con.printf("Your time has run out and the Federation has been\nconquered.  Your starship is now Klingon property,\nand you are put on trial as a war criminal. On the\nbasis of your record, you are %s\n", (game.getRemainingKlingonCount() * 3) > game.getScore().getInitTotKlingons() ? "aquitted.\n\nLIVE LONG AND PROSPER." : "found guilty and\nsentenced to death by slow torture.");
                 game.getEnterprise().setCondition(Condition.DEAD);
-                score.ExecSCORE(true, true);
                 return;
             case LIFESUPPORT:
                 game.con.printf("Your life support reserves have run out, and\nyou die of thirst, starvation, and asphyxiation.\nYour starship is a derelict in space.\n");
