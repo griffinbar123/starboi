@@ -82,7 +82,7 @@ public class GameMap {
                             entityMap.get(j).set(i, entityMap.get(j).get(i) + 100);
                         } else {
                             map.get(j).get(i).get(k).set(l, EntityType.NOTHING);
-                        }
+                        } //"hihihii"
                     }
                 }
             }
