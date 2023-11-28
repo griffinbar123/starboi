@@ -44,7 +44,7 @@ public class Ram {
             default:
                 break;
         }
-
+        
         game.destroyEntityAtPosition(position);
         game.con.printf("***%s heavily damaged.\n***Sickbay reports %d casualties.\n", "Enterprise", casualties);
         game.setCasualties(game.getCasualties() + casualties);

@@ -26,17 +26,4 @@ public class Enterprise extends Entity {
     private int torpedoes = 10;
 
     private Shield sheilds = new Shield();
-
-    public void refreshCondition(Integer[][] galaxy) {
-        // Original
-        // if (d.galaxy[quadx][quady] > 99 || d.newstuf[quadx][quady] > 9)
-        //     condit = IHRED;
-
-        this.condition = Condition.GREEN;
-        if (energy < 1000.0) this.condition = Condition.YELLOW;
-        if (galaxy[this.getPosition().getQuadrant().getY()]
-                  [this.getPosition().getQuadrant().getX()] > 99) {
-                    this.condition = Condition.RED;
-        }
-    }
 }

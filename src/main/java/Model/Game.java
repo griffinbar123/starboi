@@ -1,5 +1,6 @@
 package Model;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.io.Console;
 import java.util.Map;
@@ -10,12 +11,11 @@ import sst.Damages;
 import sst.Finish;
 import sst.Move;
 import sst.Finish.GameOverReason;
-import static Utils.Utils.checkEntityAgainstQuadrant;
 import static Utils.Utils.isEqual;
 import static Utils.Utils.randDouble;
-import static Utils.Utils.roundN;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;
+import static Utils.Utils.roundN;
 import static Utils.Utils.positionsHaveSameQuadrant;
 
 
@@ -28,16 +28,13 @@ public class Game {
         return getRegularKlingonCount() + getKlingonCommanderCount()+ (klingonSuperCommander != null ? 1 : 0);
     }
 
-    public EntityType[][][][] getMap() {
-        return this.gameMap.getMap();
-    }
-
     @JsonIgnore
     public Console con = System.console();
 
     private double starDate;
 
-    private GameMap gameMap = new GameMap(this);
+    private EntityType[][][][] map = new EntityType[8][8][10][10];
+    private HashMap<Coordinate, String> ScannedQuadrants = new HashMap<Coordinate, String>();
 
     private Klingon[] klingons;
     private KlingonCommander[] klingonCommanders;
@@ -102,9 +99,74 @@ public class Game {
         this.starDate -= time;
     }
 
+    /**
+     * Used to refresh the Enterprise's condition
+     */
+    public void refreshCondition() {
+        // Original
+        // if (d.galaxy[quadx][quady] > 99 || d.newstuf[quadx][quady] > 9)
+        //     condit = IHRED;
+
+        this.enterprise.setCondition(Condition.GREEN);
+        if (this.enterprise.getEnergy() < 1000.0) this.enterprise.setCondition(Condition.YELLOW);
+        if (getQuadrantNumber(this.enterprise.getPosition().getQuadrant().getY(),
+                              this.enterprise.getPosition().getQuadrant().getX()) > 99) {
+                    this.enterprise.setCondition(Condition.RED);
+        }
+    }
+
     @JsonIgnore
     public void begPardon(){
         con.printf("\nBeg your pardon, Captain?\n");
+    }
+
+    @JsonIgnore
+    public void addCoordinateString(Coordinate coord, String s){
+        for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
+            Coordinate key = entry.getKey();
+            if(key.isEqual(coord)){
+                ScannedQuadrants.remove(key);
+                break;
+            }
+        }
+        ScannedQuadrants.put(coord, s);
+    }
+
+    @JsonIgnore
+    public String getCoordinateString(int row, int col){
+        for (Map.Entry<Coordinate, String> entry : ScannedQuadrants.entrySet()) {
+            Coordinate key = entry.getKey();
+            String value = entry.getValue();
+            if(key.isEqual(new Coordinate(row, col))){
+                return value;
+            }
+        }
+        return  "...";
+    }
+
+    @JsonIgnore
+    private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
+        int numberOfElements = 0;
+        for (int i = 0; i < getMap()[x][y].length; i++) {
+            for (int j = 0; j < getMap()[x][y][i].length; j++) {
+                if (getMap()[x][y][j][i] == entity) {
+                    numberOfElements += 1;
+                }
+            }
+        }
+        return numberOfElements;
+    }
+
+    /**
+     * 
+     * @param quad quadrant to be compared
+     * @param entity entity to be compared
+     * @return a boolean inticating wether a quad on a map contains the symbol of an entity
+     */
+    public Boolean checkEntityAgainstQuadrant(Coordinate quad, Entity entity) {
+        // checks if entity is in a position, used mainly if map may not be updated
+        return entity != null && entity.getPosition().getQuadrant().getX() == quad.getX()
+                && entity.getPosition().getQuadrant().getY() == quad.getY();
     }
 
     /**
@@ -140,24 +202,60 @@ public class Game {
     }
 
     @JsonIgnore
-    private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
-        int numberOfElements = 0;
-        for (int i = 0; i < gameMap.getMap()[x][y].length; i++) {
-            for (int j = 0; j < gameMap.getMap()[x][y][i].length; j++) {
-                if (gameMap.getMap()[x][y][j][i] == entity) {
-                    numberOfElements += 1;
+    public Integer getQuadrantNumber(int y, int x) {
+        // int thousands = getNumberOfEntiesInMapQuadrant(row, column, Supernova); TODO:
+        // add supernova
+        if (y < 0 || y >= 8 || x < 0 || x >= 8) {
+            return -1;
+        }
+        int thousands = 0;
+        // System.out.println(row + " " + column);
+        int hundreds = (getNumberOfEntiesInMapQuadrant(y, x, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.SUPER_COMMANDER)) * 100;
+        int tens = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STARBASE) * 10;
+        int ones = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STAR);
+        return thousands + hundreds + tens + ones;
+    }
+
+    @JsonIgnore
+    public void updateMap() {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                for (int k = 0; k < map[i][j].length; k++) {
+                    for (int l = 0; l < map[i][j][k].length; l++) {
+                        Position position = new Position(new Coordinate(i, j), new Coordinate(k, l));
+                        if (checkEntityListAgainstPosition(position, klingons)) {
+                            map[j][i][k][l] = EntityType.KLINGON;
+                        } else if (checkEntityListAgainstPosition(position, planets)) {
+                            map[j][i][k][l] = EntityType.PLANET;
+                        } else if (checkEntityAgainstPosition(position, enterprise)) {
+                            map[j][i][k][l] = EntityType.ENTERPRISE;
+                        } else if (checkEntityAgainstPosition(position, klingonSuperCommander)) {
+                            map[j][i][k][l] = EntityType.ENTERPRISE;
+                        } else if (checkEntityListAgainstPosition(position, starbases)) {
+                            map[j][i][k][l] = EntityType.STARBASE;
+                        } else if (checkEntityListAgainstPosition(position, stars)) {
+                            map[j][i][k][l] = EntityType.STAR;
+                        } else if (checkEntityListAgainstPosition(position, romulans)) {
+                            map[j][i][k][l] = EntityType.ROMULAN;
+                        } else if (checkEntityListAgainstPosition(position, blackHoles)) {
+                            map[j][i][k][l] = EntityType.BLACK_HOLE;
+                        } else if (checkEntityListAgainstPosition(position, klingonCommanders)) {
+                            map[j][i][k][l] = EntityType.COMMANDER;
+                        } else {
+                            map[j][i][k][l] = EntityType.NOTHING;
+                        }
+                    }
                 }
             }
         }
-        return numberOfElements;
     }
 
     @JsonIgnore
     private List<Entity> getEntitiesInQuadrant(Coordinate quad){
         List<Entity> entities = new ArrayList<Entity>();
 
-        for(int i = 0; i < gameMap.getMap()[quad.getX()][quad.getY()].length; i++) {
-            for(int j = 0; j < gameMap.getMap()[quad.getX()][quad.getY()].length; j++) {
+        for(int i = 0; i < map[quad.getX()][quad.getY()].length; i++) {
+            for(int j = 0; j < map[quad.getX()][quad.getY()].length; j++) {
                 Position position = new Position(quad, new Coordinate(i, j));
                 Entity entity = getEntityAtPosition(position);
                 if(entity != null){
@@ -175,7 +273,7 @@ public class Game {
         for(Entity entity : entitiesInQuadrant) {
             entity.setPosition(generateRandomPositionWithinQuadrant(quad));
         }
-        gameMap.updateMap();
+        updateMap();
     }
 
     private Position generateRandomPositionWithinQuadrant(Coordinate quad) {
@@ -208,7 +306,7 @@ public class Game {
 
     @JsonIgnore
     public EntityType getEntityTypeAtPosition(Position position) {
-        return gameMap.getMap()[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()];
+        return map[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()];
     }
 
     @JsonIgnore
@@ -347,7 +445,7 @@ public class Game {
             Finish finish = new Finish(this);
             finish.finish(GameOverReason.WON);
         }
-        gameMap.updateMap();
+        updateMap();
     }
 
     @JsonIgnore
@@ -537,7 +635,7 @@ public class Game {
                     }
                     con.printf(", buffeted to %d - %d\n", newY+1, newX+1);
                     enemy.setPosition(newPosition);
-                    gameMap.updateMap();
+                    updateMap();
                     break;
                 default:
                     break;

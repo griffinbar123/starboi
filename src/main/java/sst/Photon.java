@@ -243,7 +243,7 @@ public class Photon {
                         1000.0*Math.sqrt(Math.pow(ix-initialX, 2)+Math.pow(iy-initialY, 2))*
                         Math.abs(Math.sin(bullseye-angle));
                     hit = Math.abs(hit);
-                    game.getEnterprise().refreshCondition(game.getGameMap().getEntityMap());
+                    game.refreshCondition();
 
 
                     ang = angle + 2.5*(Math.random()-0.5);
@@ -346,7 +346,7 @@ public class Photon {
             break;
         }
         if (shoved == 1) {
-            this.game.getGameMap().updateMap();
+            this.game.updateMap();
             this.game.con.printf(" displaced by blast to %d - %d\n", jy+1, jx+1);
             return hit;
         }
