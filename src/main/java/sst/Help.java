@@ -108,7 +108,7 @@ public class Help {
             cmdStr = params.get(0);
 
             c = handler.matchCommand(cmdStr);
-            if (c == Command.undefined) {
+            if (c == Command.undefined || !c.Implemented()) {
                 ExecCOMMANDS();
                 params = Arrays.asList();
             } else {
@@ -118,7 +118,7 @@ public class Help {
     }
 
     /**
-     * prints a list of valid commands to the console
+     * prints a list of valid, implemented commands to the console
      * @see Command
      * @author Matthias Schrock
      */
@@ -126,21 +126,19 @@ public class Help {
         int columns = 4;
         List<String> commands = Stream.of(Command.values())
                 .filter(c -> c != Command.undefined)
+                .filter(c -> c.Implemented())
                 .map(c -> c.toString())
                 .toList();
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nValid commands:\n");
-        for (int i = 0; i < (int) commands.size() / columns; i++) {
-            for (int j = 0; j < columns; j++) {
-                int index = i + j * (int) commands.size() / columns;
-                if (index < commands.size()) {
-                    sb.append(String.format("%-11s", commands.get(index)));
-                }
+        for (int i = 0; i < commands.size(); i++) {
+            sb.append(String.format("%-11s", commands.get(i)));
+            if ((i + 1) % columns == 0) {
+                sb.append("\n");
             }
-            sb.append("\n");
         }
-        sb.append("\n");
+        sb.append("\n\n");
         game.con.printf(sb.toString());
     }
 }

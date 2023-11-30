@@ -1,56 +1,64 @@
 package sst;
 
 public enum Command {
-        SRSCAN,
-        MOVE,
-        PHASERS,
-        CALL(false),
-        STATUS,
-        IMPULSE,
-        PHOTONS,
-        ABANDON(false),
-        LRSCAN,
-        WARP,
-        SHIELDS,
-        DESTRUCT(false),
-        CHART,
-        REST,
-        DOCK,
-        QUIT(false),
-        DAMAGES,
-        REPORT,
-        SENSORS,
-        ORBIT,
-        TRANSPORT,
-        MINE,
-        CRYSTALS,
-        SHUTTLE,
-        PLANETS,
-        REQUEST,
-        DEATHRAY(false),
-        FREEZE(false),
-        COMPUTER,
-        EMEXIT,
-        PROBE,
-        COMMANDS,
-        SCORE,
-        CLOAK,
-        CAPTURE,
-        HELP(false),
-        // DEBUG(false),
-        undefined;
-        
-        private boolean canAbbrev;
-        
-        Command() {
-            canAbbrev = true;
-        }
+    SRSCAN(true),
+    MOVE(true),
+    PHASERS(false),
+    CALL(false, false),
+    STATUS(true),
+    IMPULSE(false),
+    PHOTONS(true),
+    ABANDON(false, false),
+    LRSCAN(true),
+    WARP(false),
+    SHIELDS(false),
+    DESTRUCT(false, false),
+    CHART(true),
+    REST(true),
+    DOCK(true),
+    QUIT(false, true),
+    DAMAGES(true),
+    REPORT(false),
+    SENSORS(false),
+    ORBIT(false),
+    TRANSPORT(false),
+    MINE(false),
+    CRYSTALS(false),
+    SHUTTLE(false),
+    PLANETS(false),
+    REQUEST(false),
+    DEATHRAY(false, false),
+    FREEZE(false, false),
+    COMPUTER(true),
+    EMEXIT(false),
+    PROBE(false),
+    COMMANDS(true),
+    SCORE(true),
+    CLOAK(false),
+    CAPTURE(false),
+    HELP(false, true),
+    DEBUG(false, false),
+    undefined(true);
 
-        Command(boolean abrOk) {
-            canAbbrev = abrOk;
-        }
 
-        public boolean CanAbbrev() {
-            return canAbbrev;
-        }
+    private boolean canAbbrev;
+    private boolean implemented;
+
+    Command(boolean impl) {
+        canAbbrev = true;
+        implemented = impl;
     }
+
+    Command(boolean abrOk, boolean impl) {
+        canAbbrev = abrOk;
+        implemented = impl;
+    }
+
+    public boolean CanAbbrev() {
+        return canAbbrev;
+    }
+
+    public boolean Implemented() {
+        return implemented;
+    }
+}
