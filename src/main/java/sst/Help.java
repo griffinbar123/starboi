@@ -37,6 +37,10 @@ public class Help {
     public void ExecHELP(List<String> params) {
         Command c = pollUserForCommand(params);
 
+        if (c == Command.undefined) {
+            return;
+        }
+
         if (helpText == null) {
             try {
                 compileHelpData();
@@ -106,6 +110,10 @@ public class Help {
                 params = readCommands(cmdStr).orElse(Arrays.asList(""));
             }
             cmdStr = params.get(0);
+
+            if (cmdStr.equals("")) {
+                return Command.undefined;
+            }
 
             c = handler.matchCommand(cmdStr);
             if (c == Command.undefined || !c.Implemented()) {

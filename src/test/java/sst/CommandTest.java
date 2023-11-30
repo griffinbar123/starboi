@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -286,15 +287,10 @@ public class CommandTest {
         help.ExecCOMMANDS();
 
         String out = "\nValid commands:\n" +
-                "SRSCAN     WARP       SENSORS    FREEZE     \n" +
-                "MOVE       SHIELDS    ORBIT      COMPUTER   \n" +
-                "PHASERS    DESTRUCT   TRANSPORT  EMEXIT     \n" +
-                "CALL       CHART      MINE       PROBE      \n" +
-                "STATUS     REST       CRYSTALS   COMMANDS   \n" +
-                "IMPULSE    DOCK       SHUTTLE    SCORE      \n" +
-                "PHOTONS    QUIT       PLANETS    CLOAK      \n" +
-                "ABANDON    DAMAGES    REQUEST    CAPTURE    \n" +
-                "LRSCAN     REPORT     DEATHRAY   HELP       \n\n";
+                "SRSCAN     MOVE       STATUS     PHOTONS    \n" +
+                "LRSCAN     CHART      REST       DOCK       \n" +
+                "QUIT       DAMAGES    COMPUTER   COMMANDS   \n" +
+                "SCORE      HELP       \n\n";
 
         verify(game.con).printf(out);
     }
@@ -383,30 +379,26 @@ public class CommandTest {
     @Test
     public void helpShouldPrintAvailableCommandsWithInvalidInput() {
         List<String> params = new ArrayList<String>();
-        params.add("invalid");
+        params.add("INVALID");
 
-        when(game.con.readLine(eq("Help on what command?"))).thenReturn("invalid");
-        when(handler.matchCommand(eq("invalid"))).thenReturn(Command.undefined);
+        when(game.con.readLine(eq("Help on what command?"))).thenReturn("");
+        when(handler.matchCommand(eq("INVALID"))).thenReturn(Command.undefined);
 
         help.ExecHELP(params);
 
         String expected = "\nValid commands:\n" +
-                "SRSCAN     WARP       SENSORS    FREEZE     \n" +
-                "MOVE       SHIELDS    ORBIT      COMPUTER   \n" +
-                "PHASERS    DESTRUCT   TRANSPORT  EMEXIT     \n" +
-                "CALL       CHART      MINE       PROBE      \n" +
-                "STATUS     REST       CRYSTALS   COMMANDS   \n" +
-                "IMPULSE    DOCK       SHUTTLE    SCORE      \n" +
-                "PHOTONS    QUIT       PLANETS    CLOAK      \n" +
-                "ABANDON    DAMAGES    REQUEST    CAPTURE    \n" +
-                "LRSCAN     REPORT     DEATHRAY   HELP       \n\n";
+                "SRSCAN     MOVE       STATUS     PHOTONS    \n" +
+                "LRSCAN     CHART      REST       DOCK       \n" +
+                "QUIT       DAMAGES    COMPUTER   COMMANDS   \n" +
+                "SCORE      HELP       \n\n";
 
         verify(game.con).printf(expected);
     }
 
     @Test
     public void helpShouldPrintAlertIfDocNotFound() {
-        help.ExecHELP(List.of("srscan"));
+        when(handler.matchCommand(eq("srscan"))).thenReturn(Command.SRSCAN);
+        help.ExecHELP(Arrays.asList("srscan"));
 
         String expected = "Spock-  \"Captain, I'm sorry, but I can't find SST.DOC.\"\n" +
                 "   computer. You need to find SST.DOC and put it in the\n" +
