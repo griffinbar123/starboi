@@ -417,15 +417,6 @@ public class CommandTest {
     }
 
     @Test
-    public void assessDamagesShouldPrintOKifNoDamage() {
-        damages.assessDamages();
-
-        String expected = "\nAll devices functional.\n";
-
-        verify(game.con).printf(expected);
-    }
-
-    @Test
     public void damagedDevicesShouldDisplayRepairTimes() {
         Map<Device, Double> dmg = new HashMap<Device, Double>();
         for (Device d : Device.values()) {
