@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import sst.Finish.GameOverReason;
 
 import static Utils.Utils.randDouble;
+import static Utils.Utils.randInt;
 
 
 /**
@@ -122,7 +123,7 @@ public class Attack {
             /* Decide if hit is critical */
             if (hit > hitmax) hitmax = hit;
             hittot += hit;
-            // fry(hit);
+            fry(hit);
             game.con.printf("Hit %.2f energy %g\n", hit, game.getEnterprise().getEnergy());
             game.getEnterprise().setEnergy(game.getEnterprise().getEnergy() - hit);
         }
@@ -156,6 +157,43 @@ public class Attack {
             }
         }
 
+    }
+
+    private void fry(double hit) {
+        double ncrit, extradm;
+        int ktr=1, l, ll;
+        Device d;
+        Device[] cdam = new Device[6];
+    
+        /* a critical hit occured */
+        if (hit < (275.0-25.0*game.getSkill().getSkillValue())*(1.0+0.5*randDouble(0, 1))) return;
+     
+        ncrit = 1.0 + hit/(500.0+100.0*randDouble(0, 1));
+        game.con.printf("***CRITICAL HIT--");
+        /* Select devices and cause damage */
+        for (l = 1; l <= ncrit; l++) {
+            // System.out.println(game.getEnterprise().getDeviceDamage().keySet()[0]);
+            do {
+                d = game.getEnterprise().getDeviceDamage().keySet().toArray(new Device[game.getEnterprise().getDeviceDamage().size()])[randInt(0, game.getEnterprise().getDeviceDamage().size()-1)];
+                /* Cheat to prevent shuttle damage unless on ship */
+            } while (game.getEnterprise().getDeviceDamage().get(d) < 0.0 || d == Device.DEATHRAY);
+            cdam[l] = d;
+            extradm = (hit*game.getDamageFactor())/(ncrit*(75.0+25.0*randDouble(0,1)));
+            game.damage(d, game.getEnterprise().getDeviceDamage().get(d) + extradm);
+            if (l > 1) {
+                for (ll=2; ll<=l && d != cdam[ll-1]; ll++) ;
+                if (ll<=l) continue;
+                ktr += 1;
+                if (ktr==3) game.con.printf("\n");
+                game.con.printf(" and ");
+            }
+            game.con.printf(d.getDeviceName());
+        }
+        game.con.printf(" damaged.\n");
+        if (game.getEnterprise().getDeviceDamage().get(Device.SHIELDS) > 0  && game.getEnterprise().getSheilds().getStatus() == ShieldStatus.UP) {
+            game.con.printf("***Shields knocked down.\n");
+            game.getEnterprise().getSheilds().setStatus(ShieldStatus.DOWN);
+        }
     }
 
 }
