@@ -65,6 +65,7 @@ public class CommandHandler {
         while (true) {
             game.setReadyForHit(false);
             game.setJustEnteredQuadrant(false);
+            game.getEnterprise().getSheilds().setShieldIsChanging(false);
             originalStarDate = game.getStarDate();
             cmdstr = this.game.con.readLine("\nCOMMAND> ");
             params = readCommands(cmdstr).orElse(new ArrayList<>());

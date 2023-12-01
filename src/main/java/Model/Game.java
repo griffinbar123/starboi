@@ -462,13 +462,13 @@ public class Game {
                 con.printf("[ANNOUNCEMENT ARRIVING...]\n");
             else 
                 con.printf("[IMPORTANT ANNOUNCEMENT ARRIVING -- HIT SPACE BAR TO CONTINUE]");
-            getSpaceBar();
+            getEnter();
         } else {
             if (skill.getSkillValue() > GameLevel.FAIR.getSkillValue())
                 con.printf("[CONTINUE?]\n");
             else
-                con.printf("[HIT SPACE BAR TO CONTINUE]");
-            getSpaceBar();
+                con.printf("[HIT ENTER BAR TO CONTINUE]");
+            getEnter();
             con.printf("\r                           \r");
         }
         if (i != 0) {
@@ -477,10 +477,9 @@ public class Game {
     }
 
     @JsonIgnore
-    public void getSpaceBar(){
+    public void getEnter(){
         // TODO: actually get input without enter key press
         con.readLine("");
-        con.printf("\n");
     }
 
     @JsonIgnore

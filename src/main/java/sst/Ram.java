@@ -2,12 +2,18 @@ package sst;
 
 import static Utils.Utils.*;
 
+import java.util.Map;
+
 import Model.Entity;
 import Model.EntityType;
 import Model.Game;
 import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import Model.ShieldStatus;
+import sst.Finish.GameOverReason;
+
+import Model.Device;
 
 @RequiredArgsConstructor
 public class Ram {
@@ -48,28 +54,27 @@ public class Ram {
         game.destroyEntityAtPosition(position);
         game.con.printf("***%s heavily damaged.\n***Sickbay reports %d casualties.\n", "Enterprise", casualties);
         game.setCasualties(game.getCasualties() + casualties);
-
-        /*
-         * // TODO: damage ship.
-         * for (Map.Entry<Device, Double> entry :
-         * game.getEnterprise().getDeviceDamage().entrySet()) {
-         * if (entry.getKey() == Device.DEATHRAY)
-         * continue;
-         * if (entry.getValue() < 0)
-         * continue;
-         * double damage = (10.0 * typeDamageScore * randDouble(0, 1) + 1.0) *
-         * game.getDamageFactor();
-         * game.getEnterprise().getDeviceDamage().put(entry.getKey(), damage);
-         * }
-         * game.getEnterprise().getSheilds().setStatus(ShieldStatus.DOWN);
-         * 
-         * if (game.getRemainingKlingonCount() > 0) {
-         * // pause
-         * new Damages(game).ExecDAMAGES();
-         * } else {
-         * new Finish(game).finish(GameOverReason.WON);
-         * }
-         */
+        
+         // TODO: damage ship.
+        for (Map.Entry<Device, Double> entry :
+            game.getEnterprise().getDeviceDamage().entrySet()) {
+                if (entry.getKey() == Device.DEATHRAY)
+                    continue;
+                if (entry.getValue() < 0)
+                    continue;
+                double damage = (10.0 * typeDamageScore * randDouble(0, 1) + 1.0) *
+                game.getDamageFactor();
+                game.getEnterprise().getDeviceDamage().put(entry.getKey(), damage);
+            }
+            game.getEnterprise().getSheilds().setStatus(ShieldStatus.DOWN);
+            
+            if (game.getRemainingKlingonCount() > 0) {
+            // pause
+            new Damages(game).ExecDAMAGES();
+            } else {
+                new Finish(game).finish(GameOverReason.WON);
+            }
+         
     }
 
 }
