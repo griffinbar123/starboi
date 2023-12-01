@@ -11,10 +11,14 @@ import java.io.Console;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
+
+import Model.Enterprise;
 import Model.Game;
+import Model.Shield;
 
 public class CommandHandlerTest {
     private Game game;
+    private Enterprise enterprise;
     private CommandHandler handler;
     private SrScan srScan;
     private LrScan lrScan;
@@ -35,6 +39,7 @@ public class CommandHandlerTest {
     public void setUp() {
         game = mock(Game.class);
         game.con = mock(Console.class);
+        enterprise = mock(Enterprise.class);
         srScan = mock(SrScan.class);
         lrScan = mock(LrScan.class);
         status = mock(Status.class);
@@ -52,6 +57,9 @@ public class CommandHandlerTest {
 
         handler = new CommandHandler(game, srScan, lrScan, status, computer,
                 chart, freeze, help, damages, move, photon, score, dock, rest, attack);
+
+        when(game.getEnterprise()).thenReturn(enterprise);
+        when(game.getEnterprise().getSheilds()).thenReturn(new Shield());
     }
 
     @Test

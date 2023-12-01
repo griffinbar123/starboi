@@ -538,6 +538,7 @@ public class CommandTest {
         shields.setStatus(Model.ShieldStatus.UP);
         shields.setLevel(1.0);
         shields.setMaxLevel(1.0);
+        shields.setShieldIsChanging(false);
         when(enterprise.getSheilds()).thenReturn(shields);
         when(game.getEnterprise().getDeviceDamage()).thenReturn(dmg);
     }
