@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import Model.Coordinate;
 import Model.Entity;
 import Model.EntityType;
-import Model.Position;
 
 public class Utils {
     /**

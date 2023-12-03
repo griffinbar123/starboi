@@ -25,8 +25,6 @@ import static Utils.Utils.parseDoubles;
 public class Computer {
     @NonNull
     private Game game;
-    public double aaitem = 0.5; //TODO: figure out what this is in original
-
 
     /**
      * COMPUTER command implementation
@@ -42,8 +40,6 @@ public class Computer {
         Position pos = this.game.getEnterprise().getPosition();
         Position curPosition = new Position(new Coordinate(pos.getQuadrant().getY()+1, pos.getQuadrant().getX()+1),
                 new Coordinate(pos.getSector().getY()+1, pos.getSector().getX()+1));
-
-        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.COMPUTER, 1.0); // TODO: testing damaged computer
 
         if (game.getEnterprise().getDeviceDamage().get(Device.COMPUTER) > 0) {
             this.game.con.printf("COMPUTER DAMAGED, USE A POCKET CALCULATOR.\n\n");

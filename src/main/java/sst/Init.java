@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import Model.BlackHole;
 import Model.Coordinate;
 import Model.Device;
@@ -47,17 +46,16 @@ public class Init {
         CommandHandler handler = new CommandHandler(this.game);
         double starDate;
 
-        // TODO: for testing so we don't have to type in the same thing every time
         // game.setType(getGameParam(GameType.class));
-        // game.setLength(getGameParam(GameLength.class));
-        // game.setSkill(getGameParam(GameLevel.class));
+        game.setLength(getGameParam(GameLength.class));
+        game.setSkill(getGameParam(GameLevel.class));
         game.setType(GameType.REGULAR);
-        game.setLength(GameLength.SHORT);
-        game.setSkill(GameLevel.NOVICE);
+        // game.setLength(GameLength.SHORT);
+        // game.setSkill(GameLevel.NOVICE);
 
         // TODO
-        System.out.print("Please type in a secret password (9 characters maximum)-");
-        System.out.println("changeit");
+        // System.out.print("Please type in a secret password (9 characters maximum)-");
+        // System.out.println("changeit");
 
         game.setDamageFactor(game.getSkill().getSkillValue() * 0.5);
 
@@ -252,11 +250,6 @@ public class Init {
     }
 
     private void initializeStarbases() {
-        // TODO: From the original game
-        // Improved placement algorithm to spread out bases
-        // double distq = square(ix-d.baseqx[j]) + square(iy-d.baseqy[j]);
-        // if (distq < 6.0*(6-inbase) && Rand() < 0.75) {
-        // 	contflag = TRUE;
         int numberOfStarbases = 3*((int) randDouble(0, 1))+2;
         Position pos;
         Starbase starBases[] = new Starbase[numberOfStarbases];

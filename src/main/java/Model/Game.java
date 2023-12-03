@@ -459,25 +459,17 @@ public class Game {
             if(skill.getSkillValue() > GameLevel.FAIR.getSkillValue())
                 con.printf("[ANNOUNCEMENT ARRIVING...]\n");
             else 
-                con.printf("[IMPORTANT ANNOUNCEMENT ARRIVING -- HIT SPACE BAR TO CONTINUE]");
-            getEnter();
+                con.readLine("[IMPORTANT ANNOUNCEMENT ARRIVING -- HIT ENTER TO CONTINUE]");
         } else {
             if (skill.getSkillValue() > GameLevel.FAIR.getSkillValue())
                 con.printf("[CONTINUE?]\n");
             else
-                con.printf("[HIT ENTER BAR TO CONTINUE]");
-            getEnter();
+                con.readLine("[HIT ENTER TO CONTINUE]");
             con.printf("\r                           \r");
         }
         if (i != 0) {
             clearScreen();
         }
-    }
-
-    @JsonIgnore
-    public void getEnter(){
-        // TODO: actually get input without enter key press
-        con.readLine("");
     }
 
     @JsonIgnore

@@ -11,7 +11,6 @@ import Model.ShieldStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import sst.Finish.GameOverReason;
-
 import static Utils.Utils.randDouble;
 import static Utils.Utils.randInt;
 

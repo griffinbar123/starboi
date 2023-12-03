@@ -1,20 +1,13 @@
 package sst;
 
-import static Utils.Utils.*;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import Model.Device;
 import Model.Enterprise;
-import Model.Entity;
-import Model.EntityType;
 import Model.Game;
-import Model.ShieldStatus;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import sst.Finish.GameOverReason;
 
 /**
  * implements the damages command and functionality

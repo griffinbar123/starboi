@@ -27,9 +27,6 @@ public class LrScan {
         int column = enterprise.getPosition().getQuadrant().getX();
         String out = "";
 
-        // game.getEnterprise().getDeviceDamage().put(Enterprise.Device.LR_SENSORS,
-        // 1.0); // TODO: testing damaged sensors
-
         if (game.getEnterprise().getDeviceDamage().get(Device.LR_SENSORS) > 0 &&
                 game.getEnterprise().getCondition() != Condition.DOCKED) {
             this.game.con.printf("LONG-RANGE SENSORS DAMAGED.\n\n");
