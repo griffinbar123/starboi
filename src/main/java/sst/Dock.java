@@ -1,5 +1,7 @@
 package sst;
 
+import java.util.Arrays;
+
 import Model.Condition;
 import Model.EntityType;
 import Model.Game;
@@ -46,16 +48,7 @@ public class Dock {
      */
     private boolean isAdjacentStarbase() {
         Position ncc = game.getEnterprise().getPosition();
-        if (game.checkPositionForEntity(ncc.getTopRightPosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getTopMiddlePosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getTopLeftPosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getMiddleRightPosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getMiddleLeftPosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getBotRightPosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getBotMiddlePosition(), EntityType.STARBASE) ||
-                game.checkPositionForEntity(ncc.getBotLeftPosition(), EntityType.STARBASE)) {
-            return true;
-        }
-        return false;
+        return Arrays.stream(ncc.getAdjecentPositions())
+                .anyMatch(p -> game.checkPositionForEntity(p, EntityType.STARBASE));
     }
 }
