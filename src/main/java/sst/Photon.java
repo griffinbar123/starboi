@@ -108,7 +108,7 @@ public class Photon {
         if(sects.size() == 2) // all torpodoes have same destination
             courses.add(getInitialCourse(sects.get(0), sects.get(1)));   
          else  // all destinations were passed in
-            for(int i = 0; i < numOfTorpedoesToFire; i+=2)
+            for(int i = 0; i < sects.size(); i+=2)
                 courses.add(getInitialCourse(sects.get(i), sects.get(i+1)));
         
         return courses;
