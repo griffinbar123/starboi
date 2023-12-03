@@ -2,7 +2,6 @@ package sst;
 
 import static Utils.Utils.parseDoubles;
 import static Utils.Utils.readCommands;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import Model.Game;
@@ -24,7 +23,7 @@ public class Rest {
      * @param params
      */
     public void ExecREST(List<String> params) {
-        List<Double> iParams = new ArrayList<Double>();
+        List<Double>iParams;
         Double dur = null;
         if (params.size() == 0) {
             game.con.printf("How long? ");
@@ -36,14 +35,13 @@ public class Rest {
             }
         }
 
-        iParams = parseDoubles(params);
-        if (iParams.size() == 0) {
+        iParams = parseDoubles(params).orElse(null);
+        if (iParams == null) {
             game.begPardon();
             return;
         }
 
         dur = sure(iParams.get(0));
-
         game.passTime(dur);
     }
 

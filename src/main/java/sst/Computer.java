@@ -157,6 +157,7 @@ public class Computer {
      * @author Matthias Schrock
      */
     private Optional<Double> readTime() {
+        List<Double> params;
         String cmd = "";
 
         cmd = this.game.con.readLine("Time or arrival date? ").toUpperCase();
@@ -164,7 +165,8 @@ public class Computer {
             return Optional.empty();
         }
 
-        return Optional.of(!parseDoubles(cmd).isEmpty() ? parseDoubles(cmd).get(0) : null);
+        params = parseDoubles(cmd).orElse(null);
+        return Optional.of(params != null ? params.get(0) : null);
     }
 
     /**
@@ -175,6 +177,7 @@ public class Computer {
      * @author Matthias Schrock
      */
      private Optional<Double> readWarpFactor(Boolean prompt) {
+        List<Double> params;
         Double fact;
         String cmd = "";
 
@@ -184,7 +187,8 @@ public class Computer {
             return Optional.empty();
         }
 
-        fact = !parseDoubles(cmd).isEmpty() ? parseDoubles(cmd).get(0) : null;
+        params = parseDoubles(cmd).orElse(null);
+        fact = params != null ? params.get(0) : null;
 
 
         if (fact >= 1.0 && fact <= 10.0) {
@@ -210,9 +214,13 @@ public class Computer {
             cmdStr = this.game.con.readLine("Destination quadrant and/or sector? ");
             cmd = readCommands(cmdStr).orElse(null);
 
-            cord = parseIntegers(cmd);
+            cord = parseIntegers(cmd).orElse(null);
         } else {
-            cord = parseIntegers(params);
+            cord = parseIntegers(params).orElse(null);
+        }
+
+        if (cord == null) {
+            return Optional.empty();
         }
 
         switch (cord.size()) {

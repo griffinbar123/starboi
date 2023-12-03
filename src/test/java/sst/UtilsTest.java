@@ -1,6 +1,7 @@
 package sst;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,12 +14,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import Model.Coordinate;
 import Model.Enterprise;
 import Model.Entity;
+import Model.EntityType;
 import Model.Game;
 import Model.Klingon;
 import Model.KlingonCommander;
 import Model.Planet;
 import Model.Position;
 import Utils.Utils;
+import static Utils.Utils.roundN;
 
 public class UtilsTest {
     private Game game;
@@ -47,6 +50,14 @@ public class UtilsTest {
             assertTrue(randomVal <= 10);
             randomVal = Utils.randDouble(0, 10);
         }
+    }
+
+    @Test
+    public void roundFunctionShouldWorkAsExpected() {
+        Double pi = 3.141592653589793238;
+        assertEquals(roundN(pi, 3), 3.142, 0.001);
+        assertEquals(roundN(pi, 4), 3.1416, 0.0001);
+        assertEquals(roundN(pi, 5), 3.14159, 0.00001);
     }
     
     // @Test
@@ -93,20 +104,20 @@ public class UtilsTest {
     }
 
     @Test
-    public void readCommandsShouldReturnEmptyOptionalForEmptyString() {
+    public void readCommandsShouldReturnEmptyOptionalForBadCharacters() {
         Optional<List<String>> result = Utils.readCommands("");
         assertTrue(result.isEmpty());
-    }
 
-    @Test
-    public void readCommandsShouldReturnEmptyOptionalForWhitespaceString() {
-        Optional<List<String>> result = Utils.readCommands("   ");
+        result = Utils.readCommands("   ");
         assertTrue(result.isEmpty());
-    }
 
-    @Test
-    public void readCommandsShouldReturnEmptyOptionalForPunctuationString() {
-        Optional<List<String>> result = Utils.readCommands(".,;:");
+        result = Utils.readCommands("\n");
+        assertTrue(result.isEmpty());
+
+        result = Utils.readCommands(",;:");
+        assertTrue(result.isEmpty());
+
+        result = Utils.readCommands(". ,;\n:");
         assertTrue(result.get().size() == 1);
     }
 
@@ -119,84 +130,55 @@ public class UtilsTest {
     }
 
     @Test
-    public void parseIntegersShouldReturnEmptyOptionalForEmptyString() {
-        List<Integer> result = Utils.parseIntegers("");
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void parseIntegersShouldReturnEmptyOptionalForWhitespaceString() {
-        List<Integer> result = Utils.parseIntegers("   ");
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void parseIntegersShouldReturnEmptyOptionalForNonIntegerString() {
-        List<Integer> result = Utils.parseIntegers("abc");
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void parseIntegersShouldReturnListOfIntegers() {
-        List<Integer> result = Utils.parseIntegers("1 2 3 abc");
-        assertTrue(!result.isEmpty());
-        List<Integer> expected = List.of(1, 2, 3);
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void parseIntegersShouldHandleNegatives() {
-        List<Integer> result = Utils.parseIntegers("1 1.0 -2 3 abc");
-        assertTrue(!result.isEmpty());
-        List<Integer> expected = List.of(1, 1, -2, 3);
-        assertEquals(expected, result);
-    }
-
-    @Test
     public void parseDoublesShouldReturnEmptyOptionalForEmptyString() {
-        List<Double> result = Utils.parseDoubles("");
+        Optional<List<Double>> result = Utils.parseDoubles((String) null);
+        assertTrue(result.isEmpty());
+        
+        result = Utils.parseDoubles("");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnEmptyOptionalForWhitespaceString() {
-        List<Double> result = Utils.parseDoubles("   ");
+        Optional<List<Double>> result = Utils.parseDoubles("   ");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnEmptyOptionalForNonDoubleString() {
-        List<Double> result = Utils.parseDoubles("abc");
+        Optional<List<Double>> result = Utils.parseDoubles("abc");
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void parseDoublesShouldReturnListOfDoubles() {
-        List<Double> result = Utils.parseDoubles("1 2.5 3.7 abc");
-        assertTrue(!result.isEmpty());
+        List<Double> result = Utils.parseDoubles("1 2.5 3.7 abc").orElse(null);
+        assertTrue(result != null);
         List<Double> expected = List.of(1.0, 2.5, 3.7);
         assertEquals(expected, result);
     }
 
     @Test
     public void parseDoublesShouldHandleNegatives() {
-        List<Double> result = Utils.parseDoubles("1.0 -2.5 -3 3.7 abc");
-        assertTrue(!result.isEmpty());
+        List<Double> result = Utils.parseDoubles("1.0 -2.5 -3 3.7 abc").orElse(null);
+        assertTrue(result != null);
         List<Double> expected = List.of(1.0, -2.5, -3.0, 3.7);
         assertEquals(expected, result);
     }
 
     @Test
     public void parseIntegersListShouldReturnEmptyListForNoIntegers() {
+        List<Integer> result = Utils.parseIntegers(null).orElse(null);
+        assertTrue(result == null);
+        
         List<String> params = List.of("abc", "def", "ghi");
-        List<Integer> result = Utils.parseIntegers(params);
-        assertTrue(result.isEmpty());
+        result = Utils.parseIntegers(params).orElse(null);
     }
 
     @Test
     public void parseIntegersListShouldReturnListOfIntegers() {
         List<String> params = List.of("1", "2", "3", "abc");
-        List<Integer> result = Utils.parseIntegers(params);
+        List<Integer> result = Utils.parseIntegers(params).orElse(null);
         List<Integer> expected = List.of(1, 2, 3);
         assertEquals(expected, result);
     }
@@ -204,22 +186,25 @@ public class UtilsTest {
     @Test
     public void parseIntegersListShouldHandleNegatives() {
         List<String> params = List.of("1", "-2", "3", "abc");
-        List<Integer> result = Utils.parseIntegers(params);
+        List<Integer> result = Utils.parseIntegers(params).orElse(null);
         List<Integer> expected = List.of(1, -2, 3);
         assertEquals(expected, result);
     }
 
     @Test
     public void parseDoublesListShouldReturnEmptyListForNoDoubles() {
-        List<String> params = List.of("abc", "def", "ghi");
-        List<Double> result = Utils.parseDoubles(params);
-        assertTrue(result.isEmpty());
+        List<String> params = null;
+        List<Double> result = Utils.parseDoubles(params).orElse(null);
+        assertTrue(result == null);
+        params = List.of("abc", "def", "ghi");
+        result = Utils.parseDoubles(params).orElse(null);
+        assertTrue(result == null);
     }
 
     @Test
     public void parseDoublesListShouldReturnListOfDoubles() {
         List<String> params = List.of("1.0", "2.5", "3.7", "abc");
-        List<Double> result = Utils.parseDoubles(params);
+        List<Double> result = Utils.parseDoubles(params).orElse(null);
         List<Double> expected = List.of(1.0, 2.5, 3.7);
         assertEquals(expected, result);
     }
@@ -227,8 +212,50 @@ public class UtilsTest {
     @Test
     public void parseDoublesListShouldHandleNegatives() {
         List<String> params = List.of("1.0", "-2.5", "-3", "3.7", "abc");
-        List<Double> result = Utils.parseDoubles(params);
+        List<Double> result = Utils.parseDoubles(params).orElse(null);
         List<Double> expected = List.of(1.0, -2.5, -3.0, 3.7);
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void checkEntityAgainstQuadrantShouldWorkAsExpected() {
+        Coordinate quad = new Coordinate(1, 1);
+        assertFalse(Utils.checkEntityAgainstQuadrant(quad, null));
+        
+        Klingon klingon = new Klingon(new Position(1, 1, 1, 1));
+        assertTrue(Utils.checkEntityAgainstQuadrant(quad, klingon));
+
+        klingon.setPosition(new Position(2, 1, 1, 1));
+        assertFalse(Utils.checkEntityAgainstQuadrant(quad, klingon));
+
+        klingon.setPosition(new Position(1, 2, 1, 1));
+        assertFalse(Utils.checkEntityAgainstQuadrant(quad, klingon));
+
+        klingon.setPosition(new Position(2, 2, 1, 1));
+        assertFalse(Utils.checkEntityAgainstQuadrant(quad, klingon));
+    }
+
+    @Test
+    public void testOutputEntityWithEntityType() {
+        Integer iy = 1;
+        Integer ix = 2;
+        EntityType type = EntityType.PLANET;
+
+        String expected = "***Planet at 1 - 2";
+        String actual = Utils.outputEntity(iy, ix, type);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testOutputEntityWithChar() {
+        Integer iy = 1;
+        Integer ix = 2;
+        char symbol = 'E';
+
+        String expected = "***E at 1 - 2";
+        String actual = Utils.outputEntity(iy, ix, symbol);
+
+        assertEquals(expected, actual);
     }
 }
