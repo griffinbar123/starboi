@@ -15,7 +15,6 @@ import static Utils.Utils.randDouble;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;
 import static Utils.Utils.roundN;
-import static Utils.Utils.positionsHaveSameQuadrant;
 
 
 /**
@@ -484,28 +483,28 @@ public class Game {
     @JsonIgnore
     public Boolean checkIfCommanderInCurrentQuadrant(){
         for(KlingonCommander c: klingonCommanders)
-            if(c != null && positionsHaveSameQuadrant(c.getPosition(), enterprise.getPosition())) return true;
+            if(c != null && c.getPosition().isEqualQuadrant(enterprise.getPosition())) return true;
         return false;
     }
 
     @JsonIgnore
     public Boolean checkIfSuperInCurrentQuadrant(){
-        return (klingonSuperCommander != null && positionsHaveSameQuadrant(klingonSuperCommander.getPosition(), enterprise.getPosition()));
+        return (klingonSuperCommander != null && klingonSuperCommander.getPosition().isEqualQuadrant(enterprise.getPosition()));
     }
 
     @JsonIgnore
     public List<Enemy> getEnemiesInQuadrant(){
         List<Enemy> totalEnemies = new ArrayList<Enemy>();
         for(Klingon k: klingons) 
-            if(k!= null && positionsHaveSameQuadrant(k.getPosition(), enterprise.getPosition()))
+            if(k!= null && k.getPosition().isEqualQuadrant(enterprise.getPosition()))
                 totalEnemies.add(k);
         for(KlingonCommander c: klingonCommanders) 
-            if(c!= null && positionsHaveSameQuadrant(c.getPosition(), enterprise.getPosition()))
+            if(c!= null && c.getPosition().isEqualQuadrant(enterprise.getPosition()))
                totalEnemies.add(c);
         for(Romulan r: romulans) 
-            if(r!= null && positionsHaveSameQuadrant(r.getPosition(), enterprise.getPosition()))
+            if(r!= null && r.getPosition().isEqualQuadrant(enterprise.getPosition()))
                 totalEnemies.add(r);
-        if(klingonSuperCommander!= null && positionsHaveSameQuadrant(klingonSuperCommander.getPosition(), enterprise.getPosition()))
+        if(klingonSuperCommander!= null && klingonSuperCommander.getPosition().isEqualQuadrant(enterprise.getPosition()))
             totalEnemies.add(klingonSuperCommander);
 
         return totalEnemies;
@@ -542,7 +541,7 @@ public class Game {
             }
         }
         for(int i = 0; i < positions.length; i++) {
-            if(!positionsHaveSameQuadrant(positions[i], star.getPosition())) {
+            if(!positions[i].isEqualQuadrant(star.getPosition())) {
                 continue;
             }
             EntityType entityType = getEntityTypeAtPosition(positions[i]);
