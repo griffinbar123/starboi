@@ -1,7 +1,7 @@
 package sst;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import Model.Coordinate;
 import Model.EntityType;
 import Model.Game;
@@ -9,12 +9,9 @@ import Model.Position;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import sst.Finish.GameOverReason;
-
 import static Utils.Utils.readCommands;
 import static Utils.Utils.parseIntegers;
-import static Utils.Utils.isEqual;
 import static Utils.Utils.parseDoubles;
-import static Utils.Utils.positionsHaveSameQuadrant;
 
 /**
  * Handles the move command
@@ -72,7 +69,7 @@ public class Move {
             params = readCommands(displacements).orElse(null);
         }
 
-        List<Integer> offsets = parseIntegers(params);
+        List<Integer> offsets = parseIntegers(params).orElse(new ArrayList<Integer>());
 
         if ((offsets.size() != 2 && offsets.size() != 4) ||
                 (offsets.size() == 2
@@ -110,7 +107,7 @@ public class Move {
             params = readCommands(displacements).orElse(null);
         }
 
-        List<Double> offsets = parseDoubles(params);
+        List<Double> offsets = parseDoubles(params).orElse(new ArrayList<Double>());
         if (offsets.size() == 0) {
             this.game.begPardon();
             return;
@@ -143,7 +140,7 @@ public class Move {
 
         if(movedPos == null)
             return;
-        if(!positionsHaveSameQuadrant(this.game.getEnterprise().getPosition(), movedPos)) {
+        if(!this.game.getEnterprise().getPosition().isEqualQuadrant(movedPos)) {
             new Attack(game).klingonAttack(0);
             this.game.con.printf("\nEntering %d - %d\n", movedPos.getQuadrant().getY()+1, movedPos.getQuadrant().getX()+1);
             game.setJustEnteredQuadrant(true);
@@ -171,7 +168,7 @@ public class Move {
             return curPos;
         }
 
-        if(!positionsHaveSameQuadrant(curPos, nextPos)){
+        if(!curPos.isEqualQuadrant(nextPos)){
             game.randomizeQuadrant(nq);
         }
 
@@ -204,7 +201,7 @@ public class Move {
                 }
                 return curPos;
         }
-        if (isEqual(destPos, nextPos)) {
+        if (destPos.isEqual(nextPos)) {
             return nextPos;
         }
         return moveToPosition(nextPos, destPos);

@@ -83,40 +83,21 @@ public class Utils {
     }
 
     /**
-     * Parse Integers from string
-     * 
-     * @param str input string
-     * @return list of Integers in user command
-     * @author Matthias Schrock
-     */
-    public static List<Integer> parseIntegers(String str) {
-        if(str == null)
-            return new ArrayList<Integer>();
-        List<Integer> integers = new ArrayList<Integer>(
-                Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
-                        .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
-                        .map(Double::valueOf)
-                        .map(Double::intValue)
-                        .toList());
-        return integers;
-    }
-
-    /**
      * Parse Doubles from string
      * 
      * @param str input string
      * @return list of Doubles in the input string
      * @author Matthias Schrock
      */
-    public static List<Double> parseDoubles(String str) {
+    public static Optional<List<Double>> parseDoubles(String str) {
         if(str == null)
-            return new ArrayList<Double>();
+            return Optional.empty();
         List<Double> doubles = new ArrayList<Double>(
                 Stream.of(str.split("[\\s\\p{Punct}&&[^\\.]&&[^\\-]]"))
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .toList());
-        return doubles;
+        return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
     }
 
     /**
@@ -126,15 +107,16 @@ public class Utils {
      * @return list of Integers in original String list
      * @author Matthias Schrock
      */
-    public static List<Integer> parseIntegers(List<String> params) {
+    public static Optional<List<Integer>> parseIntegers(List<String> params) {
         if(params == null)
-            return new ArrayList<Integer>();
-        return new ArrayList<Integer>(
+            return Optional.empty();
+        List<Integer> integers = new ArrayList<Integer>(
                 params.stream()
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .map(Double::intValue)
                         .toList());
+        return (integers.size() > 0 ? Optional.ofNullable(integers) : Optional.empty());
     }
 
     /**
@@ -144,14 +126,15 @@ public class Utils {
      * @return list of Doubles in original String list
      * @author Matthias Schrock
      */
-    public static List<Double> parseDoubles(List<String> params) {
+    public static Optional<List<Double>> parseDoubles(List<String> params) {
         if(params == null)
-            return new ArrayList<Double>();
-        return new ArrayList<Double>(
+            return Optional.empty();
+        List<Double> doubles = new ArrayList<Double>(
                 params.stream()
                         .filter(s -> s.matches("\\-?\\d+\\.?\\d*"))
                         .map(Double::valueOf)
                         .toList());
+        return (doubles.size() > 0 ? Optional.ofNullable(doubles) : Optional.empty());
     }
 
     /**
@@ -170,37 +153,15 @@ public class Utils {
 
     /**
      * 
-     * @param pos1 first position to be compared
-     * @param pos2 second position to be compared
-     * @return a boolean inticating wether two positions are equal
-     */
-    public static boolean isEqual(Position pos1, Position pos2) {
-        return pos1.getQuadrant().getX() == pos2.getQuadrant().getX() && pos1.getQuadrant().getY() == pos2.getQuadrant().getY()
-        && pos1.getSector().getX() == pos2.getSector().getX() && pos1.getSector().getY() == pos2.getSector().getY();
-    }
-
-    /**
-     * 
      * @param quad quadrant to be compared
      * @param entity entity to be compared
      * @return a boolean inticating wether a quad on a map contains the symbol of an entity
      */
     public static Boolean checkEntityAgainstQuadrant(Coordinate quad, Entity entity) {
-        // checks if entity is in a position, used mainly if map may not be updated
-        return entity != null && entity.getPosition().getQuadrant().getX() == quad.getX()
+        if (entity == null)
+            return false;
+        return entity.getPosition().getQuadrant().getX() == quad.getX()
                 && entity.getPosition().getQuadrant().getY() == quad.getY();
-    }
-
-    /**
-     * 
-     * @param pos1 pos1 to be compared
-     * @param pos2 pos2 to be compared
-     * @return a boolean inticating wether 2 positions are in the same Quadrant
-     */
-    public static Boolean positionsHaveSameQuadrant(Position position, Position position2) {
-        // checks if any entity in the list provided is is in the provided position
-        return position.getQuadrant().getX() == position2.getQuadrant().getX()
-                && position.getQuadrant().getY() == position2.getQuadrant().getY();
     }
 
     public static String outputEntity(Integer iy, Integer ix, EntityType type) {

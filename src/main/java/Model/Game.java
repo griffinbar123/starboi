@@ -11,7 +11,6 @@ import sst.Damages;
 import sst.Finish;
 import sst.Move;
 import sst.Finish.GameOverReason;
-import static Utils.Utils.isEqual;
 import static Utils.Utils.randDouble;
 import static Utils.Utils.outputEntity;
 import static Utils.Utils.randInt;
@@ -391,14 +390,14 @@ public class Game {
             case STARBASE:
                 con.printf("***STARBASE DESTROYED..\n");
                 for(int i=0; i < starbases.length; i++)
-                    if(starbases[i] != null && isEqual(starbases[i].getPosition(), pos)){
+                    if(starbases[i] != null && starbases[i].getPosition().isEqual(pos)){
                         starbases[i] = null;
                         break;
                     }
             case PLANET:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < planets.length; i++)
-                    if(planets[i] != null && isEqual(planets[i].getPosition(), pos)){
+                    if(planets[i] != null && planets[i].getPosition().isEqual(pos)){
                         planets[i] = null;
                         destroyedPlanets += 1;
                         break;
@@ -407,7 +406,7 @@ public class Game {
             case KLINGON:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < klingons.length; i++)
-                    if(klingons[i] != null && isEqual(klingons[i].getPosition(), pos)) {
+                    if(klingons[i] != null && klingons[i].getPosition().isEqual(pos)) {
                         klingons[i] = null;
                         klingonsKilled += 1;
                     }
@@ -415,7 +414,7 @@ public class Game {
             case COMMANDER:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < klingonCommanders.length; i++)
-                    if(klingonCommanders[i] != null && isEqual(klingonCommanders[i].getPosition(), pos)){
+                    if(klingonCommanders[i] != null && klingonCommanders[i].getPosition().isEqual(pos)){
                         klingonCommanders[i] = null;
                         commandersKilled += 1;
                     }
@@ -423,7 +422,7 @@ public class Game {
             case ROMULAN:
                 con.printf("%s destroyed.\n", outputEntity(pos.getSector().getY()+1, pos.getSector().getX()+1, entityType));
                 for(int i=0; i < romulans.length; i++)
-                    if(romulans[i] != null && isEqual(romulans[i].getPosition(), pos)) {
+                    if(romulans[i] != null && romulans[i].getPosition().isEqual(pos)) {
                         romulans[i] = null;
                         romulansKilled += 1;
                     }
@@ -538,7 +537,7 @@ public class Game {
 
         Position[] positions = star.getPosition().getAdjecentPositions();
         for(int i = 0; i < stars.length; i++) {
-            if(stars[i] != null && isEqual(stars[i].getPosition(), star.getPosition())){
+            if(stars[i] != null && stars[i].getPosition().isEqual(star.getPosition())){
                 stars[i] = null;
             }
         }

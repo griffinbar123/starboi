@@ -24,6 +24,25 @@ public class Position {
     private Coordinate quadrant;
     private Coordinate sector;
 
+    /**
+     * 
+     * @param pos 
+     * @return a boolean inticating wether 2 positions are the same
+     */
+    public boolean isEqual(Position pos) {
+        return (this.quadrant.isEqual(pos.getQuadrant()) && this.sector.isEqual(pos.getSector()));
+    }
+
+    /**
+     * 
+     * @param pos
+     * @return a boolean inticating wether 2 positions are in the same Quadrant
+     */
+    public boolean isEqualQuadrant(Position pos) {
+        return this.quadrant.getX() == pos.getQuadrant().getX()
+                && this.quadrant.getY() == pos.getQuadrant().getY();
+    }
+
     public int getXAsInt() {
         return (quadrant.getX() * 10) + sector.getX();
     }

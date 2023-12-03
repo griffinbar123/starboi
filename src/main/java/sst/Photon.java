@@ -10,7 +10,6 @@ import Model.Entity;
 import Model.EntityType;
 import Model.Game;
 import Model.Position;
-import Model.BlackHole;
 import Model.Condition;
 import Model.ShieldStatus;
 import lombok.NonNull;
@@ -68,7 +67,7 @@ public class Photon {
     }
 
     private List<Double> getSectors(Integer numOfTorpedoesToFire, List<String> params){
-        List<Double> sects = parseDoubles(params);
+        List<Double> sects = parseDoubles(params).orElse(new ArrayList<Double>());
         List<Double> finalSectors = new ArrayList<Double>();
         // check if params have bad input
         if(params.size() != sects.size() || params.size() % 2 != 0) {
@@ -79,7 +78,10 @@ public class Photon {
         if(sects.isEmpty()) { //prompt for each destiniation
             for(int i = 0; i < numOfTorpedoesToFire; i++){
                 String sectStr = game.con.readLine("Target sector for torpedo number %d- ", i+1);
-                List<Double> sect = parseDoubles(sectStr);
+                List<Double> sect = parseDoubles(sectStr).orElse(new ArrayList<Double>());
+                if(sect.size() != 2) {
+                    return null;
+                }
                 finalSectors.add(sect.get(0));
                 finalSectors.add(sect.get(1));
             }
@@ -115,19 +117,18 @@ public class Photon {
     }
 
     private Integer getNumberOfTorpedoesToFire(List<String> params){
+         List<Integer> numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
 
-         List<Integer> numOfTorpedoesList = parseIntegers(params);
-
-        if(params != null && numOfTorpedoesList.size() != params.size()) {
+        if(numOfTorpedoesList.size() != params.size()) {
             this.game.begPardon();
             return null;
         }
 
-        if(params == null || numOfTorpedoesList.isEmpty()) {
+        if(numOfTorpedoesList.isEmpty()) {
             this.game.con.printf("%d torpedoes left.\n", this.game.getEnterprise().getTorpedoes());
             String torpsStr = this.game.con.readLine("Number of torpedoes to fire- ");
             params = readCommands(torpsStr).orElse(null);
-            numOfTorpedoesList = parseIntegers(params);
+            numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
             if(params  == null || params.size() == 0){
                 return getNumberOfTorpedoesToFire(null);
             } else if(params.size() != 1 && numOfTorpedoesList.isEmpty()) {

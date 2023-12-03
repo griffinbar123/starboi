@@ -48,6 +48,26 @@ public class ModelTest {
     }
 
     @Test
+    public void positionEqualityShouldBehaveAsExpected() {
+        Position position1 = new Position(1, 1, 1, 1);
+        Position position2 = new Position(1, 1, 1, 1);
+        assert(position1.isEqual(position2));
+
+        position2 = new Position(1, 1, 1, 2);
+        assert(!position1.isEqual(position2));
+    }
+
+    @Test
+    public void positionQuadrantEqualityShouldBehaveAsExpected() {
+        Position position1 = new Position(1, 1, 1, 1);
+        Position position2 = new Position(1, 1, 5, 5);
+        assert(position1.isEqualQuadrant(position2));
+
+        position2 = new Position(1, 2, 1, 1);
+        assert(!position1.isEqualQuadrant(position2));
+    }
+
+    @Test
     public void positionAdjacencyShouldWorkAsExpected() {
         Position position = new Position(1, 1, 5, 5);
 
