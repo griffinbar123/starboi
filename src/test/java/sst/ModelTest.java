@@ -1,16 +1,35 @@
 package sst;
 
 import static org.junit.Assert.assertEquals;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Before;
 import org.junit.Test;
-
+import Model.Condition;
 import Model.Coordinate;
+import Model.Device;
 import Model.Enterprise;
 import Model.Entity;
 import Model.EntityType;
+import Model.Game;
 import Model.Position;
 
 public class ModelTest {
+    private Game game;;
+
+    @Before
+    public void setUp() {
+        this.game = new Game();
+        Enterprise enterprise = new Enterprise(new Position(1, 1, 1, 1));
+        Map<Device, Double> deviceDamage = new HashMap<Device, Double>();
+        for (Device device : Device.values()) {
+            deviceDamage.put(device, 0.0);
+        }
+        enterprise.setDeviceDamage(deviceDamage);
+        enterprise.setCondition(Condition.GREEN);
+        this.game.setEnterprise(enterprise);
+    }
+
     @Test
     public void getEntitySymbolShouldReturnCorrectSymbol() {
         Entity entity = null;
@@ -105,5 +124,29 @@ public class ModelTest {
         Enterprise enterprise = new Enterprise(position);
         assertEquals(enterprise.getType(), EntityType.ENTERPRISE);
         assertEquals(enterprise.getPosition(), position);
+    }
+
+    @Test
+    public void passTimeShouldPassStardate() {
+        game.setTime(7);
+        game.setStarDate(3000);
+        game.passTime(1.0);
+        assert(game.getStarDate() == 3001.0);
+        assert(game.getTime() == 6);
+    }
+
+    @Test
+    public void passTimeShouldPerformInFlightRepairs() {
+        // TODO
+    }
+
+    @Test
+    public void passTimeShouldPeformDockedFlightRepairs() {
+        // TODO
+    }
+
+    @Test
+    public void refreshConditionShouldWorkAsExpected() {
+        // TODO
     }
 }

@@ -93,8 +93,8 @@ public class Game {
         // TODO: are there any other things that happen as time passes?
 
         // Passage of time
-        this.time += time;
-        this.starDate -= time;
+        this.time -= time;
+        this.starDate += time;
     }
 
     /**
