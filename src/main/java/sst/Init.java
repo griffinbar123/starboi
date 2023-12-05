@@ -321,8 +321,8 @@ public class Init {
         Coordinate quadrant = new Coordinate(Utils.randInt(0, 7), (Utils.randInt(0, 7)));
         Coordinate sector = new Coordinate(Utils.randInt(0, 9), (Utils.randInt(0, 9)));
         Position position = new Position(quadrant, sector);
-        while (!game.isPositionEmpty(position) && entities != null
-                || getNumberOfEntiesBeforeMapUpdate(entities, position) > maxElementsInQuadrant) {
+        while (entities != null && (!game.isPositionEmpty(position)
+                || getNumberOfEntiesBeforeMapUpdate(entities, position) > maxElementsInQuadrant)) {
             position = generateNewPosition(maxElementsInQuadrant, entities);
         }
         return position;
@@ -334,8 +334,7 @@ public class Init {
         // sure a quadrant doesn't get too many of an entity type
         int numberOfElements = 0;
         for (int i = 0; i < entities.length; i++) {
-            if (entities[i] != null && entities[i].getPosition().getQuadrant().getX() == position.getQuadrant().getX()
-                    && entities[i].getPosition().getQuadrant().getY() == position.getQuadrant().getY()) {
+            if (entities[i] != null && entities[i].getPosition().isEqualQuadrant(position)) {
                 numberOfElements += 1;
             }
         }

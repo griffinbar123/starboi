@@ -66,7 +66,7 @@ public class Photon {
         fireTorpedos(numOfTorpedoesToFire, courses);
     }
 
-    private List<Double> getSectors(Integer numOfTorpedoesToFire, List<String> params){
+    public List<Double> getSectors(Integer numOfTorpedoesToFire, List<String> params){
         List<Double> sects = parseDoubles(params).orElse(new ArrayList<Double>());
         List<Double> finalSectors = new ArrayList<Double>();
         // check if params have bad input
@@ -88,12 +88,12 @@ public class Photon {
             return finalSectors;
         } else if(sects.size() == 2){ // all torpodoes have same destination
             for(int i = 0; i < numOfTorpedoesToFire; i++) {
-                finalSectors.add(sects.get(i));
-                finalSectors.add(sects.get(i+1));
+                finalSectors.add(sects.get(0));
+                finalSectors.add(sects.get(1));
             }
             return finalSectors;
         } else if (sects.size() / 2 == numOfTorpedoesToFire) { // all destinations were passed in
-            for(int i = 0; i < numOfTorpedoesToFire; i+=2) {
+            for(int i = 0; i < sects.size(); i+=2) {
                 finalSectors.add(sects.get(i));
                 finalSectors.add(sects.get(i+1));
             }
@@ -107,20 +107,16 @@ public class Photon {
     private List<Double> getCourses(Integer numOfTorpedoesToFire, List<Double> sects){
         List<Double> courses = new ArrayList<Double>();
 
-        if(sects.size() == 2) // all torpodoes have same destination
-            courses.add(getInitialCourse(sects.get(0), sects.get(1)));   
-         else  // all destinations were passed in
-            for(int i = 0; i < sects.size(); i+=2)
-                courses.add(getInitialCourse(sects.get(i), sects.get(i+1)));
+        for(int i = 0; i < sects.size(); i+=2)
+            courses.add(getInitialCourse(sects.get(i), sects.get(i+1)));
         
         return courses;
     }
 
-    private Integer getNumberOfTorpedoesToFire(List<String> params){
+    public Integer getNumberOfTorpedoesToFire(List<String> params){
          List<Integer> numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
 
         if(numOfTorpedoesList.size() != params.size()) {
-            this.game.begPardon();
             return null;
         }
 
@@ -132,7 +128,6 @@ public class Photon {
             if(params  == null || params.size() == 0){
                 return getNumberOfTorpedoesToFire(null);
             } else if(params.size() != 1 && numOfTorpedoesList.isEmpty()) {
-                this.game.begPardon();
                 return null;
             } 
         }
@@ -142,7 +137,7 @@ public class Photon {
         if(numOfTorpedoes > 3){
             this.game.con.printf("Maximum of 3 torpedoes per burst.\n");
             return getNumberOfTorpedoesToFire(null);
-        } else if(numOfTorpedoes < 0 || numOfTorpedoes == 0){
+        } else if(numOfTorpedoes <= 0){
             return null;
         } else if(numOfTorpedoes > this.game.getEnterprise().getTorpedoes()){
             return getNumberOfTorpedoesToFire(params);
