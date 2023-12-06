@@ -38,6 +38,7 @@ public class CommandTest {
     private Help help;
     private Damages damages;
     private Photon photon;
+    private Shields shields;
 
     @Before
     public void setUp() {
@@ -58,6 +59,7 @@ public class CommandTest {
         this.help = new Help(game, handler, "invalid");
         this.damages = new Damages(game);
         this.photon = new Photon(game);
+        this.shields = new Shields(game);
     }
 
     @Test
@@ -290,9 +292,9 @@ public class CommandTest {
 
         String out = "\nValid commands:\n" +
                 "SRSCAN     MOVE       STATUS     PHOTONS    \n" +
-                "LRSCAN     CHART      REST       DOCK       \n" +
-                "QUIT       DAMAGES    COMPUTER   COMMANDS   \n" +
-                "SCORE      HELP       \n\n";
+                "LRSCAN     SHIELDS    CHART      REST       \n" +
+                "DOCK       QUIT       DAMAGES    COMPUTER   \n" +
+                "COMMANDS   SCORE      HELP       \n\n";
 
         verify(game.con).printf(out);
     }
@@ -390,9 +392,9 @@ public class CommandTest {
 
         String expected = "\nValid commands:\n" +
                 "SRSCAN     MOVE       STATUS     PHOTONS    \n" +
-                "LRSCAN     CHART      REST       DOCK       \n" +
-                "QUIT       DAMAGES    COMPUTER   COMMANDS   \n" +
-                "SCORE      HELP       \n\n";
+                "LRSCAN     SHIELDS    CHART      REST       \n" +
+                "DOCK       QUIT       DAMAGES    COMPUTER   \n" +
+                "COMMANDS   SCORE      HELP       \n\n";
 
         verify(game.con).printf(expected);
     }
