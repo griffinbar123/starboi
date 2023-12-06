@@ -34,6 +34,7 @@ public class CommandHandlerTest {
     private Dock dock;
     private Rest rest;
     private Attack attack;
+    private Shields shields;
 
     @Before
     public void setUp() {
@@ -54,9 +55,10 @@ public class CommandHandlerTest {
         dock = mock(Dock.class);
         attack = mock(Attack.class);
         rest = mock(Rest.class);
+        shields = mock(Shields.class);
 
         handler = new CommandHandler(game, srScan, lrScan, status, computer,
-                chart, freeze, help, damages, move, photon, score, dock, rest, attack);
+                chart, freeze, help, damages, move, photon, score, dock, rest, attack, shields);
 
         when(game.getEnterprise()).thenReturn(enterprise);
         when(game.getEnterprise().getSheilds()).thenReturn(new Shield());
