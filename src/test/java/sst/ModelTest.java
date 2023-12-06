@@ -18,7 +18,7 @@ import Model.Game;
 import Model.Position;
 
 public class ModelTest {
-    private Game game;;
+    private Game game;
 
     @Before
     public void setUp() {
@@ -28,9 +28,22 @@ public class ModelTest {
         for (Device device : Device.values()) {
             deviceDamage.put(device, 0.0);
         }
+        EntityType map[][][][] = new EntityType[8][8][10][10];
+        for (int a = 0; a < 8; a++) {
+            for (int b = 0; b < 8; b++) {
+                for (int c = 0; c < 10; c++) {
+                    for (int d = 0; d < 10; d++) {
+                        map[a][b][c][d] = EntityType.NOTHING;
+                    }
+                }
+            }
+        }
+        map[0][0][0][0] = EntityType.ENTERPRISE;
+
         enterprise.setDeviceDamage(deviceDamage);
         enterprise.setCondition(Condition.GREEN);
         this.game.setEnterprise(enterprise);
+        this.game.setMap(map);
     }
 
     @Test
@@ -150,7 +163,30 @@ public class ModelTest {
 
     @Test
     public void refreshConditionShouldWorkAsExpected() {
-        // TODO
+        game.refreshCondition();
+        assert(game.getEnterprise().getCondition() == Condition.GREEN);
+
+        game.getEnterprise().setEnergy(100.0);
+        assert(game.getEnterprise().getCondition() == Condition.YELLOW);
+
+        EntityType map[][][][] = game.getMap();
+        for (int a = 0; a < 8; a++) {
+            for (int b = 0; b < 8; b++) {
+                for (int c = 0; c < 10; c++) {
+                    for (int d = 0; d < 10; d++) {
+                        map[a][b][c][d] = EntityType.NOTHING;
+                    }
+                }
+            }
+        }
+        map[1][1][0][0] = EntityType.ENTERPRISE;
+        map[1][1][1][1] = EntityType.KLINGON;
+        map[1][1][2][2] = EntityType.KLINGON;
+        map[1][1][3][3] = EntityType.KLINGON;
+        game.setMap(map);
+
+        game.refreshCondition();
+        assert(game.getEnterprise().getCondition() == Condition.RED);
     }
 
     @Test

@@ -101,12 +101,10 @@ public class Game {
      * Used to refresh the Enterprise's condition
      */
     public void refreshCondition() {
-        // Original
-        // if (d.galaxy[quadx][quady] > 99 || d.newstuf[quadx][quady] > 9)
-        //     condit = IHRED;
-
         this.enterprise.setCondition(Condition.GREEN);
-        if (this.enterprise.getEnergy() < 1000.0) this.enterprise.setCondition(Condition.YELLOW);
+        if (this.enterprise.getEnergy() < 1000.0) {
+            this.enterprise.setCondition(Condition.YELLOW);
+        }
         if (getQuadrantNumber(this.enterprise.getPosition().getQuadrant().getY(),
                               this.enterprise.getPosition().getQuadrant().getX()) > 99) {
                     this.enterprise.setCondition(Condition.RED);
@@ -143,12 +141,18 @@ public class Game {
     }
 
     @JsonIgnore
-    private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType entity) {
+    private int getNumberOfEntiesInMapQuadrant(int y, int x, EntityType... entity) {
+        if ((y <= 0 || y > 8 || x <= 0 || x > 8) || entity == null){
+            return 0;
+        }
+
         int numberOfElements = 0;
-        for (int i = 0; i < getMap()[x][y].length; i++) {
-            for (int j = 0; j < getMap()[x][y][i].length; j++) {
-                if (getMap()[x][y][j][i] == entity) {
-                    numberOfElements += 1;
+        for (int k = 0; k < getMap()[x][y].length; k++) {
+            for (int l = 0; l < getMap()[x][y][k].length; l++) {
+                for (EntityType e : entity) {
+                    if (getMap()[x][y][k][l] == e) {
+                        numberOfElements += 1;
+                    }
                 }
             }
         }
@@ -208,7 +212,7 @@ public class Game {
         }
         int thousands = 0;
         // System.out.println(row + " " + column);
-        int hundreds = (getNumberOfEntiesInMapQuadrant(y, x, EntityType.KLINGON) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.COMMANDER) + getNumberOfEntiesInMapQuadrant(y, x, EntityType.SUPER_COMMANDER)) * 100;
+        int hundreds = (getNumberOfEntiesInMapQuadrant(y, x, EntityType.KLINGON, EntityType.COMMANDER, EntityType.SUPER_COMMANDER)) * 100;
         int tens = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STARBASE) * 10;
         int ones = getNumberOfEntiesInMapQuadrant(y, x, EntityType.STAR);
         return thousands + hundreds + tens + ones;
