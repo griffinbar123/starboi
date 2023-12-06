@@ -30,6 +30,7 @@ import static Utils.Utils.readCommands;
 /**
  * Initializes a game. In future versions, this class will be able
  * to restore a saved game state
+ * 
  * @author Griffin Barnard
  * @author Matthias Schrock
  * @author Fabrice Mpozenzi
@@ -39,6 +40,7 @@ public class Init {
 
     /**
      * Starts the game
+     * 
      * @author Matthias Schrock
      */
     public void start() {
@@ -83,6 +85,7 @@ public class Init {
 
     /**
      * Prints the startup message
+     * 
      * @author Matthias Schrock
      */
     private void printStartupMessage() {
@@ -90,23 +93,24 @@ public class Init {
                 "a deadly Klingon invasion force. As captain of the United Starship " +
                 "U.S.S. Enterprise, it is your mission to seek out and destroy this " +
                 "invasion force of %d battle cruisers. You have an initial allotment " +
-                "of %d stardates to complete your mission. As you proceed you may be " +
+                "of %.0f stardates to complete your mission. As you proceed you may be " +
                 "given more time.\n\nYou will have %d supporting starbases. Starbase " +
                 "locations- %s\n\nThe Enterprise is currently in Quadrant %d - %d " +
                 "Sector %d - %d\n\nGood Luck!\n\n",
-                this.game.getStarDate(), this.game.getKlingons().length, -1, -1,
+                game.getStarDate(), game.getKlingons().length, game.getTime(), game.getStarbases().length,
                 turnEntityQuadrantsToStrings(this.game.getStarbases()),
-                (this.game.getEnterprise().getPosition().getQuadrant().getY() + 1),
-                (this.game.getEnterprise().getPosition().getQuadrant().getX() + 1),
-                (this.game.getEnterprise().getPosition().getSector().getY() + 1),
-                (this.game.getEnterprise().getPosition().getSector().getX() + 1));
+                (game.getEnterprise().getPosition().getQuadrant().getY() + 1),
+                (game.getEnterprise().getPosition().getQuadrant().getX() + 1),
+                (game.getEnterprise().getPosition().getSector().getY() + 1),
+                (game.getEnterprise().getPosition().getSector().getX() + 1));
         this.game.con.printf("%s", initMessage);
     }
 
     /**
      * Get a game parameter from the user
+     * 
      * @param <T> Enum type
-     * @param t Enum class
+     * @param t   Enum class
      * @return Enum constant chosen by user
      * @author Matthias Schrock
      * @author Fabrice Mpozenzi
@@ -141,7 +145,7 @@ public class Init {
      * 
      * @param <T> Enum type
      * @param str String to match
-     * @param e Enum class
+     * @param e   Enum class
      * @return Enum constant if match, null otherwise
      * @author Matthias Schrock
      */
@@ -153,7 +157,7 @@ public class Init {
         for (T t : e.getEnumConstants()) {
             String tStr = t.toString();
 
-            String abrCheck = tStr.substring(0, 
+            String abrCheck = tStr.substring(0,
                     Math.min(tStr.length(), str.length()));
 
             if (str.compareTo(abrCheck) == 0) {
@@ -215,7 +219,7 @@ public class Init {
         for (int i = 0; i < numberOfRomulans; i++) {
             pos = generateNewPosition(9, rom);
             rom[i] = new Romulan(pos);
-            rom[i].setPower(randDouble(0, 1)*400.0 + 450.0 + 50.0*this.game.getSkill().getSkillValue());
+            rom[i].setPower(randDouble(0, 1) * 400.0 + 450.0 + 50.0 * this.game.getSkill().getSkillValue());
         }
         this.game.setRomulans(rom);
         this.game.getScore().setInitRomulans(numberOfRomulans);
@@ -223,8 +227,8 @@ public class Init {
 
     private void initializeBlackHoles() {
         int numberOfBlackHoles = 0;
-        for (int i=1; i<=8; i++)
-            for (int j=1; j<=8; j++) 
+        for (int i = 1; i <= 8; i++)
+            for (int j = 1; j <= 8; j++)
                 numberOfBlackHoles += randDouble(0, 1) > 0.5 ? 1 : 0;
         Position pos;
         BlackHole blackHoles[] = new BlackHole[numberOfBlackHoles];
@@ -237,9 +241,9 @@ public class Init {
 
     private void initializeStars() {
         int numberOfStars = 0;
-        for (int i=1; i<=8; i++)
-            for (int j=1; j<=8; j++) 
-                numberOfStars += ((int)(randDouble(0, 1)*9.0)) + 1;
+        for (int i = 1; i <= 8; i++)
+            for (int j = 1; j <= 8; j++)
+                numberOfStars += ((int) (randDouble(0, 1) * 9.0)) + 1;
         Position pos;
         Star stars[] = new Star[numberOfStars];
         for (int i = 0; i < numberOfStars; i++) {
@@ -250,7 +254,7 @@ public class Init {
     }
 
     private void initializeStarbases() {
-        int numberOfStarbases = 3*((int) randDouble(0, 1))+2;
+        int numberOfStarbases = 3 * ((int) randDouble(0, 1)) + 2;
         Position pos;
         Starbase starBases[] = new Starbase[numberOfStarbases];
         for (int i = 0; i < numberOfStarbases; i++) {
@@ -262,7 +266,7 @@ public class Init {
     }
 
     private void initializePlanets() {
-        int numberOfPlanets =  (int) ((10/2) + (10/2+1)*randDouble(0, 1));
+        int numberOfPlanets = (int) ((10 / 2) + (10 / 2 + 1) * randDouble(0, 1));
         Position pos;
         Planet planets[] = new Planet[numberOfPlanets];
         for (int i = 0; i < numberOfPlanets; i++) {
@@ -292,19 +296,19 @@ public class Init {
         for (int i = 0; i < ord; i++) {
             pos = generateNewPosition(9, klingons);
             klingons[i] = new Klingon(pos);
-            klingons[i].setPower(randDouble(0, 1)*150.0 +300.0 +25.0*skill);
+            klingons[i].setPower(randDouble(0, 1) * 150.0 + 300.0 + 25.0 * skill);
         }
 
         for (int i = 0; i < cmd; i++) {
             pos = generateNewPosition(9, klingonCommanders);
             klingonCommanders[i] = new KlingonCommander(pos);
-            klingonCommanders[i].setPower(950.0+400.0*randDouble(0, 1)+50.0*skill);
+            klingonCommanders[i].setPower(950.0 + 400.0 * randDouble(0, 1) + 50.0 * skill);
         }
 
         if (sCmd == 1) {
             pos = generateNewPosition(9, klingonSuperCommander);
             klingonSuperCommander = new KlingonSuperCommander(pos);
-            klingonSuperCommander.setPower(1175.0 + 400.0*randDouble(0, 1) + 125.0*skill);
+            klingonSuperCommander.setPower(1175.0 + 400.0 * randDouble(0, 1) + 125.0 * skill);
             this.game.setKlingonSuperCommander(klingonSuperCommander);
         }
 
