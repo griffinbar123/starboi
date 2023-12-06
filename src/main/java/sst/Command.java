@@ -11,7 +11,7 @@ public enum Command {
     ABANDON(false, false),
     LRSCAN(true),
     WARP(false),
-    SHIELDS(false),
+    SHIELDS(true),
     DESTRUCT(false, false),
     CHART(true),
     REST(true),

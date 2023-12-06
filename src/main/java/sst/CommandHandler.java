@@ -28,6 +28,7 @@ public class CommandHandler {
     private Rest rest;
     // private Finish finish;
     private Attack attack;
+    private Shields shields;
 
     public CommandHandler(Game game) {
         this.game = game;
@@ -46,6 +47,7 @@ public class CommandHandler {
         this.rest = new Rest(game);
         // this.finish = new Finish(game);
         this.attack = new Attack(game);
+        this.shields = new Shields(game);
     }
 
     /**
@@ -122,6 +124,9 @@ public class CommandHandler {
                         break;
                     case SCORE:
                         score.ExecSCORE(false, false);
+                        break;
+                    case SHIELDS:
+                        shields.ExecSHIELDS(params);
                         break;
                     case undefined:
                         help.ExecCOMMANDS();
