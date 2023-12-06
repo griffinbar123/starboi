@@ -160,26 +160,30 @@ public class Game {
     }
 
     /**
-     * 
+     * checks if entity is in a position, used mainly if map may not be updated
      * @param quad quadrant to be compared
      * @param entity entity to be compared
      * @return a boolean inticating wether a quad on a map contains the symbol of an entity
      */
-    public Boolean checkEntityAgainstQuadrant(Coordinate quad, Entity entity) {
-        // checks if entity is in a position, used mainly if map may not be updated
-        return entity != null && entity.getPosition().getQuadrant().getX() == quad.getX()
+    public boolean checkEntityAgainstQuadrant(Coordinate quad, Entity entity) {
+        if (entity == null) {
+            return false;
+        }
+        return entity.getPosition().getQuadrant().getX() == quad.getX()
                 && entity.getPosition().getQuadrant().getY() == quad.getY();
     }
 
     /**
-     * 
+     * checks if entity is in a position, used mainly if map may not be updated
      * @param pos1 position to be compared
      * @param entity entity to be compared
      * @return a boolean inticating wether a pos on a map contains the symbol of an entity
      */
-    public Boolean checkEntityAgainstPosition(Position position, Entity entity) {
-        // checks if entity is in a position, used mainly if map may not be updated
-        return entity != null && checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
+    public boolean checkEntityAgainstPosition(Position position, Entity entity) {
+        if (entity == null) {
+            return false;
+        }
+        return checkEntityAgainstQuadrant(position.getQuadrant(), entity) &&
                 entity.getPosition().getSector().getX() == position.getSector().getX()
                 && entity.getPosition().getSector().getY() == position.getSector().getY();
     }
@@ -232,7 +236,7 @@ public class Game {
                         } else if (checkEntityAgainstPosition(position, enterprise)) {
                             map[j][i][k][l] = EntityType.ENTERPRISE;
                         } else if (checkEntityAgainstPosition(position, klingonSuperCommander)) {
-                            map[j][i][k][l] = EntityType.ENTERPRISE;
+                            map[j][i][k][l] = EntityType.SUPER_COMMANDER;
                         } else if (checkEntityListAgainstPosition(position, starbases)) {
                             map[j][i][k][l] = EntityType.STARBASE;
                         } else if (checkEntityListAgainstPosition(position, stars)) {
