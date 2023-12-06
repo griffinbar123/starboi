@@ -37,6 +37,7 @@ public class CommandTest {
     private LrScan lrScan;
     private Help help;
     private Damages damages;
+    private Photon photon;
 
     @Before
     public void setUp() {
@@ -56,6 +57,7 @@ public class CommandTest {
         this.lrScan = new LrScan(game);
         this.help = new Help(game, handler, "invalid");
         this.damages = new Damages(game);
+        this.photon = new Photon(game);
     }
 
     @Test
@@ -492,6 +494,92 @@ public class CommandTest {
         String error = "COMPUTER DAMAGED, USE A POCKET CALCULATOR.\n\n";
 
         verify(game.con).printf(error);
+    }
+
+    @Test
+    public void getNumberOfTorpedoesToFireShouldReturnNullForNonInteger() {
+        List<String> badInput = new ArrayList<String>();
+        badInput.add("a");
+        badInput.add("1");
+        Integer numOfTorpedoes = photon.getNumberOfTorpedoesToFire(badInput);
+        assertEquals(numOfTorpedoes, null);
+    }
+
+    @Test
+    public void getNumberOfTorpedoesToFireShouldReturnNullForTooLittleTorps() {
+        List<String> badInput = new ArrayList<String>();
+        badInput.add("0");
+        Integer numOfTorpedoes = photon.getNumberOfTorpedoesToFire(badInput);
+        assertEquals(numOfTorpedoes, null);
+    }
+
+    @Test
+    public void getNumberOfTorpedoesToFireShouldReturnCorrectValue() {
+        List<String> input = new ArrayList<String>();
+        input.add("1");
+        Integer numOfTorpedoes = photon.getNumberOfTorpedoesToFire(input);
+        assert(numOfTorpedoes == 1);
+    }
+
+    @Test
+    public void getSectorsShouldReturnNullForNonInteger() {
+        List<String> badInput = new ArrayList<String>();
+        badInput.add("1");
+        badInput.add("a");
+        List<Double> sectors = photon.getSectors(1, badInput);
+        assertEquals(sectors, null);
+    }
+
+    @Test
+    public void getSectorsShouldReturnNullForWrongAmountOfInput() {
+        List<String> badInput = new ArrayList<String>();
+        badInput.add("1");
+        badInput.add("2");
+        badInput.add("3");
+        List<Double> sectors = photon.getSectors(1, badInput);
+        assertEquals(sectors, null);
+    }
+
+    @Test
+    public void getSectorsShouldReturnCorrectValuesWithBasicParams() {
+        List<String> input = new ArrayList<String>();
+        input.add("1");
+        input.add("2");
+        List<Double> sectors = photon.getSectors(1, input);
+        List<Double> output = new ArrayList<Double>();
+        output.add(1.0);
+        output.add(2.0);
+        assertEquals(sectors, output);
+    }
+
+    @Test
+    public void getSectorsShouldReturnCorrectValuesWithTwoParams() {
+        List<String> input = new ArrayList<String>();
+        input.add("1");
+        input.add("2");
+        List<Double> sectors = photon.getSectors(2, input);
+        List<Double> output = new ArrayList<Double>();
+        output.add(1.0);
+        output.add(2.0);
+        output.add(1.0);
+        output.add(2.0);
+        assertEquals(sectors, output);
+    }
+
+    @Test
+    public void getSectorsShouldReturnCorrectValuesWithBaseParams() {
+        List<String> input = new ArrayList<String>();
+        input.add("1");
+        input.add("2");
+        input.add("3");
+        input.add("4");
+        List<Double> sectors = photon.getSectors(2, input);
+        List<Double> output = new ArrayList<Double>();
+        output.add(1.0);
+        output.add(2.0);
+        output.add(3.0);
+        output.add(4.0);
+        assertEquals(output, sectors);
     }
 
     private void mockObjects() {
