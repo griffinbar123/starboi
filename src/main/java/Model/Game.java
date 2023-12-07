@@ -95,6 +95,10 @@ public class Game {
         // Passage of time
         this.time -= time;
         this.starDate += time;
+
+        if(time <= 0.0) {
+            new Finish(null).finish(GameOverReason.DEPLETED);
+        }
     }
 
     /**

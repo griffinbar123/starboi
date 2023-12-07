@@ -65,6 +65,12 @@ public class Shields {
         } else {
             String shieldTypeT = params.get(0);
             shieldType = matchShieldType(shieldTypeT);
+            if(!shieldType.equals(ShieldType.TRANSFER)) {
+                if(game.getEnterprise().getDeviceDamage().get(Device.SHIELDS) > 0) {
+                    game.con.printf("Shields damaged and down.\n");
+                    return;
+                }
+            }
         }
 
         switch (shieldType) {
