@@ -97,7 +97,7 @@ public class Game {
         this.starDate += time;
 
         if(time <= 0.0) {
-            new Finish(null).finish(GameOverReason.DEPLETED);
+            new Finish(this).finish(GameOverReason.DEPLETED);
         }
     }
 
