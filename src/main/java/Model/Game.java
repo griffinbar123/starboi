@@ -73,24 +73,25 @@ public class Game {
     public void passTime(Double time) {
         Damages dmg = new Damages(this);
         Map<Device, Double> repairTimes = dmg.calcDamages();
-        double devDmg, rprTm, fac;
+        double devDmg = 0;
+        double rprTm = 0;
         boolean docked = this.enterprise.getCondition() == Condition.DOCKED;
 
         // Enterprise device repairs
-        for (Device d : this.enterprise.getDeviceDamage().keySet()) {
-            devDmg = this.enterprise.getDeviceDamage().get(d);
-            if (devDmg == 0.0 || (!docked && d == Device.DEATHRAY)) continue;
+        if (repairTimes.size() != 0) {
+            for (Device d : this.enterprise.getDeviceDamage().keySet()) {
+                devDmg = roundN(this.enterprise.getDeviceDamage().get(d), 2);
+                if (devDmg == 0.0) continue;
 
-            // TODO: going to need something tailored to final damage calculations
-            // Issue with this current solution is that repairing over multiple
-            // time periods does not add up to the correct, initial repair time
-            rprTm = repairTimes.get(d) * (docked ? dmg.getDOCFAC() : 1.0);
-            fac = (rprTm - time) / rprTm;
+                if (d == Device.DEATHRAY && docked) {
+                    rprTm = (repairTimes.get(d) - 0.05) * dmg.getDOCFAC();
+                } else {
+                    rprTm = (repairTimes.get(d) - 0.5) * (docked ? dmg.getDOCFAC() : 1.0);
+                }
 
-            this.enterprise.getDeviceDamage().put(d, roundN(devDmg * fac, 2));
+                this.enterprise.getDeviceDamage().put(d, roundN((devDmg - time > 0 ? devDmg - time : 0), 2));
+            }
         }
-
-        // TODO: are there any other things that happen as time passes?
 
         // Passage of time
         this.time -= time;

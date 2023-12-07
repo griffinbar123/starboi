@@ -52,7 +52,7 @@ public class Rest {
      */
     private Double sure(Double duration) {
         String cont;
-        if (duration > game.getStarDate()) {
+        if (duration >= game.getTime()) {
             game.con.printf("Are you sure? ");
             cont = readCommands(game.con.readLine()).orElse(Arrays.asList("No")).get(0);
             if (cont.equals("YES")) {
