@@ -9,6 +9,7 @@ import Model.Coordinate;
 import Model.Device;
 import Model.Enterprise;
 import Model.Entity;
+import Model.EntityType;
 import Model.Game;
 import Model.GameLength;
 import Model.GameLevel;
@@ -43,7 +44,7 @@ public class Init {
      * 
      * @author Matthias Schrock
      */
-    public void start() {
+    public void start(String[] args) {
         game = new Game();
         CommandHandler handler = new CommandHandler(this.game);
         double starDate;
@@ -76,11 +77,23 @@ public class Init {
         initializeStars();
         initializeRomulans(romulans);
         initializeBlackHoles();
+
+        if (args.length > 0 && args[0].equals("demo")) {
+            demo();
+        }
+
         game.updateMap();
 
         printStartupMessage();
 
         handler.getAndExecuteCommands();
+    }
+
+    private void demo() {
+        game.getEnterprise().setPosition(new Position(0, 0, 4, 4));
+        game.getKlingons()[0].setPosition(new Position(0, 0, 0, 9));
+        game.getBlackHoles()[0].setPosition(new Position(0, 0, 8, 1));
+        game.getStarbases()[0].setPosition(new Position(0, 0, 0, 0));
     }
 
     /**
