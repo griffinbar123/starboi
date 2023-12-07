@@ -47,6 +47,8 @@ public class Game {
     private GameLevel skill = GameLevel.UNDEFINED;
     private GameLength length = GameLength.UNDEFINED;
     private GameType type = GameType.UNDEFINED;
+
+    private Double initStarDate = 0.0;
     
     private Integer destroyedPlanets = 0;
     private Integer destroyedBases = 0;

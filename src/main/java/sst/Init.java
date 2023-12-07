@@ -63,6 +63,7 @@ public class Init {
 
         starDate = randDouble(21, 39) * 100;
         game.setStarDate(starDate);
+        game.setInitStarDate(starDate);
         game.getScore().setInitStarDate(starDate);
         game.setTime(this.game.getLength().getLengthValue() * 7);
 

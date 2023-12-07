@@ -35,26 +35,25 @@ public class Score {
         double timeUsed = game.getStarDate() - game.getScore().getInitStarDate();
         
         // gains
-        int klDest = game.getScore().getInitKlingons() - game.getRegularKlingonCount();
-        int klCmdDest = game.getScore().getInitKlingonCmds() - game.getKlingonCommanderCount();
-        int klSCmdDest = game.getScore().getInitKlingonSupCmds() - (game.getKlingonSuperCommander() != null ? 1 : 0);
-        int klCap = 0;
-        int romDest = game.getRomulansCount() - game.getScore().getInitRomulans();
-        int romSur = 0;
-        // perdate = (d.killc + d.killk + d.nsckill)/timused;
-        double perDate = (game.getScore().getInitTotKlingons() - game.getRemainingKlingonCount()) /
-                (game.getScore().getInitStarDate() - game.getStarDate());
+        int klDest = game.getKlingonsKilled();
+        int klCmdDest = game.getCommandersKilled(); 
+        int klSCmdDest = game.getSuperCommandersKilled();
+        int klCap = 0; 
+        int romDest = game.getRomulansKilled();
+        int romSur = game.getRomulansCount(); 
+        // perdate = (d.killc + d.killk + d.nsckill)/timused; 
+        double perDate = (game.getKlingonsKilled() + game.getCommandersKilled() + game.getSuperCommandersKilled() + game.getRomulansKilled()) /
+                (game.getInitStarDate() - game.getStarDate());
         int win = (finalScore ? game.getSkill().getSkillValue() * 100 : 0);
 
         // losses
         int deathPen = game.getEnterprise().getCondition() == Condition.DEAD ? 200 : 0;
-        int basePen = 100 * 0;
+        int basePen = 100 * game.getDestroyedBases();
         int shipPen = 100 * 0;
         int treatyPen = 100 * 0;
         int helpPen = Call.calls * 45;
-        int planetPen = 10 * 0;
-        int starPen = 5 * 0;
-        int casualties = 0;
+        int planetPen = 10 * game.getDestroyedPlanets();
+        int starPen = 5 * game.getDestroyedStars();
 
         timeUsed = ((timeUsed == 0 || game.getRemainingKlingonCount() != 0) && timeUsed < 5.0) ? 5.0 : timeUsed;
 
@@ -65,6 +64,6 @@ public class Score {
                 (20 * romDest) +
                 (romSur) +
                 (500 * perDate) +
-                win - deathPen - basePen - shipPen - treatyPen - helpPen - planetPen - starPen - casualties;
+                win - deathPen - basePen - shipPen - treatyPen - helpPen - planetPen - starPen - game.getCasualties();
     }
 }
