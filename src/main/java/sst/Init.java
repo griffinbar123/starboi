@@ -9,7 +9,6 @@ import Model.Coordinate;
 import Model.Device;
 import Model.Enterprise;
 import Model.Entity;
-import Model.EntityType;
 import Model.Game;
 import Model.GameLength;
 import Model.GameLevel;
@@ -92,25 +91,34 @@ public class Init {
 
     private void demo() {
         game.con.printf("\n\n\n******************DEMO MODE******************\n\n");
-        game.getEnterprise().setPosition(new Position(0, 0, 4, 4));
+        game.getEnterprise().setPosition(new Position(0, 1, 4, 4));
         game.getKlingons()[0].setPosition(new Position(0, 0, 0, 9));
-        game.getBlackHoles()[0].setPosition(new Position(0, 0, 8, 1));
+        if (game.getKlingons().length > 1) {
+            game.getKlingons()[1].setPosition(new Position(1, 0, 0, 1));
+        }
+        game.getBlackHoles()[0].setPosition(new Position(0, 1, 8, 1));
         game.getStarbases()[0].setPosition(new Position(0, 0, 0, 0));
 
         int cnt = 2;
-        Coordinate quad = new Coordinate(0, 0);
+        Coordinate quad = new Coordinate(0, 1);
         for (int i = 0; i < game.getStars().length; i++) {
             if (game.getStars()[i].getPosition().getQuadrant().isEqual(quad)) {
                 if (cnt > 0) {
                     cnt--;
-                    game.getStars()[i].setPosition(new Position(0, 0, cnt + 3, 0));
+                    game.getStars()[i].setPosition(new Position(0, 1, cnt + 3, 0));
                 } else {
                     game.getStars()[i] = null;
                 }
             }
         }
 
-
+        Coordinate quad2 = new Coordinate(0, 0);
+        for (int i = 0; i < game.getRomulans().length; i++) {
+            if (game.getRomulans()[i].getPosition().getQuadrant().isEqual(quad) ||
+                    game.getRomulans()[i].getPosition().getQuadrant().isEqual(quad2)) {
+                game.getRomulans()[i] = null;
+            }
+        }
     }
 
     /**

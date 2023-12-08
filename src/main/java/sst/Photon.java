@@ -114,9 +114,11 @@ public class Photon {
     }
 
     public Integer getNumberOfTorpedoesToFire(List<String> params){
-         List<Integer> numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
+        List<Integer> numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
 
-        if(numOfTorpedoesList.size() != params.size()) {
+        if (numOfTorpedoesList == null || params == null) {
+            return null;
+        } else if(numOfTorpedoesList.size() != params.size()) {
             return null;
         }
 
@@ -125,7 +127,9 @@ public class Photon {
             String torpsStr = this.game.con.readLine("Number of torpedoes to fire- ");
             params = readCommands(torpsStr).orElse(null);
             numOfTorpedoesList = parseIntegers(params).orElse(new ArrayList<Integer>());
-            if(params  == null || params.size() == 0){
+            if(params == null ){
+                return getNumberOfTorpedoesToFire(null);
+            } else if(params.size() == 0) {
                 return getNumberOfTorpedoesToFire(null);
             } else if(params.size() != 1 && numOfTorpedoesList.isEmpty()) {
                 return null;
