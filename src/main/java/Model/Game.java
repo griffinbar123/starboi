@@ -85,13 +85,13 @@ public class Game {
                 devDmg = roundN(this.enterprise.getDeviceDamage().get(d), 2);
                 if (devDmg == 0.0) continue;
 
-                if (d == Device.DEATHRAY && docked) {
-                    rprTm = (repairTimes.get(d) - 0.05) * dmg.getDOCFAC();
-                } else {
-                    rprTm = (repairTimes.get(d) - 0.5) * (docked ? dmg.getDOCFAC() : 1.0);
-                }
-
-                this.enterprise.getDeviceDamage().put(d, roundN((devDmg - time > 0 ? devDmg - time : 0), 2));
+                // if (d == Device.DEATHRAY && docked) {
+                //     rprTm = (repairTimes.get(d) - 0.05) * dmg.getDOCFAC();
+                // } else {
+                //     rprTm = (repairTimes.get(d) - 0.5) * (docked ? dmg.getDOCFAC() : 1.0);
+                // }
+                rprTm = docked ? time / dmg.getDOCFAC() : time;
+                this.enterprise.getDeviceDamage().put(d, roundN((devDmg - rprTm > 0 ? devDmg - rprTm : 0), 2));
             }
         }
 
@@ -319,6 +319,10 @@ public class Game {
 
     @JsonIgnore
     public EntityType getEntityTypeAtPosition(Position position) {
+        if(position.getQuadrant().getX() > 7 || position.getQuadrant().getX() < 0 || position.getQuadrant().getY() > 7 || position.getQuadrant().getY() < 0 ||
+        position.getSector().getX() > 9 || position.getSector().getX() < 0 ||position.getSector().getY() > 9 || position.getSector().getY() < 0 ) {
+            return EntityType.NOTHING;
+        }
         return map[position.getQuadrant().getX()][position.getQuadrant().getY()][position.getSector().getY()][position.getSector().getX()];
     }
 
