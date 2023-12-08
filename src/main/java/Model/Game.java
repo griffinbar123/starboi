@@ -534,13 +534,6 @@ public class Game {
             return;
         }
 
-        if (randDouble(0, 1) < 0.05) {
-            con.printf("supernova would happen, not implemented yet\n");
-            /* Wow! We've supernova'ed */
-            // snova(ix, iy);
-            return;
-        }
-
         destroyedStars += 1;
 
         con.printf("***%s at %d - %d novas.\n", EntityType.STAR.getName(), starSector.getY()+1, starSector.getX()+1);

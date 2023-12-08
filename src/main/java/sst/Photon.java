@@ -63,6 +63,12 @@ public class Photon {
 
     public void firePhoton(Entity initialEntity, Integer numOfTorpedoesToFire, List<Double> sectors) {
         List<Double> courses = getCourses(numOfTorpedoesToFire, sectors);
+        for(int i = 0; i < courses.size(); i++) {
+            if(courses.get(i) == null) {
+                game.begPardon();
+                return;
+            }
+        }
         fireTorpedos(numOfTorpedoesToFire, courses);
     }
 

@@ -90,7 +90,7 @@ public class Init {
     }
 
     private void demo() {
-        game.con.printf("\n\n\n******************DEMO MODE******************\n\n");
+        game.con.printf("\n\n\n******************DEMO MODE******************");
         game.getEnterprise().setPosition(new Position(0, 1, 4, 4));
         game.getKlingons()[0].setPosition(new Position(0, 0, 0, 9));
         if (game.getKlingons().length > 1) {
