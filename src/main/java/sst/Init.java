@@ -91,10 +91,26 @@ public class Init {
     }
 
     private void demo() {
+        game.con.printf("\n\n\n******************DEMO MODE******************\n\n");
         game.getEnterprise().setPosition(new Position(0, 0, 4, 4));
         game.getKlingons()[0].setPosition(new Position(0, 0, 0, 9));
         game.getBlackHoles()[0].setPosition(new Position(0, 0, 8, 1));
         game.getStarbases()[0].setPosition(new Position(0, 0, 0, 0));
+
+        int cnt = 2;
+        Coordinate quad = new Coordinate(0, 0);
+        for (int i = 0; i < game.getStars().length; i++) {
+            if (game.getStars()[i].getPosition().getQuadrant().isEqual(quad)) {
+                if (cnt > 0) {
+                    cnt--;
+                    game.getStars()[i].setPosition(new Position(0, 0, cnt + 3, 0));
+                } else {
+                    game.getStars()[i] = null;
+                }
+            }
+        }
+
+
     }
 
     /**
